@@ -1,0 +1,5 @@
+
+tests/test_ddp.py::test_DistributedDataParallel[ToyModel] PASSED
+tests/test_ddp.py::test_DistributedDataParallel[ToyModelWithTiedWeights] PASSED
+
+============================== 2 passed in 6.71s ===============================

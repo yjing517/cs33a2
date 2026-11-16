@@ -1,0 +1,19 @@
+{
+  "command": [
+    "/home/yangjing/projects/cs336/assignment2-systems/.venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "tests/test_ddp_flat.py",
+    "--timeout=120"
+  ],
+  "cwd": "/home/yangjing/projects/cs336/assignment2-systems",
+  "exit_code": 0,
+  "elapsed_s": 30.24419180899895,
+  "timestamp_utc": "2026-11-16T09:46:41.575198+00:00",
+  "environment": {
+    "CUDA_VISIBLE_DEVICES": "",
+    "OMP_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  }
+}

@@ -1,0 +1,9 @@
+
+tests/test_ddp_cpu.py::test_cpu_gradients_and_updates[ToyModel] ToyModel rank=0 steps=5 max_gradient_error=2.776e-17 max_parameter_error=5.551e-17
+ToyModel rank=1 steps=5 max_gradient_error=2.776e-17 max_parameter_error=5.551e-17
+PASSED
+tests/test_ddp_cpu.py::test_cpu_gradients_and_updates[ToyModelWithTiedWeights] ToyModelWithTiedWeights rank=0 steps=5 max_gradient_error=4.337e-18 max_parameter_error=1.388e-17
+ToyModelWithTiedWeights rank=1 steps=5 max_gradient_error=4.337e-18 max_parameter_error=1.388e-17
+PASSED
+
+============================== 2 passed in 6.90s ===============================
