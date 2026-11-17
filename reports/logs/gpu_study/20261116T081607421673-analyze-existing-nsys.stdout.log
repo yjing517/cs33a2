@@ -1,0 +1,7 @@
+COMMAND: /opt/nvidia/nsight-compute/2025.1.1/host/target-linux-x64/nsys export --type=sqlite --output reports/gpu_study/artifacts/medium-train_step-fp32-w5-n256-nsys.sqlite reports/gpu_study/artifacts/medium-train_step-fp32-w5-n256-nsys.nsys-rep
+EXIT_CODE=0 ELAPSED_S=0.198 LOG=reports/logs/gpu_study/20261116T081607949908-export-medium-train_step-fp32-w5-n256-nsys
+medium-train_step-fp32-w5-n256-nsys {'forward': 62.723, 'loss': 0.123, 'backward': 0.001, 'optimizer': 72.663, 'attention_scores_matmul': 2.173, 'attention_mask_softmax': 5.108, 'attention_output_matmul': 1.821}
+COMMAND: /opt/nvidia/nsight-compute/2025.1.1/host/target-linux-x64/nsys export --type=sqlite --output reports/gpu_study/artifacts/small-train_step-fp32-w5-n256-nsys.sqlite reports/gpu_study/artifacts/small-train_step-fp32-w5-n256-nsys.nsys-rep
+EXIT_CODE=0 ELAPSED_S=0.123 LOG=reports/logs/gpu_study/20261116T081608538527-export-small-train_step-fp32-w5-n256-nsys
+small-train_step-fp32-w5-n256-nsys {'forward': 19.89, 'loss': 0.124, 'backward': 0.001, 'optimizer': 22.449, 'attention_scores_matmul': 0.794, 'attention_mask_softmax': 1.949, 'attention_output_matmul': 0.855}
+small-train_step-fp32-w5-n512-nsys {'forward': 44.734, 'loss': 0.223, 'backward': 0.001, 'optimizer': 22.65, 'attention_scores_matmul': 2.795, 'attention_mask_softmax': 7.18, 'attention_output_matmul': 2.286}

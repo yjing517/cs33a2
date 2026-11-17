@@ -1,0 +1,63 @@
+Capture range started in the application.
+Capture range ended in the application.
+Generating '/tmp/nsys-report-5197.qdstrm'
+
+[1/1] [0%                          ] small-train_step-fp32-w5-n256-nsys.nsys-repProcessing events...
+
+[1/1] [0%                          ] small-train_step-fp32-w5-n256-nsys.nsys-rep
+[1/1] [8%                          ] small-train_step-fp32-w5-n256-nsys.nsys-rep
+[1/1] [===========53%              ] small-train_step-fp32-w5-n256-nsys.nsys-rep
+[1/1] [========================99% ] small-train_step-fp32-w5-n256-nsys.nsys-rep
+[1/1] [0%                          ] small-train_step-fp32-w5-n256-nsys.nsys-rep
+[1/1] [=16%                        ] small-train_step-fp32-w5-n256-nsys.nsys-rep
+[1/1] [=====32%                    ] small-train_step-fp32-w5-n256-nsys.nsys-rep
+[1/1] [============54%             ] small-train_step-fp32-w5-n256-nsys.nsys-rep
+[1/1] [=================73%        ] small-train_step-fp32-w5-n256-nsys.nsys-rep
+[1/1] [========================100%] small-train_step-fp32-w5-n256-nsys.nsys-rep
+[1/1] [========================100%] small-train_step-fp32-w5-n256-nsys.nsys-rep
+{
+  "arguments": {
+    "model_size": "small",
+    "mode": "train_step",
+    "precision": "fp32",
+    "device": "cuda",
+    "optimizer": "reference_adamw",
+    "batch_size": 4,
+    "vocab_size": 10000,
+    "context_length": 256,
+    "warmup": 5,
+    "steps": 1,
+    "profile": null,
+    "snapshot": null,
+    "nvtx": true,
+    "stage_timing": false,
+    "compile": false,
+    "checkpoint_group": 0,
+    "output": "reports/gpu_study/data/small-train_step-fp32-w5-n256-nsys.json"
+  },
+  "parameters": 128625408,
+  "parameter_bytes": 514501632,
+  "persistent_lower_bound_bytes": 2058006528,
+  "free_bytes": 12190220288,
+  "total_bytes": 12491292672,
+  "environment": {
+    "torch": "2.8.0+cu128",
+    "cuda": "12.8",
+    "gpu": "NVIDIA GeForce RTX 3080 Ti",
+    "tf32": false
+  },
+  "official_shape": true,
+  "warmup_peak_allocated_bytes": 3234339328,
+  "measurement_start_allocated_bytes": 2167419392,
+  "status": "ok",
+  "mean_ms": 222.5076062604785,
+  "std_ms": 0.0,
+  "phase_ms": {},
+  "peak_allocated_bytes": 3235699200,
+  "peak_reserved_bytes": 3443523584,
+  "final_loss": 5.479974746704102,
+  "parameter_dtype": "torch.float32",
+  "process_work_seconds": 11.337867902591825
+}
+Generated:
+    /root/autodl-tmp/cs336-assignment2/reports/gpu_study/artifacts/small-train_step-fp32-w5-n256-nsys.nsys-rep

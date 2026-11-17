@@ -1,0 +1,86 @@
+Traceback (most recent call last):
+  File "/root/autodl-tmp/cs336-assignment2/cs336_systems/gpu_experiments.py", line 226, in main
+    result, code = experiment(args)
+                   ^^^^^^^^^^^^^^^^
+  File "/root/autodl-tmp/cs336-assignment2/cs336_systems/gpu_experiments.py", line 149, in experiment
+    step(False)
+  File "/root/autodl-tmp/cs336-assignment2/cs336_systems/gpu_experiments.py", line 126, in step
+    logits = model(x)
+             ^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/autodl-tmp/cs336-assignment2/cs336-basics/cs336_basics/model.py", line 253, in forward
+    x = layer(x)
+        ^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/autodl-tmp/cs336-assignment2/cs336-basics/cs336_basics/model.py", line 382, in forward
+    x_attn = self.attn(self.ln1(x))
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/autodl-tmp/cs336-assignment2/cs336-basics/cs336_basics/model.py", line 520, in forward
+    attn_output = scaled_dot_product_attention(K=K, Q=Q, V=V, mask=causal_mask)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/autodl-tmp/cs336-assignment2/cs336-basics/cs336_basics/model.py", line 432, in scaled_dot_product_attention
+    attention_weights = softmax(attention_scores, dim=-1)  # Softmax over the key dimension
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/autodl-tmp/cs336-assignment2/cs336-basics/cs336_basics/nn_utils.py", line 6, in softmax
+    exponentiated_rescaled_input = torch.exp(rescaled_input)
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 768.00 MiB. GPU 0 has a total capacity of 11.63 GiB of which 101.50 MiB is free. Including non-PyTorch memory, this process has 11.53 GiB memory in use. Of the allocated memory 10.97 GiB is allocated by PyTorch, and 269.63 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+Traceback (most recent call last):
+  File "/root/autodl-tmp/cs336-assignment2/cs336_systems/gpu_experiments.py", line 226, in main
+    result, code = experiment(args)
+                   ^^^^^^^^^^^^^^^^
+  File "/root/autodl-tmp/cs336-assignment2/cs336_systems/gpu_experiments.py", line 149, in experiment
+    step(False)
+  File "/root/autodl-tmp/cs336-assignment2/cs336_systems/gpu_experiments.py", line 126, in step
+    logits = model(x)
+             ^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/autodl-tmp/cs336-assignment2/cs336-basics/cs336_basics/model.py", line 253, in forward
+    x = layer(x)
+        ^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/autodl-tmp/cs336-assignment2/cs336-basics/cs336_basics/model.py", line 382, in forward
+    x_attn = self.attn(self.ln1(x))
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/autodl-tmp/cs336-assignment2/cs336-basics/cs336_basics/model.py", line 520, in forward
+    attn_output = scaled_dot_product_attention(K=K, Q=Q, V=V, mask=causal_mask)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/autodl-tmp/cs336-assignment2/cs336-basics/cs336_basics/model.py", line 432, in scaled_dot_product_attention
+    attention_weights = softmax(attention_scores, dim=-1)  # Softmax over the key dimension
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/autodl-tmp/cs336-assignment2/cs336-basics/cs336_basics/nn_utils.py", line 6, in softmax
+    exponentiated_rescaled_input = torch.exp(rescaled_input)
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 768.00 MiB. GPU 0 has a total capacity of 11.63 GiB of which 33.50 MiB is free. Including non-PyTorch memory, this process has 11.59 GiB memory in use. Of the allocated memory 10.94 GiB is allocated by PyTorch, and 355.75 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)

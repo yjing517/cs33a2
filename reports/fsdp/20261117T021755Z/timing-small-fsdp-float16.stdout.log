@@ -1,0 +1,2 @@
+NCCL version 2.27.3+cuda12.9
+{"status": "passed", "mode": "fsdp", "dtype": "float16", "median_ms": 107.4075315, "global_tokens_per_s": 4733.300518248334, "ranks": [{"rank": 0, "state_bytes": 514578876, "peak": {"allocated_bytes": 1153663488, "max_memory_allocated": 1429000192, "reserved_bytes": 1585446912, "max_memory_reserved": 1585446912}}, {"rank": 1, "state_bytes": 514578876, "peak": {"allocated_bytes": 1151304192, "max_memory_allocated": 1428738048, "reserved_bytes": 1585446912, "max_memory_reserved": 1585446912}}]}

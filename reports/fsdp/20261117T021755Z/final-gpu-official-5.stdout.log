@@ -1,0 +1,15 @@
+
+tests/test_fsdp.py::test_fsdp_correctness[fp32] [Gloo] Rank 1 is connected to 1 peer ranks. Expected number of connected peer ranks is : 1
+[Gloo] Rank 0 is connected to 1 peer ranks. Expected number of connected peer ranks is : 1
+PASSED
+tests/test_fsdp.py::test_fsdp_correctness[fp16] [Gloo] Rank 0 is connected to 1 peer ranks. Expected number of connected peer ranks is : 1
+[Gloo] Rank 1 is connected to 1 peer ranks. Expected number of connected peer ranks is : 1
+PASSED
+tests/test_fsdp.py::test_fsdp_gradient_sync[fp32] [Gloo] Rank 0 is connected to 1 peer ranks. Expected number of connected peer ranks is : 1
+[Gloo] Rank 1 is connected to 1 peer ranks. Expected number of connected peer ranks is : 1
+PASSED
+tests/test_fsdp.py::test_fsdp_gradient_sync[fp16] [Gloo] Rank 1 is connected to 1 peer ranks. Expected number of connected peer ranks is : 1
+[Gloo] Rank 0 is connected to 1 peer ranks. Expected number of connected peer ranks is : 1
+PASSED
+
+============================== 4 passed in 19.36s ==============================

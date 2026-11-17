@@ -1,0 +1,3 @@
+mode=forward, device=cuda, warmup=5, steps=10
+mean=47.377 ms, std=0.117 ms
+per_step_ms=[47.362, 47.304, 47.679, 47.318, 47.300, 47.330, 47.278, 47.351, 47.416, 47.436]

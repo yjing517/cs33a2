@@ -1,0 +1,1 @@
+{"status": "passed", "backend": "gloo", "model": "mlp", "dtype": "float64", "state_bytes": [13392, 66568], "baseline_state_bytes": [79960, 79960], "max_errors": {"loss": 0.0, "gradient": 0.0, "parameter": 0.0, "optimizer_state": 0.0}}

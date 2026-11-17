@@ -1,0 +1,5 @@
+
+tests/test_sharded_optimizer.py::test_sharded_optimizer[ToyModel] PASSED
+tests/test_sharded_optimizer.py::test_sharded_optimizer[ToyModelWithTiedWeights] PASSED
+
+============================== 2 passed in 7.74s ===============================

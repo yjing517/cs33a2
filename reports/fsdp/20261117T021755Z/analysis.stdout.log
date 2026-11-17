@@ -1,0 +1,186 @@
+{
+  "memory_peak_gib": {
+    "reference-float32": 2.481365203857422,
+    "reference-float16": 2.4762306213378906,
+    "fsdp-float32": 1.3419837951660156,
+    "fsdp-float16": 1.3280754089355469
+  },
+  "timing_median_ms": {
+    "float32": 103.64400950000001,
+    "float16": 107.4075315
+  },
+  "trace": [
+    {
+      "rank": 0,
+      "gpu": 0,
+      "forward_all_gather_kernels": 172,
+      "reduce_scatter_kernels": 172,
+      "forward_gemm_kernels": 218,
+      "overlap_pairs": 90,
+      "examples": [
+        {
+          "overlap_start_ns": 147523820,
+          "overlap_end_ns": 147557554,
+          "overlap_us": 33.734,
+          "all_gather": {
+            "start": 147523660,
+            "end": 148355746,
+            "deviceId": 0,
+            "globalPid": 281610402398208,
+            "streamId": 17,
+            "correlationId": 31103,
+            "name": "ncclDevKernel_AllGather_RING_LL(ncclDevKernelArgsStorage<(unsigned long)4096>)",
+            "launch_start": 142891445
+          },
+          "forward_gemm": {
+            "start": 147523820,
+            "end": 147557554,
+            "deviceId": 0,
+            "globalPid": 281610402398208,
+            "streamId": 7,
+            "correlationId": 31169,
+            "name": "ampere_fp16_s16816gemm_fp16_128x64_ldg8_f2f_stages_32x6_tn",
+            "launch_start": 143229732
+          }
+        },
+        {
+          "overlap_start_ns": 145260820,
+          "overlap_end_ns": 145294459,
+          "overlap_us": 33.639,
+          "all_gather": {
+            "start": 145260820,
+            "end": 147517643,
+            "deviceId": 0,
+            "globalPid": 281610402398208,
+            "streamId": 17,
+            "correlationId": 30906,
+            "name": "ncclDevKernel_AllGather_RING_LL(ncclDevKernelArgsStorage<(unsigned long)4096>)",
+            "launch_start": 142065837
+          },
+          "forward_gemm": {
+            "start": 145260820,
+            "end": 145294459,
+            "deviceId": 0,
+            "globalPid": 281610402398208,
+            "streamId": 7,
+            "correlationId": 31054,
+            "name": "ampere_fp16_s16816gemm_fp16_128x64_ldg8_f2f_stages_32x6_tn",
+            "launch_start": 142705310
+          }
+        },
+        {
+          "overlap_start_ns": 131415606,
+          "overlap_end_ns": 131449180,
+          "overlap_us": 33.574,
+          "all_gather": {
+            "start": 131415478,
+            "end": 132179488,
+            "deviceId": 0,
+            "globalPid": 281610402398208,
+            "streamId": 17,
+            "correlationId": 27161,
+            "name": "ncclDevKernel_AllGather_RING_LL(ncclDevKernelArgsStorage<(unsigned long)4096>)",
+            "launch_start": 126344202
+          },
+          "forward_gemm": {
+            "start": 131415606,
+            "end": 131449180,
+            "deviceId": 0,
+            "globalPid": 281610402398208,
+            "streamId": 7,
+            "correlationId": 27227,
+            "name": "ampere_fp16_s16816gemm_fp16_128x64_ldg8_f2f_stages_32x6_tn",
+            "launch_start": 126679291
+          }
+        }
+      ],
+      "verdict": "observed_same_GPU_forward_all_gather_overlap"
+    },
+    {
+      "rank": 1,
+      "gpu": 1,
+      "forward_all_gather_kernels": 172,
+      "reduce_scatter_kernels": 172,
+      "forward_gemm_kernels": 218,
+      "overlap_pairs": 106,
+      "examples": [
+        {
+          "overlap_start_ns": 349119522,
+          "overlap_end_ns": 349154889,
+          "overlap_us": 35.367,
+          "all_gather": {
+            "start": 349119362,
+            "end": 349790171,
+            "deviceId": 1,
+            "globalPid": 281610419175424,
+            "streamId": 17,
+            "correlationId": 84941,
+            "name": "ncclDevKernel_AllGather_RING_LL(ncclDevKernelArgsStorage<(unsigned long)4096>)",
+            "launch_start": 336718470
+          },
+          "forward_gemm": {
+            "start": 349119522,
+            "end": 349154889,
+            "deviceId": 1,
+            "globalPid": 281610419175424,
+            "streamId": 7,
+            "correlationId": 85007,
+            "name": "ampere_fp16_s16816gemm_fp16_128x64_ldg8_f2f_stages_32x6_tn",
+            "launch_start": 336953714
+          }
+        },
+        {
+          "overlap_start_ns": 338729390,
+          "overlap_end_ns": 338764692,
+          "overlap_us": 35.302,
+          "all_gather": {
+            "start": 338729230,
+            "end": 339512123,
+            "deviceId": 1,
+            "globalPid": 281610419175424,
+            "streamId": 17,
+            "correlationId": 82313,
+            "name": "ncclDevKernel_AllGather_RING_LL(ncclDevKernelArgsStorage<(unsigned long)4096>)",
+            "launch_start": 328707101
+          },
+          "forward_gemm": {
+            "start": 338729390,
+            "end": 338764692,
+            "deviceId": 1,
+            "globalPid": 281610419175424,
+            "streamId": 7,
+            "correlationId": 82379,
+            "name": "ampere_fp16_s16816gemm_fp16_128x64_ldg8_f2f_stages_32x6_tn",
+            "launch_start": 328946645
+          }
+        },
+        {
+          "overlap_start_ns": 319981332,
+          "overlap_end_ns": 320016442,
+          "overlap_us": 35.11,
+          "all_gather": {
+            "start": 319981268,
+            "end": 322225321,
+            "deviceId": 1,
+            "globalPid": 281610419175424,
+            "streamId": 17,
+            "correlationId": 78174,
+            "name": "ncclDevKernel_AllGather_RING_LL(ncclDevKernelArgsStorage<(unsigned long)4096>)",
+            "launch_start": 315654526
+          },
+          "forward_gemm": {
+            "start": 319981332,
+            "end": 320016442,
+            "deviceId": 1,
+            "globalPid": 281610419175424,
+            "streamId": 7,
+            "correlationId": 78322,
+            "name": "ampere_fp16_s16816gemm_fp16_128x64_ldg8_f2f_stages_32x6_tn",
+            "launch_start": 316087185
+          }
+        }
+      ],
+      "verdict": "observed_same_GPU_forward_all_gather_overlap"
+    }
+  ]
+}

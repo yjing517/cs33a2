@@ -1,0 +1,63 @@
+{
+  "accumulation": [
+    {
+      "accumulator": "torch.float32",
+      "term": "torch.float32",
+      "explicit_cast": false,
+      "actual": 10.000133514404297,
+      "absolute_error": 0.000133514404296875
+    },
+    {
+      "accumulator": "torch.float16",
+      "term": "torch.float16",
+      "explicit_cast": false,
+      "actual": 9.953125,
+      "absolute_error": 0.046875
+    },
+    {
+      "accumulator": "torch.float32",
+      "term": "torch.float16",
+      "explicit_cast": false,
+      "actual": 10.00213623046875,
+      "absolute_error": 0.00213623046875
+    },
+    {
+      "accumulator": "torch.float32",
+      "term": "torch.float16",
+      "explicit_cast": true,
+      "actual": 10.00213623046875,
+      "absolute_error": 0.00213623046875
+    }
+  ],
+  "toy_dtypes": {
+    "torch.float16": {
+      "parameters_inside_autocast": [
+        "torch.float32"
+      ],
+      "fc1": "torch.float16",
+      "relu": "torch.float16",
+      "ln": "torch.float32",
+      "fc2": "torch.float16",
+      "logits": "torch.float16",
+      "loss": "torch.float32",
+      "gradients": [
+        "torch.float32"
+      ]
+    },
+    "torch.bfloat16": {
+      "parameters_inside_autocast": [
+        "torch.float32"
+      ],
+      "fc1": "torch.bfloat16",
+      "relu": "torch.bfloat16",
+      "ln": "torch.float32",
+      "fc2": "torch.bfloat16",
+      "logits": "torch.bfloat16",
+      "loss": "torch.float32",
+      "gradients": [
+        "torch.float32"
+      ]
+    }
+  },
+  "torch": "2.8.0+cu128"
+}

@@ -1,0 +1,46 @@
+{
+  "arguments": {
+    "model_size": "small",
+    "mode": "forward",
+    "precision": "fp32",
+    "device": "cuda",
+    "optimizer": "reference_adamw",
+    "batch_size": 4,
+    "vocab_size": 10000,
+    "context_length": 128,
+    "warmup": 5,
+    "steps": 1,
+    "profile": null,
+    "snapshot": "reports/gpu_study/artifacts/small-forward-fp32-n128.pickle",
+    "nvtx": false,
+    "stage_timing": true,
+    "compile": false,
+    "checkpoint_group": 0,
+    "output": "reports/gpu_study/data/small-forward-fp32-w5-n128-memory.json"
+  },
+  "parameters": 128625408,
+  "parameter_bytes": 514501632,
+  "persistent_lower_bound_bytes": 514501632,
+  "free_bytes": 12219580416,
+  "total_bytes": 12491292672,
+  "environment": {
+    "torch": "2.8.0+cu128",
+    "cuda": "12.8",
+    "gpu": "NVIDIA GeForce RTX 3080 Ti",
+    "tf32": false
+  },
+  "official_shape": true,
+  "warmup_peak_allocated_bytes": 553896960,
+  "measurement_start_allocated_bytes": 524536832,
+  "status": "ok",
+  "mean_ms": 25.101478211581707,
+  "std_ms": 0.0,
+  "phase_ms": {
+    "forward": 24.763391494750977
+  },
+  "peak_allocated_bytes": 553896960,
+  "peak_reserved_bytes": 612368384,
+  "final_loss": null,
+  "parameter_dtype": "torch.float32",
+  "process_work_seconds": 44.353175323456526
+}

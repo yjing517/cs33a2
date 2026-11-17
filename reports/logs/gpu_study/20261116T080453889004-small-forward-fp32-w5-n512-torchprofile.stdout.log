@@ -1,0 +1,73 @@
+-------------------------------------------------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  
+                                                   Name    Self CPU %      Self CPU   CPU total %     CPU total  CPU time avg     Self CUDA   Self CUDA %    CUDA total  CUDA time avg       CPU Mem  Self CPU Mem      CUDA Mem  Self CUDA Mem    # of Calls  
+-------------------------------------------------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  
+                                                forward         0.00%       0.000us         0.00%       0.000us       0.000us     101.142ms       109.26%     101.142ms      50.571ms           0 B           0 B           0 B           0 B             2  
+                                              aten::bmm         6.13%       6.372ms         9.52%       9.895ms      45.391us      59.384ms        64.15%      59.384ms     272.404us           0 B           0 B       3.25 GB       3.25 GB           218  
+                                 ampere_sgemm_128x64_tn         0.00%       0.000us         0.00%       0.000us       0.000us      52.047ms        56.23%      52.047ms     306.157us           0 B           0 B           0 B           0 B           170  
+                                 attention_mask_softmax         0.00%       0.000us         0.00%       0.000us       0.000us      14.731ms        15.91%      14.731ms     613.797us           0 B           0 B           0 B           0 B            24  
+                                              aten::mul         3.43%       3.564ms         5.85%       6.083ms      17.892us       8.883ms         9.60%       8.883ms      26.127us           0 B           0 B       2.27 GB       2.27 GB           340  
+                                              aten::div         0.66%     682.414us         1.05%       1.092ms      22.743us       5.936ms         6.41%       5.936ms     123.662us           0 B           0 B       2.25 GB       2.25 GB            48  
+                                attention_scores_matmul         0.00%       0.000us         0.00%       0.000us       0.000us       5.727ms         6.19%       5.727ms     238.617us           0 B           0 B           0 B           0 B            24  
+                                attention_output_matmul         0.00%       0.000us         0.00%       0.000us       0.000us       4.973ms         5.37%       4.973ms     207.207us           0 B           0 B           0 B           0 B            24  
+                                ampere_sgemm_128x128_nn         0.00%       0.000us         0.00%       0.000us       0.000us       4.478ms         4.84%       4.478ms     186.593us           0 B           0 B           0 B           0 B            24  
+void at::native::vectorized_elementwise_kernel<4, at...         0.00%       0.000us         0.00%       0.000us       0.000us       4.457ms         4.81%       4.457ms      92.856us           0 B           0 B           0 B           0 B            48  
+void at::native::elementwise_kernel<128, 2, at::nati...         0.00%       0.000us         0.00%       0.000us       0.000us       4.426ms         4.78%       4.426ms      15.158us           0 B           0 B           0 B           0 B           292  
+                                              aten::sub         0.77%     795.543us         1.23%       1.277ms      17.743us       3.333ms         3.60%       3.333ms      46.288us           0 B           0 B       1.27 GB       1.27 GB            72  
+void at::native::vectorized_elementwise_kernel<4, at...         0.00%       0.000us         0.00%       0.000us       0.000us       2.978ms         3.22%       2.978ms     124.065us           0 B           0 B           0 B           0 B            24  
+                                              aten::exp         0.23%     235.983us         0.39%     407.056us      16.961us       2.964ms         3.20%       2.964ms     123.492us           0 B           0 B       1.12 GB       1.12 GB            24  
+void at::native::vectorized_elementwise_kernel<4, at...         0.00%       0.000us         0.00%       0.000us       0.000us       2.964ms         3.20%       2.964ms     123.492us           0 B           0 B           0 B           0 B            24  
+void at::native::elementwise_kernel<128, 2, at::nati...         0.00%       0.000us         0.00%       0.000us       0.000us       2.958ms         3.20%       2.958ms     123.260us           0 B           0 B           0 B           0 B            24  
+void at::native::elementwise_kernel<128, 2, at::nati...         0.00%       0.000us         0.00%       0.000us       0.000us       2.905ms         3.14%       2.905ms     121.055us           0 B           0 B           0 B           0 B            24  
+                                ampere_sgemm_128x128_tn         0.00%       0.000us         0.00%       0.000us       0.000us       2.731ms         2.95%       2.731ms     113.808us           0 B           0 B           0 B           0 B            24  
+                                            aten::where         0.59%     612.940us         2.64%       2.746ms      57.218us       2.284ms         2.47%       4.604ms      95.907us           0 B           0 B       2.25 GB     -12.00 KB            48  
+void at::native::elementwise_kernel<128, 2, at::nati...         0.00%       0.000us         0.00%       0.000us       0.000us       2.284ms         2.47%       2.284ms      95.173us           0 B           0 B           0 B           0 B            24  
+-------------------------------------------------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  
+Self CPU time total: 103.937ms
+Self CUDA time total: 92.567ms
+
+{
+  "arguments": {
+    "model_size": "small",
+    "mode": "forward",
+    "precision": "fp32",
+    "device": "cuda",
+    "optimizer": "reference_adamw",
+    "batch_size": 4,
+    "vocab_size": 10000,
+    "context_length": 512,
+    "warmup": 5,
+    "steps": 2,
+    "profile": "reports/gpu_study/artifacts/small-forward-torch",
+    "snapshot": null,
+    "nvtx": false,
+    "stage_timing": true,
+    "compile": false,
+    "checkpoint_group": 0,
+    "output": "reports/gpu_study/data/small-forward-fp32-w5-n512-torchprofile.json"
+  },
+  "parameters": 128625408,
+  "parameter_bytes": 514501632,
+  "persistent_lower_bound_bytes": 514501632,
+  "free_bytes": 12219580416,
+  "total_bytes": 12491292672,
+  "environment": {
+    "torch": "2.8.0+cu128",
+    "cuda": "12.8",
+    "gpu": "NVIDIA GeForce RTX 3080 Ti",
+    "tf32": false
+  },
+  "official_shape": true,
+  "warmup_peak_allocated_bytes": 764099584,
+  "measurement_start_allocated_bytes": 524659712,
+  "status": "ok",
+  "mean_ms": 51.20783252641559,
+  "std_ms": 2.6279356885397087,
+  "phase_ms": {
+    "forward": 50.843807220458984
+  },
+  "peak_allocated_bytes": 764099584,
+  "peak_reserved_bytes": 937426944,
+  "final_loss": null,
+  "parameter_dtype": "torch.float32",
+  "process_work_seconds": 4.2015222273766994
+}

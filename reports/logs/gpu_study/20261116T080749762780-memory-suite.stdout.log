@@ -1,0 +1,650 @@
+COMMAND: /root/miniconda3/bin/python -m cs336_systems.gpu_experiments --model-size xl --mode forward --precision fp32 --warmup 5 --steps 1 --context-length 128 --output reports/gpu_study/data/xl-forward-fp32-w5-n128-memory.json --snapshot reports/gpu_study/artifacts/xl-forward-fp32-n128.pickle --stage-timing --optimizer reference_adamw
+{
+  "arguments": {
+    "model_size": "xl",
+    "mode": "forward",
+    "precision": "fp32",
+    "device": "cuda",
+    "optimizer": "reference_adamw",
+    "batch_size": 4,
+    "vocab_size": 10000,
+    "context_length": 128,
+    "warmup": 5,
+    "steps": 1,
+    "profile": null,
+    "snapshot": "reports/gpu_study/artifacts/xl-forward-fp32-n128.pickle",
+    "nvtx": false,
+    "stage_timing": true,
+    "compile": false,
+    "checkpoint_group": 0,
+    "output": "reports/gpu_study/data/xl-forward-fp32-w5-n128-memory.json"
+  },
+  "parameters": 3406809600,
+  "parameter_bytes": 13627238400,
+  "persistent_lower_bound_bytes": 13627238400,
+  "free_bytes": 12219580416,
+  "total_bytes": 12491292672,
+  "environment": {
+    "torch": "2.8.0+cu128",
+    "cuda": "12.8",
+    "gpu": "NVIDIA GeForce RTX 3080 Ti",
+    "tf32": false
+  },
+  "official_shape": true,
+  "status": "blocked_capacity_lower_bound",
+  "reason": "Persistent tensor lower bound already exceeds free VRAM; not an observed OOM",
+  "process_work_seconds": 0.3267866587266326
+}
+EXIT_CODE=43 ELAPSED_S=3.515 LOG=reports/logs/gpu_study/20261116T080749904202-xl-forward-fp32-w5-n128-memory
+COMMAND: /root/miniconda3/bin/python -m cs336_systems.gpu_experiments --model-size xl --mode train_step --precision fp32 --warmup 5 --steps 1 --context-length 128 --output reports/gpu_study/data/xl-train_step-fp32-w5-n128-memory.json --snapshot reports/gpu_study/artifacts/xl-train_step-fp32-n128.pickle --stage-timing --optimizer reference_adamw
+{
+  "arguments": {
+    "model_size": "xl",
+    "mode": "train_step",
+    "precision": "fp32",
+    "device": "cuda",
+    "optimizer": "reference_adamw",
+    "batch_size": 4,
+    "vocab_size": 10000,
+    "context_length": 128,
+    "warmup": 5,
+    "steps": 1,
+    "profile": null,
+    "snapshot": "reports/gpu_study/artifacts/xl-train_step-fp32-n128.pickle",
+    "nvtx": false,
+    "stage_timing": true,
+    "compile": false,
+    "checkpoint_group": 0,
+    "output": "reports/gpu_study/data/xl-train_step-fp32-w5-n128-memory.json"
+  },
+  "parameters": 3406809600,
+  "parameter_bytes": 13627238400,
+  "persistent_lower_bound_bytes": 54508953600,
+  "free_bytes": 12219580416,
+  "total_bytes": 12491292672,
+  "environment": {
+    "torch": "2.8.0+cu128",
+    "cuda": "12.8",
+    "gpu": "NVIDIA GeForce RTX 3080 Ti",
+    "tf32": false
+  },
+  "official_shape": true,
+  "status": "blocked_capacity_lower_bound",
+  "reason": "Persistent tensor lower bound already exceeds free VRAM; not an observed OOM",
+  "process_work_seconds": 0.4719577068462968
+}
+EXIT_CODE=43 ELAPSED_S=3.628 LOG=reports/logs/gpu_study/20261116T080753632526-xl-train_step-fp32-w5-n128-memory
+COMMAND: /root/miniconda3/bin/python -m cs336_systems.gpu_experiments --model-size xl --mode forward --precision bf16 --warmup 5 --steps 1 --context-length 128 --output reports/gpu_study/data/xl-forward-bf16-w5-n128-memory.json --snapshot reports/gpu_study/artifacts/xl-forward-bf16-n128.pickle --stage-timing --optimizer reference_adamw
+{
+  "arguments": {
+    "model_size": "xl",
+    "mode": "forward",
+    "precision": "bf16",
+    "device": "cuda",
+    "optimizer": "reference_adamw",
+    "batch_size": 4,
+    "vocab_size": 10000,
+    "context_length": 128,
+    "warmup": 5,
+    "steps": 1,
+    "profile": null,
+    "snapshot": "reports/gpu_study/artifacts/xl-forward-bf16-n128.pickle",
+    "nvtx": false,
+    "stage_timing": true,
+    "compile": false,
+    "checkpoint_group": 0,
+    "output": "reports/gpu_study/data/xl-forward-bf16-w5-n128-memory.json"
+  },
+  "parameters": 3406809600,
+  "parameter_bytes": 13627238400,
+  "persistent_lower_bound_bytes": 13627238400,
+  "free_bytes": 12219580416,
+  "total_bytes": 12491292672,
+  "environment": {
+    "torch": "2.8.0+cu128",
+    "cuda": "12.8",
+    "gpu": "NVIDIA GeForce RTX 3080 Ti",
+    "tf32": false
+  },
+  "official_shape": true,
+  "status": "blocked_capacity_lower_bound",
+  "reason": "Persistent tensor lower bound already exceeds free VRAM; not an observed OOM",
+  "process_work_seconds": 0.273527255281806
+}
+EXIT_CODE=43 ELAPSED_S=3.472 LOG=reports/logs/gpu_study/20261116T080757512855-xl-forward-bf16-w5-n128-memory
+COMMAND: /root/miniconda3/bin/python -m cs336_systems.gpu_experiments --model-size xl --mode train_step --precision bf16 --warmup 5 --steps 1 --context-length 128 --output reports/gpu_study/data/xl-train_step-bf16-w5-n128-memory.json --snapshot reports/gpu_study/artifacts/xl-train_step-bf16-n128.pickle --stage-timing --optimizer reference_adamw
+{
+  "arguments": {
+    "model_size": "xl",
+    "mode": "train_step",
+    "precision": "bf16",
+    "device": "cuda",
+    "optimizer": "reference_adamw",
+    "batch_size": 4,
+    "vocab_size": 10000,
+    "context_length": 128,
+    "warmup": 5,
+    "steps": 1,
+    "profile": null,
+    "snapshot": "reports/gpu_study/artifacts/xl-train_step-bf16-n128.pickle",
+    "nvtx": false,
+    "stage_timing": true,
+    "compile": false,
+    "checkpoint_group": 0,
+    "output": "reports/gpu_study/data/xl-train_step-bf16-w5-n128-memory.json"
+  },
+  "parameters": 3406809600,
+  "parameter_bytes": 13627238400,
+  "persistent_lower_bound_bytes": 54508953600,
+  "free_bytes": 12219580416,
+  "total_bytes": 12491292672,
+  "environment": {
+    "torch": "2.8.0+cu128",
+    "cuda": "12.8",
+    "gpu": "NVIDIA GeForce RTX 3080 Ti",
+    "tf32": false
+  },
+  "official_shape": true,
+  "status": "blocked_capacity_lower_bound",
+  "reason": "Persistent tensor lower bound already exceeds free VRAM; not an observed OOM",
+  "process_work_seconds": 0.31418096739798784
+}
+EXIT_CODE=43 ELAPSED_S=3.524 LOG=reports/logs/gpu_study/20261116T080801205666-xl-train_step-bf16-w5-n128-memory
+COMMAND: /root/miniconda3/bin/python -m cs336_systems.gpu_experiments --model-size xl --mode forward --precision fp32 --warmup 5 --steps 1 --context-length 2048 --output reports/gpu_study/data/xl-forward-fp32-w5-n2048-memory.json --snapshot reports/gpu_study/artifacts/xl-forward-fp32-n2048.pickle --stage-timing --optimizer reference_adamw
+{
+  "arguments": {
+    "model_size": "xl",
+    "mode": "forward",
+    "precision": "fp32",
+    "device": "cuda",
+    "optimizer": "reference_adamw",
+    "batch_size": 4,
+    "vocab_size": 10000,
+    "context_length": 2048,
+    "warmup": 5,
+    "steps": 1,
+    "profile": null,
+    "snapshot": "reports/gpu_study/artifacts/xl-forward-fp32-n2048.pickle",
+    "nvtx": false,
+    "stage_timing": true,
+    "compile": false,
+    "checkpoint_group": 0,
+    "output": "reports/gpu_study/data/xl-forward-fp32-w5-n2048-memory.json"
+  },
+  "parameters": 3406809600,
+  "parameter_bytes": 13627238400,
+  "persistent_lower_bound_bytes": 13627238400,
+  "free_bytes": 12219580416,
+  "total_bytes": 12491292672,
+  "environment": {
+    "torch": "2.8.0+cu128",
+    "cuda": "12.8",
+    "gpu": "NVIDIA GeForce RTX 3080 Ti",
+    "tf32": false
+  },
+  "official_shape": true,
+  "status": "blocked_capacity_lower_bound",
+  "reason": "Persistent tensor lower bound already exceeds free VRAM; not an observed OOM",
+  "process_work_seconds": 0.3307482963427901
+}
+EXIT_CODE=43 ELAPSED_S=3.546 LOG=reports/logs/gpu_study/20261116T080804909749-xl-forward-fp32-w5-n2048-memory
+COMMAND: /root/miniconda3/bin/python -m cs336_systems.gpu_experiments --model-size xl --mode train_step --precision fp32 --warmup 5 --steps 1 --context-length 2048 --output reports/gpu_study/data/xl-train_step-fp32-w5-n2048-memory.json --snapshot reports/gpu_study/artifacts/xl-train_step-fp32-n2048.pickle --stage-timing --optimizer reference_adamw
+{
+  "arguments": {
+    "model_size": "xl",
+    "mode": "train_step",
+    "precision": "fp32",
+    "device": "cuda",
+    "optimizer": "reference_adamw",
+    "batch_size": 4,
+    "vocab_size": 10000,
+    "context_length": 2048,
+    "warmup": 5,
+    "steps": 1,
+    "profile": null,
+    "snapshot": "reports/gpu_study/artifacts/xl-train_step-fp32-n2048.pickle",
+    "nvtx": false,
+    "stage_timing": true,
+    "compile": false,
+    "checkpoint_group": 0,
+    "output": "reports/gpu_study/data/xl-train_step-fp32-w5-n2048-memory.json"
+  },
+  "parameters": 3406809600,
+  "parameter_bytes": 13627238400,
+  "persistent_lower_bound_bytes": 54508953600,
+  "free_bytes": 12219580416,
+  "total_bytes": 12491292672,
+  "environment": {
+    "torch": "2.8.0+cu128",
+    "cuda": "12.8",
+    "gpu": "NVIDIA GeForce RTX 3080 Ti",
+    "tf32": false
+  },
+  "official_shape": true,
+  "status": "blocked_capacity_lower_bound",
+  "reason": "Persistent tensor lower bound already exceeds free VRAM; not an observed OOM",
+  "process_work_seconds": 0.31698163971304893
+}
+EXIT_CODE=43 ELAPSED_S=3.527 LOG=reports/logs/gpu_study/20261116T080808632084-xl-train_step-fp32-w5-n2048-memory
+COMMAND: /root/miniconda3/bin/python -m cs336_systems.gpu_experiments --model-size xl --mode forward --precision bf16 --warmup 5 --steps 1 --context-length 2048 --output reports/gpu_study/data/xl-forward-bf16-w5-n2048-memory.json --snapshot reports/gpu_study/artifacts/xl-forward-bf16-n2048.pickle --stage-timing --optimizer reference_adamw
+{
+  "arguments": {
+    "model_size": "xl",
+    "mode": "forward",
+    "precision": "bf16",
+    "device": "cuda",
+    "optimizer": "reference_adamw",
+    "batch_size": 4,
+    "vocab_size": 10000,
+    "context_length": 2048,
+    "warmup": 5,
+    "steps": 1,
+    "profile": null,
+    "snapshot": "reports/gpu_study/artifacts/xl-forward-bf16-n2048.pickle",
+    "nvtx": false,
+    "stage_timing": true,
+    "compile": false,
+    "checkpoint_group": 0,
+    "output": "reports/gpu_study/data/xl-forward-bf16-w5-n2048-memory.json"
+  },
+  "parameters": 3406809600,
+  "parameter_bytes": 13627238400,
+  "persistent_lower_bound_bytes": 13627238400,
+  "free_bytes": 12219580416,
+  "total_bytes": 12491292672,
+  "environment": {
+    "torch": "2.8.0+cu128",
+    "cuda": "12.8",
+    "gpu": "NVIDIA GeForce RTX 3080 Ti",
+    "tf32": false
+  },
+  "official_shape": true,
+  "status": "blocked_capacity_lower_bound",
+  "reason": "Persistent tensor lower bound already exceeds free VRAM; not an observed OOM",
+  "process_work_seconds": 0.39109009969979525
+}
+EXIT_CODE=43 ELAPSED_S=3.514 LOG=reports/logs/gpu_study/20261116T080812346014-xl-forward-bf16-w5-n2048-memory
+COMMAND: /root/miniconda3/bin/python -m cs336_systems.gpu_experiments --model-size xl --mode train_step --precision bf16 --warmup 5 --steps 1 --context-length 2048 --output reports/gpu_study/data/xl-train_step-bf16-w5-n2048-memory.json --snapshot reports/gpu_study/artifacts/xl-train_step-bf16-n2048.pickle --stage-timing --optimizer reference_adamw
+{
+  "arguments": {
+    "model_size": "xl",
+    "mode": "train_step",
+    "precision": "bf16",
+    "device": "cuda",
+    "optimizer": "reference_adamw",
+    "batch_size": 4,
+    "vocab_size": 10000,
+    "context_length": 2048,
+    "warmup": 5,
+    "steps": 1,
+    "profile": null,
+    "snapshot": "reports/gpu_study/artifacts/xl-train_step-bf16-n2048.pickle",
+    "nvtx": false,
+    "stage_timing": true,
+    "compile": false,
+    "checkpoint_group": 0,
+    "output": "reports/gpu_study/data/xl-train_step-bf16-w5-n2048-memory.json"
+  },
+  "parameters": 3406809600,
+  "parameter_bytes": 13627238400,
+  "persistent_lower_bound_bytes": 54508953600,
+  "free_bytes": 12219580416,
+  "total_bytes": 12491292672,
+  "environment": {
+    "torch": "2.8.0+cu128",
+    "cuda": "12.8",
+    "gpu": "NVIDIA GeForce RTX 3080 Ti",
+    "tf32": false
+  },
+  "official_shape": true,
+  "status": "blocked_capacity_lower_bound",
+  "reason": "Persistent tensor lower bound already exceeds free VRAM; not an observed OOM",
+  "process_work_seconds": 0.563502443023026
+}
+EXIT_CODE=43 ELAPSED_S=3.759 LOG=reports/logs/gpu_study/20261116T080815996849-xl-train_step-bf16-w5-n2048-memory
+COMMAND: /root/miniconda3/bin/python -m cs336_systems.gpu_experiments --model-size small --mode forward --precision fp32 --warmup 5 --steps 1 --context-length 128 --output reports/gpu_study/data/small-forward-fp32-w5-n128-memory.json --snapshot reports/gpu_study/artifacts/small-forward-fp32-n128.pickle --stage-timing --optimizer reference_adamw
+{
+  "arguments": {
+    "model_size": "small",
+    "mode": "forward",
+    "precision": "fp32",
+    "device": "cuda",
+    "optimizer": "reference_adamw",
+    "batch_size": 4,
+    "vocab_size": 10000,
+    "context_length": 128,
+    "warmup": 5,
+    "steps": 1,
+    "profile": null,
+    "snapshot": "reports/gpu_study/artifacts/small-forward-fp32-n128.pickle",
+    "nvtx": false,
+    "stage_timing": true,
+    "compile": false,
+    "checkpoint_group": 0,
+    "output": "reports/gpu_study/data/small-forward-fp32-w5-n128-memory.json"
+  },
+  "parameters": 128625408,
+  "parameter_bytes": 514501632,
+  "persistent_lower_bound_bytes": 514501632,
+  "free_bytes": 12219580416,
+  "total_bytes": 12491292672,
+  "environment": {
+    "torch": "2.8.0+cu128",
+    "cuda": "12.8",
+    "gpu": "NVIDIA GeForce RTX 3080 Ti",
+    "tf32": false
+  },
+  "official_shape": true,
+  "warmup_peak_allocated_bytes": 553896960,
+  "measurement_start_allocated_bytes": 524536832,
+  "status": "ok",
+  "mean_ms": 25.101478211581707,
+  "std_ms": 0.0,
+  "phase_ms": {
+    "forward": 24.763391494750977
+  },
+  "peak_allocated_bytes": 553896960,
+  "peak_reserved_bytes": 612368384,
+  "final_loss": null,
+  "parameter_dtype": "torch.float32",
+  "process_work_seconds": 44.353175323456526
+}
+EXIT_CODE=0 ELAPSED_S=47.780 LOG=reports/logs/gpu_study/20261116T080819983103-small-forward-fp32-w5-n128-memory
+COMMAND: /root/miniconda3/bin/python -m cs336_systems.gpu_experiments --model-size small --mode train_step --precision fp32 --warmup 5 --steps 1 --context-length 128 --output reports/gpu_study/data/small-train_step-fp32-w5-n128-memory.json --snapshot reports/gpu_study/artifacts/small-train_step-fp32-n128.pickle --stage-timing --optimizer reference_adamw
+{
+  "arguments": {
+    "model_size": "small",
+    "mode": "train_step",
+    "precision": "fp32",
+    "device": "cuda",
+    "optimizer": "reference_adamw",
+    "batch_size": 4,
+    "vocab_size": 10000,
+    "context_length": 128,
+    "warmup": 5,
+    "steps": 1,
+    "profile": null,
+    "snapshot": "reports/gpu_study/artifacts/small-train_step-fp32-n128.pickle",
+    "nvtx": false,
+    "stage_timing": true,
+    "compile": false,
+    "checkpoint_group": 0,
+    "output": "reports/gpu_study/data/small-train_step-fp32-w5-n128-memory.json"
+  },
+  "parameters": 128625408,
+  "parameter_bytes": 514501632,
+  "persistent_lower_bound_bytes": 2058006528,
+  "free_bytes": 12219580416,
+  "total_bytes": 12491292672,
+  "environment": {
+    "torch": "2.8.0+cu128",
+    "cuda": "12.8",
+    "gpu": "NVIDIA GeForce RTX 3080 Ti",
+    "tf32": false
+  },
+  "official_shape": true,
+  "warmup_peak_allocated_bytes": 2353099264,
+  "measurement_start_allocated_bytes": 2104709632,
+  "status": "ok",
+  "mean_ms": 97.32666611671448,
+  "std_ms": 0.0,
+  "phase_ms": {
+    "forward": 27.15443229675293,
+    "loss": 0.07475200295448303,
+    "backward": 41.6993293762207,
+    "optimizer": 28.037120819091797
+  },
+  "peak_allocated_bytes": 2351002112,
+  "peak_reserved_bytes": 2617245696,
+  "final_loss": 4.6735453605651855,
+  "parameter_dtype": "torch.float32",
+  "process_work_seconds": 46.32324531022459
+}
+EXIT_CODE=0 ELAPSED_S=49.696 LOG=reports/logs/gpu_study/20261116T080908042148-small-train_step-fp32-w5-n128-memory
+COMMAND: /root/miniconda3/bin/python -m cs336_systems.gpu_experiments --model-size small --mode forward --precision bf16 --warmup 5 --steps 1 --context-length 128 --output reports/gpu_study/data/small-forward-bf16-w5-n128-memory.json --snapshot reports/gpu_study/artifacts/small-forward-bf16-n128.pickle --stage-timing --optimizer reference_adamw
+{
+  "arguments": {
+    "model_size": "small",
+    "mode": "forward",
+    "precision": "bf16",
+    "device": "cuda",
+    "optimizer": "reference_adamw",
+    "batch_size": 4,
+    "vocab_size": 10000,
+    "context_length": 128,
+    "warmup": 5,
+    "steps": 1,
+    "profile": null,
+    "snapshot": "reports/gpu_study/artifacts/small-forward-bf16-n128.pickle",
+    "nvtx": false,
+    "stage_timing": true,
+    "compile": false,
+    "checkpoint_group": 0,
+    "output": "reports/gpu_study/data/small-forward-bf16-w5-n128-memory.json"
+  },
+  "parameters": 128625408,
+  "parameter_bytes": 514501632,
+  "persistent_lower_bound_bytes": 514501632,
+  "free_bytes": 12219580416,
+  "total_bytes": 12491292672,
+  "environment": {
+    "torch": "2.8.0+cu128",
+    "cuda": "12.8",
+    "gpu": "NVIDIA GeForce RTX 3080 Ti",
+    "tf32": false
+  },
+  "official_shape": true,
+  "warmup_peak_allocated_bytes": 812018688,
+  "measurement_start_allocated_bytes": 524536832,
+  "status": "ok",
+  "mean_ms": 27.68491394817829,
+  "std_ms": 0.0,
+  "phase_ms": {
+    "forward": 27.266048431396484
+  },
+  "peak_allocated_bytes": 812018688,
+  "peak_reserved_bytes": 843055104,
+  "final_loss": null,
+  "parameter_dtype": "torch.float32",
+  "process_work_seconds": 43.49268582556397
+}
+EXIT_CODE=0 ELAPSED_S=46.871 LOG=reports/logs/gpu_study/20261116T080957980360-small-forward-bf16-w5-n128-memory
+COMMAND: /root/miniconda3/bin/python -m cs336_systems.gpu_experiments --model-size small --mode train_step --precision bf16 --warmup 5 --steps 1 --context-length 128 --output reports/gpu_study/data/small-train_step-bf16-w5-n128-memory.json --snapshot reports/gpu_study/artifacts/small-train_step-bf16-n128.pickle --stage-timing --optimizer reference_adamw
+{
+  "arguments": {
+    "model_size": "small",
+    "mode": "train_step",
+    "precision": "bf16",
+    "device": "cuda",
+    "optimizer": "reference_adamw",
+    "batch_size": 4,
+    "vocab_size": 10000,
+    "context_length": 128,
+    "warmup": 5,
+    "steps": 1,
+    "profile": null,
+    "snapshot": "reports/gpu_study/artifacts/small-train_step-bf16-n128.pickle",
+    "nvtx": false,
+    "stage_timing": true,
+    "compile": false,
+    "checkpoint_group": 0,
+    "output": "reports/gpu_study/data/small-train_step-bf16-w5-n128-memory.json"
+  },
+  "parameters": 128625408,
+  "parameter_bytes": 514501632,
+  "persistent_lower_bound_bytes": 2058006528,
+  "free_bytes": 12219580416,
+  "total_bytes": 12491292672,
+  "environment": {
+    "torch": "2.8.0+cu128",
+    "cuda": "12.8",
+    "gpu": "NVIDIA GeForce RTX 3080 Ti",
+    "tf32": false
+  },
+  "official_shape": true,
+  "warmup_peak_allocated_bytes": 2345915392,
+  "measurement_start_allocated_bytes": 2098549248,
+  "status": "ok",
+  "mean_ms": 108.47566090524197,
+  "std_ms": 0.0,
+  "phase_ms": {
+    "forward": 30.99443244934082,
+    "loss": 0.20070399343967438,
+    "backward": 49.128448486328125,
+    "optimizer": 27.642879486083984
+  },
+  "peak_allocated_bytes": 2345759744,
+  "peak_reserved_bytes": 2690646016,
+  "final_loss": 4.652679443359375,
+  "parameter_dtype": "torch.float32",
+  "process_work_seconds": 46.5055012954399
+}
+EXIT_CODE=0 ELAPSED_S=50.052 LOG=reports/logs/gpu_study/20261116T081045049987-small-train_step-bf16-w5-n128-memory
+COMMAND: /root/miniconda3/bin/python -m cs336_systems.gpu_experiments --model-size small --mode forward --precision fp32 --warmup 5 --steps 1 --context-length 2048 --output reports/gpu_study/data/small-forward-fp32-w5-n2048-memory.json --snapshot reports/gpu_study/artifacts/small-forward-fp32-n2048.pickle --stage-timing --optimizer reference_adamw
+{
+  "arguments": {
+    "model_size": "small",
+    "mode": "forward",
+    "precision": "fp32",
+    "device": "cuda",
+    "optimizer": "reference_adamw",
+    "batch_size": 4,
+    "vocab_size": 10000,
+    "context_length": 2048,
+    "warmup": 5,
+    "steps": 1,
+    "profile": null,
+    "snapshot": "reports/gpu_study/artifacts/small-forward-fp32-n2048.pickle",
+    "nvtx": false,
+    "stage_timing": true,
+    "compile": false,
+    "checkpoint_group": 0,
+    "output": "reports/gpu_study/data/small-forward-fp32-w5-n2048-memory.json"
+  },
+  "parameters": 128625408,
+  "parameter_bytes": 514501632,
+  "persistent_lower_bound_bytes": 514501632,
+  "free_bytes": 12219580416,
+  "total_bytes": 12491292672,
+  "environment": {
+    "torch": "2.8.0+cu128",
+    "cuda": "12.8",
+    "gpu": "NVIDIA GeForce RTX 3080 Ti",
+    "tf32": false
+  },
+  "official_shape": true,
+  "warmup_peak_allocated_bytes": 3901975552,
+  "measurement_start_allocated_bytes": 525151232,
+  "status": "ok",
+  "mean_ms": 316.302097402513,
+  "std_ms": 0.0,
+  "phase_ms": {
+    "forward": 316.0954895019531
+  },
+  "peak_allocated_bytes": 3901975552,
+  "peak_reserved_bytes": 4817158144,
+  "final_loss": null,
+  "parameter_dtype": "torch.float32",
+  "process_work_seconds": 45.86677819862962
+}
+EXIT_CODE=0 ELAPSED_S=49.294 LOG=reports/logs/gpu_study/20261116T081135228958-small-forward-fp32-w5-n2048-memory
+COMMAND: /root/miniconda3/bin/python -m cs336_systems.gpu_experiments --model-size small --mode train_step --precision fp32 --warmup 5 --steps 1 --context-length 2048 --output reports/gpu_study/data/small-train_step-fp32-w5-n2048-memory.json --snapshot reports/gpu_study/artifacts/small-train_step-fp32-n2048.pickle --stage-timing --optimizer reference_adamw
+{
+  "status": "observed_oom",
+  "arguments": {
+    "model_size": "small",
+    "mode": "train_step",
+    "precision": "fp32",
+    "device": "cuda",
+    "optimizer": "reference_adamw",
+    "batch_size": 4,
+    "vocab_size": 10000,
+    "context_length": 2048,
+    "warmup": 5,
+    "steps": 1,
+    "profile": null,
+    "snapshot": "reports/gpu_study/artifacts/small-train_step-fp32-n2048.pickle",
+    "nvtx": false,
+    "stage_timing": true,
+    "compile": false,
+    "checkpoint_group": 0,
+    "output": "reports/gpu_study/data/small-train_step-fp32-w5-n2048-memory.json"
+  },
+  "error": "CUDA out of memory. Tried to allocate 768.00 MiB. GPU 0 has a total capacity of 11.63 GiB of which 101.50 MiB is free. Including non-PyTorch memory, this process has 11.53 GiB memory in use. Of the allocated memory 10.97 GiB is allocated by PyTorch, and 269.63 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)",
+  "process_work_seconds": 1.9627961609512568
+}
+EXIT_CODE=42 ELAPSED_S=5.143 LOG=reports/logs/gpu_study/20261116T081224753819-small-train_step-fp32-w5-n2048-memory
+COMMAND: /root/miniconda3/bin/python -m cs336_systems.gpu_experiments --model-size small --mode forward --precision bf16 --warmup 5 --steps 1 --context-length 2048 --output reports/gpu_study/data/small-forward-bf16-w5-n2048-memory.json --snapshot reports/gpu_study/artifacts/small-forward-bf16-n2048.pickle --stage-timing --optimizer reference_adamw
+{
+  "arguments": {
+    "model_size": "small",
+    "mode": "forward",
+    "precision": "bf16",
+    "device": "cuda",
+    "optimizer": "reference_adamw",
+    "batch_size": 4,
+    "vocab_size": 10000,
+    "context_length": 2048,
+    "warmup": 5,
+    "steps": 1,
+    "profile": null,
+    "snapshot": "reports/gpu_study/artifacts/small-forward-bf16-n2048.pickle",
+    "nvtx": false,
+    "stage_timing": true,
+    "compile": false,
+    "checkpoint_group": 0,
+    "output": "reports/gpu_study/data/small-forward-bf16-w5-n2048-memory.json"
+  },
+  "parameters": 128625408,
+  "parameter_bytes": 514501632,
+  "persistent_lower_bound_bytes": 514501632,
+  "free_bytes": 12219580416,
+  "total_bytes": 12491292672,
+  "environment": {
+    "torch": "2.8.0+cu128",
+    "cuda": "12.8",
+    "gpu": "NVIDIA GeForce RTX 3080 Ti",
+    "tf32": false
+  },
+  "official_shape": true,
+  "warmup_peak_allocated_bytes": 3325127680,
+  "measurement_start_allocated_bytes": 525151232,
+  "status": "ok",
+  "mean_ms": 216.0853473469615,
+  "std_ms": 0.0,
+  "phase_ms": {
+    "forward": 215.89593505859375
+  },
+  "peak_allocated_bytes": 3325127680,
+  "peak_reserved_bytes": 3999268864,
+  "final_loss": null,
+  "parameter_dtype": "torch.float32",
+  "process_work_seconds": 45.03991316072643
+}
+EXIT_CODE=0 ELAPSED_S=48.463 LOG=reports/logs/gpu_study/20261116T081230080167-small-forward-bf16-w5-n2048-memory
+COMMAND: /root/miniconda3/bin/python -m cs336_systems.gpu_experiments --model-size small --mode train_step --precision bf16 --warmup 5 --steps 1 --context-length 2048 --output reports/gpu_study/data/small-train_step-bf16-w5-n2048-memory.json --snapshot reports/gpu_study/artifacts/small-train_step-bf16-n2048.pickle --stage-timing --optimizer reference_adamw
+{
+  "status": "observed_oom",
+  "arguments": {
+    "model_size": "small",
+    "mode": "train_step",
+    "precision": "bf16",
+    "device": "cuda",
+    "optimizer": "reference_adamw",
+    "batch_size": 4,
+    "vocab_size": 10000,
+    "context_length": 2048,
+    "warmup": 5,
+    "steps": 1,
+    "profile": null,
+    "snapshot": "reports/gpu_study/artifacts/small-train_step-bf16-n2048.pickle",
+    "nvtx": false,
+    "stage_timing": true,
+    "compile": false,
+    "checkpoint_group": 0,
+    "output": "reports/gpu_study/data/small-train_step-bf16-w5-n2048-memory.json"
+  },
+  "error": "CUDA out of memory. Tried to allocate 768.00 MiB. GPU 0 has a total capacity of 11.63 GiB of which 33.50 MiB is free. Including non-PyTorch memory, this process has 11.59 GiB memory in use. Of the allocated memory 10.94 GiB is allocated by PyTorch, and 355.75 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)",
+  "process_work_seconds": 2.1567695206031203
+}
+EXIT_CODE=42 ELAPSED_S=5.387 LOG=reports/logs/gpu_study/20261116T081318751988-small-train_step-bf16-w5-n2048-memory

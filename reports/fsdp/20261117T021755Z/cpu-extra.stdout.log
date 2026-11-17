@@ -1,0 +1,4 @@
+
+tests/test_fsdp_extra.py::test_padded_shards_native_linear_embedding_and_bias PASSED
+
+============================== 1 passed in 7.57s ===============================

@@ -1,0 +1,10 @@
+
+tests/test_gpu_experiments.py::test_parameter_capacity_formula[small] PASSED
+tests/test_gpu_experiments.py::test_parameter_capacity_formula[medium] PASSED
+tests/test_gpu_experiments.py::test_parameter_capacity_formula[large] PASSED
+tests/test_gpu_experiments.py::test_parameter_capacity_formula[xl] PASSED
+tests/test_gpu_experiments.py::test_parameter_capacity_formula[10B] PASSED
+tests/test_gpu_experiments.py::test_parameter_capacity_formula[surrogate] PASSED
+tests/test_gpu_experiments.py::test_checkpoint_preserves_output_and_gradients PASSED
+
+============================== 7 passed in 2.41s ===============================

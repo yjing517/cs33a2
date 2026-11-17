@@ -1,0 +1,13 @@
+NCCL version 2.27.3+cuda12.9
+/root/miniconda3/lib/python3.12/site-packages/torch/distributed/distributed_c10d.py:4807: UserWarning: No device id is provided via `init_process_group` or `barrier `. Using the current device set by the user. 
+  warnings.warn(  # warn only once
+/root/miniconda3/lib/python3.12/site-packages/torch/distributed/distributed_c10d.py:4807: UserWarning: No device id is provided via `init_process_group` or `barrier `. Using the current device set by the user. 
+  warnings.warn(  # warn only once
+Capture range started in the application.
+Capture range ended in the application.
+Generating '/tmp/nsys-report-2be1.qdstrm'
+[1/1] [0%                          ] trace-FlatDDP.nsys-repProcessing events...
+[1/1] [0%                          ] trace-FlatDDP.nsys-rep[1/1] [=15%                        ] trace-FlatDDP.nsys-rep[1/1] [=====31%                    ] trace-FlatDDP.nsys-rep[1/1] [===============65%          ] trace-FlatDDP.nsys-rep[1/1] [========================99% ] trace-FlatDDP.nsys-rep[1/1] [====26%                     ] trace-FlatDDP.nsys-rep[1/1] [=17%                        ] trace-FlatDDP.nsys-rep[1/1] [13%                         ] trace-FlatDDP.nsys-rep[1/1] [10%                         ] trace-FlatDDP.nsys-rep[1/1] [8%                          ] trace-FlatDDP.nsys-rep[1/1] [7%                          ] trace-FlatDDP.nsys-rep[1/1] [6%                          ] trace-FlatDDP.nsys-rep[1/1] [5%                          ] trace-FlatDDP.nsys-rep[1/1] [7%                          ] trace-FlatDDP.nsys-rep[1/1] [11%                         ] trace-FlatDDP.nsys-rep[1/1] [14%                         ] trace-FlatDDP.nsys-rep[1/1] [==18%                       ] trace-FlatDDP.nsys-rep[1/1] [===22%                      ] trace-FlatDDP.nsys-rep[1/1] [====25%                     ] trace-FlatDDP.nsys-rep[1/1] [=====29%                    ] trace-FlatDDP.nsys-rep[1/1] [======33%                   ] trace-FlatDDP.nsys-rep[1/1] [=======36%                  ] trace-FlatDDP.nsys-rep[1/1] [========40%                 ] trace-FlatDDP.nsys-rep[1/1] [=========43%                ] trace-FlatDDP.nsys-rep[1/1] [==========49%               ] trace-FlatDDP.nsys-rep[1/1] [===========53%              ] trace-FlatDDP.nsys-rep[1/1] [==================75%       ] trace-FlatDDP.nsys-rep[1/1] [========================100%] trace-FlatDDP.nsys-rep[1/1] [========================100%] trace-FlatDDP.nsys-rep
+{"status": "ok", "median_ms": 134.971502, "global_tokens_per_s": 30495.13353581477, "parameters": 128625408}
+Generated:
+    /root/autodl-tmp/cs336-assignment2/reports/ddp_nccl/performance-20261117T012804Z/trace-FlatDDP.nsys-rep

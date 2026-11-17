@@ -1,0 +1,66 @@
+{
+  "timing": {
+    "DDP": {
+      "steps": 30,
+      "median_ms": 128.18620850000002,
+      "min_ms": 127.701537,
+      "max_ms": 132.074469,
+      "mean_ms": 128.5393773,
+      "std_ms": 1.1269098671977558,
+      "repeat_median_ms": [
+        128.09599500000002,
+        128.26603999999998,
+        128.1013825
+      ],
+      "global_tokens_per_s": 31865.721509139443,
+      "sync_tail_median_ms": 37.05311965942383,
+      "peak_memory_gib": 5.0242109298706055
+    },
+    "FlatDDP": {
+      "steps": 30,
+      "median_ms": 128.92920900000001,
+      "min_ms": 127.215955,
+      "max_ms": 132.53296,
+      "mean_ms": 128.9712886,
+      "std_ms": 1.0795179953860838,
+      "repeat_median_ms": [
+        128.7534035,
+        128.376197,
+        129.27502900000002
+      ],
+      "global_tokens_per_s": 31759.006554579777,
+      "sync_tail_median_ms": 37.61100959777832,
+      "peak_memory_gib": 5.0242109298706055
+    },
+    "OverlapDDP": {
+      "steps": 30,
+      "median_ms": 105.86576550000001,
+      "min_ms": 105.46218,
+      "max_ms": 110.127917,
+      "mean_ms": 106.04770423333333,
+      "std_ms": 0.8131334736642061,
+      "repeat_median_ms": [
+        105.9399315,
+        105.86454,
+        105.86576550000001
+      ],
+      "global_tokens_per_s": 38624.12703426096,
+      "sync_tail_median_ms": 6.198784112930298,
+      "peak_memory_gib": 5.027186393737793
+    }
+  },
+  "trace_verdicts": {
+    "DDP": [
+      "no_backward_kernel_overlap_observed",
+      "no_backward_kernel_overlap_observed"
+    ],
+    "FlatDDP": [
+      "no_backward_kernel_overlap_observed",
+      "no_backward_kernel_overlap_observed"
+    ],
+    "OverlapDDP": [
+      "observed_backward_gemm_overlap",
+      "observed_backward_gemm_overlap"
+    ]
+  }
+}

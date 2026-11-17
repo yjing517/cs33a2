@@ -1,0 +1,10 @@
+NCCL ONLY: driver started
+START smoke
+END smoke code=0 seconds=5.52
+START allreduce-1
+END allreduce-1 code=0 seconds=6.78
+START allreduce-2
+END allreduce-2 code=0 seconds=6.57
+START allreduce-3
+END allreduce-3 code=0 seconds=6.78
+ALL NCCL EXPERIMENT PROCESSES EXITED; INSTANCE LEFT RUNNING

@@ -1,0 +1,74 @@
+autodl-container-6fe24daeef-58df8375:6281:6281 [0] NCCL INFO Bootstrap: Using eth0:172.17.0.13<0>
+autodl-container-6fe24daeef-58df8375:6281:6281 [0] NCCL INFO cudaDriverVersion 13000
+autodl-container-6fe24daeef-58df8375:6281:6281 [0] NCCL INFO NCCL version 2.27.3+cuda12.9
+autodl-container-6fe24daeef-58df8375:6281:6281 [0] NCCL INFO Comm config Blocking set to 1
+autodl-container-6fe24daeef-58df8375:6282:6282 [1] NCCL INFO cudaDriverVersion 13000
+autodl-container-6fe24daeef-58df8375:6282:6282 [1] NCCL INFO Bootstrap: Using eth0:172.17.0.13<0>
+autodl-container-6fe24daeef-58df8375:6282:6282 [1] NCCL INFO NCCL version 2.27.3+cuda12.9
+autodl-container-6fe24daeef-58df8375:6282:6282 [1] NCCL INFO Comm config Blocking set to 1
+autodl-container-6fe24daeef-58df8375:6281:6294 [0] NCCL INFO NET/Plugin: Could not find: libnccl-net.so. 
+autodl-container-6fe24daeef-58df8375:6281:6294 [0] NCCL INFO NET/IB : No device found.
+autodl-container-6fe24daeef-58df8375:6281:6294 [0] NCCL INFO NET/IB : Using [RO]; OOB eth0:172.17.0.13<0>
+autodl-container-6fe24daeef-58df8375:6281:6294 [0] NCCL INFO NET/Socket : Using [0]eth0:172.17.0.13<0>
+autodl-container-6fe24daeef-58df8375:6281:6294 [0] NCCL INFO Initialized NET plugin Socket
+autodl-container-6fe24daeef-58df8375:6281:6294 [0] NCCL INFO Assigned NET plugin Socket to comm
+autodl-container-6fe24daeef-58df8375:6281:6294 [0] NCCL INFO Using network Socket
+autodl-container-6fe24daeef-58df8375:6281:6294 [0] NCCL INFO ncclCommInitRankConfig comm 0xa71a5d0 rank 0 nranks 2 cudaDev 0 nvmlDev 0 busId 38000 commId 0xd7ca0907a6d488bd - Init START
+autodl-container-6fe24daeef-58df8375:6282:6295 [1] NCCL INFO NET/Plugin: Could not find: libnccl-net.so. 
+autodl-container-6fe24daeef-58df8375:6282:6295 [1] NCCL INFO NET/IB : No device found.
+autodl-container-6fe24daeef-58df8375:6282:6295 [1] NCCL INFO NET/IB : Using [RO]; OOB eth0:172.17.0.13<0>
+autodl-container-6fe24daeef-58df8375:6282:6295 [1] NCCL INFO NET/Socket : Using [0]eth0:172.17.0.13<0>
+autodl-container-6fe24daeef-58df8375:6282:6295 [1] NCCL INFO Initialized NET plugin Socket
+autodl-container-6fe24daeef-58df8375:6282:6295 [1] NCCL INFO Assigned NET plugin Socket to comm
+autodl-container-6fe24daeef-58df8375:6282:6295 [1] NCCL INFO Using network Socket
+autodl-container-6fe24daeef-58df8375:6282:6295 [1] NCCL INFO ncclCommInitRankConfig comm 0x99b5960 rank 1 nranks 2 cudaDev 1 nvmlDev 1 busId 5a000 commId 0xd7ca0907a6d488bd - Init START
+autodl-container-6fe24daeef-58df8375:6282:6295 [1] NCCL INFO RAS client listening socket at 127.0.0.1<28028>
+autodl-container-6fe24daeef-58df8375:6281:6294 [0] NCCL INFO RAS client listening socket at 127.0.0.1<28028>
+autodl-container-6fe24daeef-58df8375:6282:6295 [1] NCCL INFO Bootstrap timings total 0.000610 (create 0.000024, send 0.000102, recv 0.000153, ring 0.000018, delay 0.000000)
+autodl-container-6fe24daeef-58df8375:6281:6294 [0] NCCL INFO Bootstrap timings total 0.006527 (create 0.000032, send 0.000115, recv 0.005985, ring 0.000020, delay 0.000000)
+autodl-container-6fe24daeef-58df8375:6281:6294 [0] NCCL INFO Setting affinity for GPU 0 to 0-31,64-95
+autodl-container-6fe24daeef-58df8375:6282:6295 [1] NCCL INFO Setting affinity for GPU 1 to 0-31,64-95
+autodl-container-6fe24daeef-58df8375:6282:6295 [1] NCCL INFO comm 0x99b5960 rank 1 nRanks 2 nNodes 1 localRanks 2 localRank 1 MNNVL 0
+autodl-container-6fe24daeef-58df8375:6281:6294 [0] NCCL INFO comm 0xa71a5d0 rank 0 nRanks 2 nNodes 1 localRanks 2 localRank 0 MNNVL 0
+autodl-container-6fe24daeef-58df8375:6282:6295 [1] NCCL INFO Trees [0] -1/-1/-1->1->0 [1] -1/-1/-1->1->0
+autodl-container-6fe24daeef-58df8375:6281:6294 [0] NCCL INFO Channel 00/02 : 0 1
+autodl-container-6fe24daeef-58df8375:6282:6295 [1] NCCL INFO P2P Chunksize set to 131072
+autodl-container-6fe24daeef-58df8375:6281:6294 [0] NCCL INFO Channel 01/02 : 0 1
+autodl-container-6fe24daeef-58df8375:6281:6294 [0] NCCL INFO Trees [0] 1/-1/-1->0->-1 [1] 1/-1/-1->0->-1
+autodl-container-6fe24daeef-58df8375:6281:6294 [0] NCCL INFO P2P Chunksize set to 131072
+autodl-container-6fe24daeef-58df8375:6282:6295 [1] NCCL INFO PROFILER/Plugin: Could not find: libnccl-profiler.so. 
+autodl-container-6fe24daeef-58df8375:6281:6294 [0] NCCL INFO PROFILER/Plugin: Could not find: libnccl-profiler.so. 
+autodl-container-6fe24daeef-58df8375:6281:6294 [0] NCCL INFO Check P2P Type isAllDirectP2p 0 directMode 0
+autodl-container-6fe24daeef-58df8375:6281:6299 [0] NCCL INFO [Proxy Service] Device 0 CPU core 87
+autodl-container-6fe24daeef-58df8375:6282:6298 [1] NCCL INFO [Proxy Service] Device 1 CPU core 2
+autodl-container-6fe24daeef-58df8375:6282:6300 [1] NCCL INFO [Proxy Service UDS] Device 1 CPU core 84
+autodl-container-6fe24daeef-58df8375:6281:6301 [0] NCCL INFO [Proxy Service UDS] Device 0 CPU core 90
+autodl-container-6fe24daeef-58df8375:6282:6295 [1] NCCL INFO NCCL_ALGO set by environment to ^NVLS
+autodl-container-6fe24daeef-58df8375:6282:6295 [1] NCCL INFO threadThresholds 8/8/64 | 16/8/64 | 512 | 512
+autodl-container-6fe24daeef-58df8375:6282:6295 [1] NCCL INFO 2 coll channels, 2 collnet channels, 0 nvls channels, 2 p2p channels, 2 p2p channels per peer
+autodl-container-6fe24daeef-58df8375:6281:6294 [0] NCCL INFO NCCL_ALGO set by environment to ^NVLS
+autodl-container-6fe24daeef-58df8375:6281:6294 [0] NCCL INFO Enabled NCCL Func/Proto/Algo Matrix:
+     Function |       LL     LL128    Simple   |          Tree           Ring  CollNetDirect   CollNetChain           NVLS       NVLSTree            PAT  
+    Broadcast |        1         2         1   |             1              1              1              1              0              1              1  
+       Reduce |        1         2         1   |             1              1              1              1              0              1              1  
+    AllGather |        1         2         1   |             1              1              1              1              0              1              1  
+ReduceScatter |        1         2         1   |             1              1              1              1              0              1              1  
+    AllReduce |        1         2         1   |             1              1              1              1              0              1             
+autodl-container-6fe24daeef-58df8375:6281:6294 [0] NCCL INFO threadThresholds 8/8/64 | 16/8/64 | 512 | 512
+autodl-container-6fe24daeef-58df8375:6281:6294 [0] NCCL INFO 2 coll channels, 2 collnet channels, 0 nvls channels, 2 p2p channels, 2 p2p channels per peer
+autodl-container-6fe24daeef-58df8375:6281:6294 [0] NCCL INFO CC Off, workFifoBytes 1048576
+autodl-container-6fe24daeef-58df8375:6282:6295 [1] NCCL INFO TUNER/Plugin: Could not find: libnccl-tuner.so. Using internal tuner plugin.
+autodl-container-6fe24daeef-58df8375:6282:6295 [1] NCCL INFO ncclCommInitRankConfig comm 0x99b5960 rank 1 nranks 2 cudaDev 1 nvmlDev 1 busId 5a000 commId 0xd7ca0907a6d488bd - Init COMPLETE
+autodl-container-6fe24daeef-58df8375:6282:6295 [1] NCCL INFO Init timings - ncclCommInitRankConfig: rank 1 nranks 2 total 0.17 (kernels 0.15, alloc 0.00, bootstrap 0.00, allgathers 0.00, topo 0.01, graphs 0.00, connections 0.00, rest 0.00)
+autodl-container-6fe24daeef-58df8375:6281:6294 [0] NCCL INFO TUNER/Plugin: Could not find: libnccl-tuner.so. Using internal tuner plugin.
+autodl-container-6fe24daeef-58df8375:6281:6294 [0] NCCL INFO ncclCommInitRankConfig comm 0xa71a5d0 rank 0 nranks 2 cudaDev 0 nvmlDev 0 busId 38000 commId 0xd7ca0907a6d488bd - Init COMPLETE
+autodl-container-6fe24daeef-58df8375:6281:6294 [0] NCCL INFO Init timings - ncclCommInitRankConfig: rank 0 nranks 2 total 0.18 (kernels 0.15, alloc 0.00, bootstrap 0.01, allgathers 0.00, topo 0.01, graphs 0.00, connections 0.00, rest 0.00)
+autodl-container-6fe24daeef-58df8375:6281:6302 [0] NCCL INFO Channel 00 : 0[0] -> 1[1] via SHM/direct/direct
+autodl-container-6fe24daeef-58df8375:6282:6303 [1] NCCL INFO Channel 00 : 1[1] -> 0[0] via SHM/direct/direct
+autodl-container-6fe24daeef-58df8375:6281:6302 [0] NCCL INFO Channel 01 : 0[0] -> 1[1] via SHM/direct/direct
+autodl-container-6fe24daeef-58df8375:6282:6303 [1] NCCL INFO Channel 01 : 1[1] -> 0[0] via SHM/direct/direct
+autodl-container-6fe24daeef-58df8375:6281:6302 [0] NCCL INFO Connected all rings, use ring PXN 0 GDR 1
+autodl-container-6fe24daeef-58df8375:6282:6303 [1] NCCL INFO Connected all rings, use ring PXN 0 GDR 1
+{"status": "passed", "backend": "nccl", "compute_dtype": "float32", "optimizer": "sgd", "steps": 3, "torch": "2.8.0+cu128", "ranks": [{"rank": 0, "max_errors": {"loss": 4.76837158203125e-07, "gradient": 5.960464477539063e-08, "parameter": 1.1920928955078125e-07}, "losses": [{"reference": 4.806036472320557, "fsdp_global": 4.806035995483398}, {"reference": 4.66926908493042, "fsdp_global": 4.669269561767578}, {"reference": 4.5341081619262695, "fsdp_global": 4.5341081619262695}], "master_bytes": 59136, "reference_parameter_bytes": 117504, "forward_order_length": 4, "backward_order_length": 4}, {"rank": 1, "max_errors": {"loss": 4.76837158203125e-07, "gradient": 5.960464477539063e-08, "parameter": 1.1920928955078125e-07}, "losses": [{"reference": 4.806036472320557, "fsdp_global": 4.806035995483398}, {"reference": 4.66926908493042, "fsdp_global": 4.669269561767578}, {"reference": 4.5341081619262695, "fsdp_global": 4.5341081619262695}], "master_bytes": 59136, "reference_parameter_bytes": 117504, "forward_order_length": 4, "backward_order_length": 4}], "tolerances": {"parameter": {"atol": 1e-06, "rtol": 0.0001}, "gradient": {"atol": 1e-06, "rtol": 0.0001}}, "full_model_replicas_exactly_equal": true}
+autodl-container-6fe24daeef-58df8375:6281:6281 [0] NCCL INFO comm 0xa71a5d0 rank 0 nranks 2 cudaDev 0 busId 38000 - Destroy COMPLETE
+autodl-container-6fe24daeef-58df8375:6282:6282 [1] NCCL INFO comm 0x99b5960 rank 1 nranks 2 cudaDev 1 busId 5a000 - Destroy COMPLETE

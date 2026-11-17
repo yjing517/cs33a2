@@ -1,0 +1,37 @@
+Traceback (most recent call last):
+  File "/root/autodl-tmp/cs336-assignment2/cs336_systems/gpu_experiments.py", line 226, in main
+    result, code = experiment(args)
+                   ^^^^^^^^^^^^^^^^
+  File "/root/autodl-tmp/cs336-assignment2/cs336_systems/gpu_experiments.py", line 149, in experiment
+    step(False)
+  File "/root/autodl-tmp/cs336-assignment2/cs336_systems/gpu_experiments.py", line 126, in step
+    logits = model(x)
+             ^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/autodl-tmp/cs336-assignment2/cs336-basics/cs336_basics/model.py", line 257, in forward
+    logits = self.lm_head(x)
+             ^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/autodl-tmp/cs336-assignment2/cs336-basics/cs336_basics/model.py", line 39, in forward
+    return einsum(x, self.weight, "... d_in, d_out d_in -> ... d_out")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/einops/einops.py", line 939, in einsum
+    return get_backend(tensors[0]).einsum(pattern, *tensors)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/einops/_backends.py", line 291, in einsum
+    return self.torch.einsum(pattern, *x)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/torch/functional.py", line 422, in einsum
+    return _VF.einsum(equation, operands)  # type: ignore[attr-defined]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 40.00 MiB. GPU 0 has a total capacity of 11.63 GiB of which 5.50 MiB is free. Including non-PyTorch memory, this process has 11.62 GiB memory in use. Of the allocated memory 11.28 GiB is allocated by PyTorch, and 28.70 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)

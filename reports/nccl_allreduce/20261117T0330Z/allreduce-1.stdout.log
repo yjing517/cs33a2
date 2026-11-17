@@ -1,0 +1,2 @@
+NCCL version 2.27.3+cuda12.9
+[{"bytes": 1000000, "median_ms": 0.1129505, "algorithm_GB_s": 8.853435797096958}, {"bytes": 10000000, "median_ms": 0.7224705, "algorithm_GB_s": 13.84139560023558}, {"bytes": 100000000, "median_ms": 6.6112055000000005, "algorithm_GB_s": 15.125834463926433}, {"bytes": 1000000000, "median_ms": 66.104145, "algorithm_GB_s": 15.127644416246515}]

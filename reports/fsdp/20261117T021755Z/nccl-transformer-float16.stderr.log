@@ -1,0 +1,133 @@
+[rank1]: Traceback (most recent call last):
+[rank1]:   File "<frozen runpy>", line 198, in _run_module_as_main
+[rank1]:   File "<frozen runpy>", line 88, in _run_code
+[rank1]:   File "/root/autodl-tmp/cs336-assignment2/scripts/check_fsdp.py", line 103, in <module>
+[rank1]:     if __name__=='__main__':main()
+[rank1]:                             ^^^^^^
+[rank1]:   File "/root/autodl-tmp/cs336-assignment2/scripts/check_fsdp.py", line 57, in main
+[rank1]:     ref_loss=torch.nn.functional.cross_entropy(reference(ref_x)[:,-1].float(),ref_y)
+[rank1]:                                                ^^^^^^^^^^^^^^^^
+[rank1]:   File "/root/miniconda3/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+[rank1]:     return self._call_impl(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/root/miniconda3/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+[rank1]:     return forward_call(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/root/autodl-tmp/cs336-assignment2/cs336-basics/cs336_basics/model.py", line 253, in forward
+[rank1]:     x = layer(x)
+[rank1]:         ^^^^^^^^
+[rank1]:   File "/root/miniconda3/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+[rank1]:     return self._call_impl(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/root/miniconda3/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+[rank1]:     return forward_call(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/root/autodl-tmp/cs336-assignment2/cs336-basics/cs336_basics/model.py", line 382, in forward
+[rank1]:     x_attn = self.attn(self.ln1(x))
+[rank1]:              ^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/root/miniconda3/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+[rank1]:     return self._call_impl(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/root/miniconda3/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+[rank1]:     return forward_call(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/root/autodl-tmp/cs336-assignment2/cs336-basics/cs336_basics/model.py", line 520, in forward
+[rank1]:     attn_output = scaled_dot_product_attention(K=K, Q=Q, V=V, mask=causal_mask)
+[rank1]:                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/root/autodl-tmp/cs336-assignment2/cs336-basics/cs336_basics/model.py", line 434, in scaled_dot_product_attention
+[rank1]:     return einsum(attention_weights, V, "... query key, ... key d_v ->  ... query d_v")
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/root/autodl-tmp/cs336-ddp-deps-20261117/einops/einops.py", line 939, in einsum
+[rank1]:     return get_backend(tensors[0]).einsum(pattern, *tensors)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/root/autodl-tmp/cs336-ddp-deps-20261117/einops/_backends.py", line 291, in einsum
+[rank1]:     return self.torch.einsum(pattern, *x)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/root/miniconda3/lib/python3.12/site-packages/torch/functional.py", line 422, in einsum
+[rank1]:     return _VF.einsum(equation, operands)  # type: ignore[attr-defined]
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]: RuntimeError: expected scalar type Float but found Half
+[rank0]: Traceback (most recent call last):
+[rank0]:   File "<frozen runpy>", line 198, in _run_module_as_main
+[rank0]:   File "<frozen runpy>", line 88, in _run_code
+[rank0]:   File "/root/autodl-tmp/cs336-assignment2/scripts/check_fsdp.py", line 103, in <module>
+[rank0]:     if __name__=='__main__':main()
+[rank0]:                             ^^^^^^
+[rank0]:   File "/root/autodl-tmp/cs336-assignment2/scripts/check_fsdp.py", line 57, in main
+[rank0]:     ref_loss=torch.nn.functional.cross_entropy(reference(ref_x)[:,-1].float(),ref_y)
+[rank0]:                                                ^^^^^^^^^^^^^^^^
+[rank0]:   File "/root/miniconda3/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+[rank0]:     return self._call_impl(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/root/miniconda3/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+[rank0]:     return forward_call(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/root/autodl-tmp/cs336-assignment2/cs336-basics/cs336_basics/model.py", line 253, in forward
+[rank0]:     x = layer(x)
+[rank0]:         ^^^^^^^^
+[rank0]:   File "/root/miniconda3/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+[rank0]:     return self._call_impl(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/root/miniconda3/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+[rank0]:     return forward_call(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/root/autodl-tmp/cs336-assignment2/cs336-basics/cs336_basics/model.py", line 382, in forward
+[rank0]:     x_attn = self.attn(self.ln1(x))
+[rank0]:              ^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/root/miniconda3/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+[rank0]:     return self._call_impl(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/root/miniconda3/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+[rank0]:     return forward_call(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/root/autodl-tmp/cs336-assignment2/cs336-basics/cs336_basics/model.py", line 520, in forward
+[rank0]:     attn_output = scaled_dot_product_attention(K=K, Q=Q, V=V, mask=causal_mask)
+[rank0]:                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/root/autodl-tmp/cs336-assignment2/cs336-basics/cs336_basics/model.py", line 434, in scaled_dot_product_attention
+[rank0]:     return einsum(attention_weights, V, "... query key, ... key d_v ->  ... query d_v")
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/root/autodl-tmp/cs336-ddp-deps-20261117/einops/einops.py", line 939, in einsum
+[rank0]:     return get_backend(tensors[0]).einsum(pattern, *tensors)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/root/autodl-tmp/cs336-ddp-deps-20261117/einops/_backends.py", line 291, in einsum
+[rank0]:     return self.torch.einsum(pattern, *x)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/root/miniconda3/lib/python3.12/site-packages/torch/functional.py", line 422, in einsum
+[rank0]:     return _VF.einsum(equation, operands)  # type: ignore[attr-defined]
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]: RuntimeError: expected scalar type Float but found Half
+W1117 10:38:31.547000 7074 site-packages/torch/distributed/elastic/multiprocessing/api.py:900] Sending process 7078 closing signal SIGTERM
+E1117 10:38:31.663000 7074 site-packages/torch/distributed/elastic/multiprocessing/api.py:874] failed (exitcode: 1) local_rank: 1 (pid: 7079) of binary: /root/miniconda3/bin/python
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/root/miniconda3/lib/python3.12/site-packages/torch/distributed/run.py", line 905, in <module>
+    main()
+  File "/root/miniconda3/lib/python3.12/site-packages/torch/distributed/elastic/multiprocessing/errors/__init__.py", line 357, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/torch/distributed/run.py", line 901, in main
+    run(args)
+  File "/root/miniconda3/lib/python3.12/site-packages/torch/distributed/run.py", line 892, in run
+    elastic_launch(
+  File "/root/miniconda3/lib/python3.12/site-packages/torch/distributed/launcher/api.py", line 143, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/torch/distributed/launcher/api.py", line 277, in launch_agent
+    raise ChildFailedError(
+torch.distributed.elastic.multiprocessing.errors.ChildFailedError: 
+============================================================
+scripts.check_fsdp FAILED
+------------------------------------------------------------
+Failures:
+  <NO_OTHER_FAILURES>
+------------------------------------------------------------
+Root Cause (first observed failure):
+[0]:
+  time      : 2026-11-17_10:38:31
+  host      : localhost
+  rank      : 1 (local_rank: 1)
+  exitcode  : 1 (pid: 7079)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+============================================================

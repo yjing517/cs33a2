@@ -1,0 +1,1760 @@
+Script started on 2026-11-16 15:45:41+08:00 [TERM="dumb" TTY="/dev/pts/0" COLUMNS="80" LINES="24"]
++-----------------------------------------------AutoDL-----------------------------------------------------+
+[32m目录说明:[0m
+╔═════════════════╦════════╦════╦═════════════════════════════════════════════════════════════════════════╗
+║目录             ║名称    ║速度║说明                                                                     ║
+╠═════════════════╬════════╬════╬═════════════════════════════════════════════════════════════════════════╣
+║/                ║系 统 盘║一般║实例关机数据不会丢失，可存放代码等。会随保存镜像一起保存。               ║
+║/root/autodl-tmp ║数 据 盘║ 快 ║实例关机数据不会丢失，可存放读写IO要求高的数据。但不会随保存镜像一起保存 ║
+╚═════════════════╩════════╩════╩═════════════════════════════════════════════════════════════════════════╝
+[32mCPU[0m ：10 核心
+[32m内存[0m：30 GB
+[32mGPU [0m：NVIDIA GeForce RTX 3080 Ti, 1
+[32m存储[0m：
+[32m  系 统 盘/               [0m：22% 6.5G/30G
+[32m  数 据 盘/root/autodl-tmp[0m：1% 8.3M/50G
++----------------------------------------------------------------------------------------------------------+
+[31m*注意: [0m
+[31m1.系统盘较小请将大的数据存放于数据盘或文件存储中，重置系统时数据盘和文件存储中的数据不受影响[0m
+[31m2.清理系统盘请参考：https://www.autodl.com/docs/qa1/[0m
+[31m3.终端中长期执行命令请使用screen等工具开后台运行，确保程序不受SSH连接中断影响：https://www.autodl.com/docs/daemon/[0m
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# <nment2# run(){ printf '\nCOMMAND:'; printf ' %q' "$                      @"; p<?; printf '\nEXIT_CODE=%s\n' "$rc"; return "$rc"; }     
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# <utodl-tmp/cs336-assignment2# run git status --short                      
+
+COMMAND: git status --short
+ M tests/adapters.py
+?? cs336_systems/benchmark.py
+?? cs336_systems/flash_attention.py
+?? cs336_systems/flash_attention_triton.py
+
+EXIT_CODE=0
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# <mp/cs336-assignment2# run git branch --show-current                      
+
+COMMAND: git branch --show-current
+main
+
+EXIT_CODE=0
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# <utodl-tmp/cs336-assignment2# run git rev-parse HEAD                      
+
+COMMAND: git rev-parse HEAD
+ca8bc81a59b70516f7ebb2da4808daade877c736
+
+EXIT_CODE=0
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# <systems/flash_attention.py cs336_systems/flash_atte                      <systems/flash_attention_triton.py tests/adapters.py
+
+COMMAND: sha256sum cs336_systems/benchmark.py cs336_systems/flash_attention.py cs336_systems/flash_attention_triton.py tests/adapters.py
+5392f9fd47019cfec3ed4692b1e1b1b505c69f88ec1b20b76859548455ca7c3e  cs336_systems/benchmark.py
+d55f3d64d22068673b5ba37117385a0e1ae54befa429852079cf3ee8cbcd4605  cs336_systems/flash_attention.py
+d05773603dffc32be4f4fe1c1876720a775c1b0430a1b074335da9a31cdbe531  cs336_systems/flash_attention_triton.py
+9558377ec5f92ead26aebfd07dab4d2cb129e5cd8bddb66db7ccada575d6001b  tests/adapters.py
+
+EXIT_CODE=0
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# <asics/model.py; ls reports; df -h /root/autodl-tmp'                      
+
+COMMAND: bash -c command\ -v\ nsys\;\ nsys\ --version\;\ nvidia-smi\;\ python\ -c\ \"import\ torch\,triton\;\ print\(torch.__version__\,triton.__version__\,torch.version.cuda\)\;\ print\(torch.cuda.mem_get_info\(\)\)\"\;\ head\ -n\ 30\ cs336-basics/cs336_basics/model.py\;\ ls\ reports\;\ df\ -h\ /root/autodl-tmp
+bash: line 1: nsys: command not found
+Mon Nov 16 15:45:59 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 595.71.05              Driver Version: 595.71.05      CUDA Version: 13.2     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA GeForce RTX 3080 Ti     On  |   00000000:1A:00.0 Off |                  N/A |
+| 31%   32C    P8             25W /  350W |       1MiB /  12288MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+2.8.0+cu128 3.4.0 12.8
+(12219580416, 12491292672)
+from __future__ import annotations
+
+import json
+import logging
+import math
+import os
+import warnings
+
+import einx
+import torch
+import torch.nn as nn
+from einops import einsum, rearrange
+from jaxtyping import Bool, Float, Int
+from torch import Tensor
+
+from cs336_basics.nn_utils import softmax
+
+logger = logging.getLogger(__name__)
+
+
+class Linear(nn.Module):
+    def __init__(self, d_in: int, d_out: int):
+        """A linear layer initialized with truncated normal fan-in fan-out.
+
+        Args:
+            d_in: int
+                The number of input features.
+            d_out: int
+                The number of output features.
+        """
+logs
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/nvme0n1     50G  8.3M   50G   1% /root/autodl-tmp
+
+EXIT_CODE=0
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# <typing\",\"matplotlib\"]})"; which curl; which g++'                      
+
+COMMAND: bash -c find\ /opt\ /usr/local\ /root/miniconda3\ -name\ nsys\ -type\ f\ 2\>/dev/null\;\ python\ -c\ \"import\ importlib.util\;\ print\(\{m:importlib.util.find_spec\(m\)\ is\ not\ None\ for\ m\ in\ \[\\\"einx\\\"\,\\\"jaxtyping\\\"\,\\\"matplotlib\\\"\]\}\)\"\;\ which\ curl\;\ which\ g++
+/opt/nvidia/nsight-compute/2025.1.1/host/target-linux-x64/nsys
+{'einx': False, 'jaxtyping': False, 'matplotlib': True}
+/usr/bin/curl
+/usr/bin/g++
+
+EXIT_CODE=0
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# <un env -u HTTP_PROXY -u HTTPS_PROXY -u ALL_PROXY -u                      <oxy python -m pip install einx jaxtyping matplotlib
+
+COMMAND: env -u HTTP_PROXY -u HTTPS_PROXY -u ALL_PROXY -u http_proxy -u https_proxy -u all_proxy python -m pip install einx jaxtyping matplotlib
+Looking in indexes: http://mirrors.aliyun.com/pypi/simple
+Collecting einx
+  Downloading http://mirrors.aliyun.com/pypi/packages/d0/28/6768d342b2b888f9facdddbd430daf015cab936e2598281ab436b1be1b4a/einx-0.4.3-py3-none-any.whl (163 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 163.8/163.8 kB 190.1 kB/s eta 0:00:00
+
+Collecting jaxtyping
+  Downloading http://mirrors.aliyun.com/pypi/packages/8b/38/c66bbdc5047f4776c2bd3e47e5295a350e3fa44d5b8942105e71c2a876a0/jaxtyping-0.3.11-py3-none-any.whl (56 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 56.6/56.6 kB 227.4 kB/s eta 0:00:00
+
+Requirement already satisfied: matplotlib in /root/miniconda3/lib/python3.12/site-packages (3.10.5)
+Requirement already satisfied: numpy in /root/miniconda3/lib/python3.12/site-packages (from einx) (2.3.2)
+Requirement already satisfied: sympy in /root/miniconda3/lib/python3.12/site-packages (from einx) (1.14.0)
+Collecting frozendict (from einx)
+  Downloading http://mirrors.aliyun.com/pypi/packages/60/98/0902e074fb777b4064594a3a18773a50d661dbb8d73b7487fdf63ba088cc/frozendict-2.5.1-py3-none-any.whl (18 kB)
+Collecting wadler-lindig>=0.1.3 (from jaxtyping)
+  Downloading http://mirrors.aliyun.com/pypi/packages/00/0b/b170089cd44848f25dbc9efda08e5aa4a8402d9a13f0d4d0f3d7808be539/wadler_lindig-0.1.8-py3-none-any.whl (20 kB)
+Requirement already satisfied: contourpy>=1.0.1 in /root/miniconda3/lib/python3.12/site-packages (from matplotlib) (1.3.3)
+Requirement already satisfied: cycler>=0.10 in /root/miniconda3/lib/python3.12/site-packages (from matplotlib) (0.12.1)
+Requirement already satisfied: fonttools>=4.22.0 in /root/miniconda3/lib/python3.12/site-packages (from matplotlib) (4.59.0)
+Requirement already satisfied: kiwisolver>=1.3.1 in /root/miniconda3/lib/python3.12/site-packages (from matplotlib) (1.4.8)
+Requirement already satisfied: packaging>=20.0 in /root/miniconda3/lib/python3.12/site-packages (from matplotlib) (26.3)
+Requirement already satisfied: pillow>=8 in /root/miniconda3/lib/python3.12/site-packages (from matplotlib) (11.3.0)
+Requirement already satisfied: pyparsing>=2.3.1 in /root/miniconda3/lib/python3.12/site-packages (from matplotlib) (3.2.3)
+Requirement already satisfied: python-dateutil>=2.7 in /root/miniconda3/lib/python3.12/site-packages (from matplotlib) (2.9.0.post0)
+Requirement already satisfied: six>=1.5 in /root/miniconda3/lib/python3.12/site-packages (from python-dateutil>=2.7->matplotlib) (1.17.0)
+Requirement already satisfied: mpmath<1.4,>=1.1.0 in /root/miniconda3/lib/python3.12/site-packages (from sympy->einx) (1.3.0)
+Installing collected packages: wadler-lindig, frozendict, jaxtyping, einx
+Successfully installed einx-0.4.3 frozendict-2.5.1 jaxtyping-0.3.11 wadler-lindig-0.1.8
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+
+EXIT_CODE=0
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# <1-d49a9814:~/autodl-tmp/cs336-assignment2# run /opt                      <ia/nsight-compute/2025.1.1/host/target-linux-x64/nsys --version
+
+COMMAND: /opt/nvidia/nsight-compute/2025.1.1/host/target-linux-x64/nsys --version
+NVIDIA Nsight Systems version 2025.1.1.0
+
+EXIT_CODE=0
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# <1-d49a9814:~/autodl-tmp/cs336-assignment2# run bash                      <t BasicsTransformerLM; print(\"Model import OK\")"'
+
+COMMAND: bash -c export\ PYTHONPATH=.:cs336-basics\;\ python\ -c\ \"from\ cs336_basics.model\ import\ BasicsTransformerLM\;\ print\(\\\"Model\ import\ OK\\\"\)\"
+Model import OK
+
+EXIT_CODE=0
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# <tmp/cs336-assignment2# mkdir -p scripts; stty -echo                      
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# COMMAND: python -m cs336_systems.benchmark --mode forward --device cuda --vocab-size 10000 --d-model 768 --d-ff 3072 --num-layers 12 --num-heads 12 --batch-size 4 --context-length 512 --warmup 5 --steps 10
+mode=forward, device=cuda, warmup=5, steps=10
+mean=47.377 ms, std=0.117 ms
+per_step_ms=[47.362, 47.304, 47.679, 47.318, 47.300, 47.330, 47.278, 47.351, 47.416, 47.436]
+EXIT_CODE=0 ELAPSED_S=6.862 LOG=reports/logs/gpu_study/20261116T075131260102-original-small-forward
+COMMAND: python -m cs336_systems.benchmark --mode forward_backward --device cuda --vocab-size 10000 --d-model 768 --d-ff 3072 --num-layers 12 --num-heads 12 --batch-size 4 --context-length 512 --warmup 5 --steps 10
+mode=forward_backward, device=cuda, warmup=5, steps=10
+mean=145.726 ms, std=0.223 ms
+per_step_ms=[145.339, 145.629, 145.760, 145.808, 145.658, 145.596, 145.779, 146.232, 145.716, 145.737]
+EXIT_CODE=0 ELAPSED_S=7.360 LOG=reports/logs/gpu_study/20261116T075138315189-original-small-forward_backward
+COMMAND: python -m cs336_systems.benchmark --mode train_step --device cuda --vocab-size 10000 --d-model 768 --d-ff 3072 --num-layers 12 --num-heads 12 --batch-size 4 --context-length 512 --warmup 5 --steps 10
+mode=train_step, device=cuda, warmup=5, steps=10
+mean=156.770 ms, std=0.418 ms
+per_step_ms=[156.499, 156.375, 156.342, 156.414, 156.708, 157.126, 157.700, 156.729, 156.866, 156.937]
+EXIT_CODE=0 ELAPSED_S=7.527 LOG=reports/logs/gpu_study/20261116T075145875398-original-small-train_step
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# 
+COMMAND: /opt/nvidia/nsight-compute/2025.1.1/host/target-linux-x64/nsys profile --help
+
+usage: nsys profile [<args>] [application] [<application args>]
+
+	-b, --backtrace=
+
+	   Possible values are 'lbr', 'fp', 'dwarf', or 'none'.
+	   Select the backtrace method to use while sampling.
+	   Select 'none' to disable backtrace collection.
+	   Default is 'lbr'.
+
+	-c, --capture-range=
+
+	   Possible values are none, cudaProfilerApi, nvtx, hotkey.
+	   When '-c cudaProfilerApi' is used, profiling will start only when cudaProfilerStart API is
+	   invoked in the application.
+	   When '-c nvtx' is used, profiling will start only when the specified NVTX range is
+	   started in the application.
+	   When '-c hotkey' is used, profiling will start only when the hotkey
+	   set by '--hotkey-capture' is pressed in the application. This works for graphic apps only.
+	   Note that you must enable CUDA or NVTX tracing of the target application
+	   for '-c cudaProfilerApi' or '-c nvtx' to work.
+	   When '-capture-range none' is used, cudaProfilerStart/Stop APIs and hotkey will 
+	   be ignored and NVTX ranges will be ignored as collection start/stop triggers.
+	   Default is none.
+
+	--capture-range-end=
+
+	   Possible values are 'none', 'stop', 'stop-shutdown', 'repeat[:N]' or 'repeat-shutdown:N'.
+	   Specify the desired behavior when a capture range ends. Applicable only when used along
+	   with --capture-range option.
+	   If 'none', capture range end will be ignored.
+	   If 'stop', collection will stop at capture range end. Any subsequent capture ranges will be
+	   ignored. Target app will continue running.
+	   If 'stop-shutdown', collection will stop at capture range end and session will be shutdown.
+	   If 'repeat[:N]', collection will stop at capture range end and subsequent capture ranges
+	   will trigger more collections. 
+	   Use the optional ':N' to specify max number of capture ranges to be honored. Any subsequent
+	   capture ranges will be ignored once N capture ranges are collected.
+	   If 'repeat-shutdown:N', same behavior as 'repeat:N' but session will be shutdown after N
+	   ranges.
+	   For 'stop-shutdown' and 'repeat-shutdown:N', use --kill option to specify the signal to be
+	   sent to target app when shutting down session.
+	   Default is 'stop-shutdown'.
+
+	--command-file=
+
+	   Open a file that contains nsys switches and parse the switches. Note that
+	   command line switches will override switches found in the command-file.
+
+	--cpu-core-events=
+
+	   CPU Core events to sample.
+	   Possible values are (for example) '2,3,...'.
+	   Use the '--cpu-core-events=help' switch to see the full list of events.
+	   Multiple values can be selected, separated by commas only (no spaces).
+	   Requires root privileges or a paranoid level of 0 or less.
+	   Use the --event-sample switch to enable.
+
+	--cpuctxsw=
+
+	   Possible values are 'process-tree', 'system-wide', or 'none'.
+	   Trace OS thread scheduling activity. Select 'none' to disable tracing CPU context switches. 
+	   'system-wide' requires root privileges or a paranoid level of 0 or less.
+	   If CPU IP/backtrace sampling is enabled, --cpuctxsw equals the --sample setting.
+	   For example, if --sample=process-tree, then --cpuctxsw=process-tree.
+	   If --sample=none and a target application is launched, the default is 'process-tree',
+	   otherwise the default is 'none'.
+
+	--cuda-flush-interval=
+
+	   Set the interval, in milliseconds, when buffered CUDA data is automatically saved to
+	   storage. CUDA data buffer saves may cause profiler overhead. Buffer save behavior can be
+	   controlled with this switch.
+
+	   If the CUDA flush interval is set to 0 on systems running CUDA 11.0 or newer, buffers are
+	   saved when they fill. If a flush interval is set to a non-zero value on such systems, 
+	   buffers are saved only when the flush interval expires. If a flush interval is set and the
+	   profiler runs out of available buffers before the flush interval expires, additional buffers
+	   will be allocated as needed. In this case, setting a flush interval can reduce buffer
+	   save overhead but increase memory use by the profiler.
+
+	   If the flush interval is set to 0 on systems running older versions of CUDA, 
+	   buffers are saved at the end of the collection. If the profiler runs out of available
+	   buffers, additional buffers are allocated as needed. If a flush interval is set to a
+	   non-zero value on such systems, buffers are saved when the flush interval expires.
+	   A cuCtxSynchronize call may be inserted into the workflow before the buffers
+	   are saved which will cause application overhead. In this case, setting a flush interval
+	   can reduce memory use by the profiler but may increase save overhead.
+	   Default is '0'. Application scope.
+
+	--cuda-graph-trace=<granularity>[:<launch origin>]
+
+	   Set the granularity and launch origin for CUDA graph trace.
+	   Applicable only when CUDA tracing is enabled.
+
+	   Possible values for <granularity> are 'graph' or 'node'.
+	   If 'graph' is selected, CUDA graphs will be traced as a whole and node
+	   activities will not be collected. This can reduce overhead to the minimal,
+	   but requires CUDA driver version 11.7 or higher.
+	   If 'node' is selected, node activities will be collected, but CUDA graphs
+	   will not be traced as a whole. This may cause significant runtime overhead.
+	   If CUDA driver version is 11.7 or higher, default is 'graph', otherwise default is 'node'.
+
+	   Possible values for <launch origin> are 'host-only' or 'host-and-device'.
+	   If 'host-only' is selected, only CUDA graphs launched from host codes will be traced.
+	   If 'host-and-device' is selected, CUDA graphs launched from host codes and device codes
+	   will both be traced. This is only supported when the granularity is set to 'graph' and
+	   the CUDA driver is version 12.3 or higher. This may cause significant runtime overhead.
+	   If granularity is set to 'graph' and the CUDA driver version is 12.3 or higher,
+	   the default is 'host-and-device', otherwise default is 'host-only'.'.
+
+	   Application scope.
+
+	--cuda-memory-usage=
+
+	   Possible values are 'true' or 'false'.
+	   Track the GPU memory usage. Applicable only when CUDA tracing is enabled.
+	   This feature may cause significant runtime overhead.
+	   Default is 'false'. Application scope.
+
+	--cuda-um-cpu-page-faults=
+
+	   Possible values are 'true' or 'false'.
+	   Track the CPU page faults that occur with Unified Memory.
+	   Applicable only when CUDA tracing is enabled.
+	   This feature may cause significant runtime overhead.
+	   Default is 'false'. Application scope.
+
+	--cuda-um-gpu-page-faults=
+
+	   Possible values are 'true' or 'false'.
+	   Track the GPU page faults that occur with Unified Memory.
+	   Applicable only when CUDA tracing is enabled.
+	   This feature may cause significant runtime overhead.
+	   Default is 'false'. Application scope.
+
+	--cudabacktrace=
+
+	   Possible values are 'all','none','kernel','memory','sync','other'.
+	   If tracing CUDA APIs, enable the collection of a backtrace when a CUDA API is invoked.
+	   When selected, significant runtime overhead may occur.
+	   Values may be combined using ','.
+	   Each value except 'none' may be appended with a threshold after ':'.
+	   Threshold is the duration, in nanoseconds, that CUDA APIs must execute before backtraces are
+	   collected, e.g. 'kernel:500'.
+	   Default value for each threshold is 80000ns (80us).
+	   Note that CPU sampling must be enabled.
+	   Default is 'none'. Application scope.
+
+	-d, --duration=
+
+	   Collection duration in seconds.
+	   Default is 0 seconds.
+
+	--debug-symbols=
+
+	   Specify the paths to directories with symbol files.
+	   Multiple directories can be selected, separated by a colon (':') only (no spaces).
+
+	--duration-frames=
+
+	   Stop the recording session after this many frames have been captured.
+	   Minimum supported frame is '60'.
+	   Note when it is selected cannot include any other stop options.
+	   If not specified the default is disabled. Application scope.
+
+	-e, --env-var=
+
+	   Set environment variable(s) for application process to be launched.
+	   Environment variable(s) should be defined as 'A=B'.
+	   Multiple environment variables can be specified as 'A=B,C=D'
+
+	(Experimental) --enable=<plugin_name>[,arg1,arg2,...]
+
+	   Use the specified plugin.
+	   The option can be specified multiple times to enable multiple plugins.
+	   Plugin arguments are separated by commas only (no spaces).
+	   Commas can be escaped with a backslash '\'. The backslash itself can be
+	   escaped by another backslash '\\'. To include spaces in an argument,
+	   enclose the argument in double quotes '"'.
+	   To list all available plugins, use '--enable=help' command.
+
+	--event-sample=
+
+	   Enable event sampling.
+	   Possible values are 'system-wide' or 'none'.
+	   Select 'none' to disable event sampling.
+	   The default is 'none'.
+	   Use the '--cpu-core-events=help' and the '--os-events=help' switches to see the 
+	   full list of events.
+	   Requires root privileges or a paranoid level of 0 or less.
+	   If event sampling is enabled and no events are selected, 
+	   the CPU Core event 'Instructions Retired' is selected by default.
+
+	(Deprecated) --event-sampling-frequency=
+
+	   WARNING: This switch is no longer supported.
+	   Please use the event-sampling-interval switch instead.
+
+	--event-sampling-interval=
+
+	   The interval between each event sample collection.
+	   Minimum event sampling interval is '1' milliseconds.
+	   Maximum event sampling interval is '1000' milliseconds.
+	   The default is '10' milliseconds.
+
+	--export=<format>[,<format>...]
+
+	   Possible formats are: none sqlite hdf text json arrow arrowdir parquetdir
+	   Create additional output file(s) based on the data collected.
+	   If 'none' is selected, no additional files are created.
+	   Default is 'none'. This option can be given more than once.
+
+	-f, --force-overwrite=
+
+	   Possible values are 'true' or 'false'.
+	   If true, overwrite all existing result files with same output filename
+	   (QDSTRM, nsys-rep, SQLITE, HDF, TEXT, JSON, ARROW, ARROWDIR, PARQUETDIR).
+	   Default is 'false'.
+
+	--flush-on-cudaprofilerstop=
+
+           If set to 'true', any call to cudaProfilerStop() will
+           cause the CUDA trace buffers to be flushed. Note that the CUDA trace
+           buffers will be flushed when the collection ends, irrespective of the
+           value of this switch. Default value is 'true'.
+
+	--ftrace=
+
+	   Collect ftrace events.
+	   Argument should list events to collect as: subsystem1/event1,subsystem2/event2.
+	   To collect trace markers, set '--ftrace=ftrace/print'.
+	   Requires root privileges.
+	   Default is '' (no ftrace events are collected by default). System scope.
+
+	--ftrace-keep-user-config=
+
+	   Possible values are 'true' or 'false'.
+	   Skip initial ftrace setup and collect already configured events.
+	   Default is 'false' (nsys will reset the ftrace configuration).
+
+	--gpu-metrics-devices=
+
+	   Collect GPU Metrics from the specified devices.
+	   Possible values are:
+	     'none', 'cuda-visible', 'all',
+	   or a comma separated list of GPU IDs reported by '--gpu-metrics-devices=help' switch.
+	   Default is 'none'. System scope.
+
+	--gpu-metrics-frequency=
+
+	   Specify the sampling frequency for GPU Metrics.
+	   Minimum supported frequency is '10' (Hz).
+	   Maximum supported frequency is '200000' (Hz).
+	   Default is '10000'. System scope.
+
+	--gpu-metrics-set=
+
+	   Specify the metric set for GPU Metrics.
+	   The option argument must be one of aliases reported by '--gpu-metrics-set=help' switch.
+	   Default is the first metric set that supports all selected GPU. System scope.
+
+	--gpu-video-device=
+
+           Collect GPU video accelerator traces from specified devices.
+           The argument must be 'none' or one or more GPU IDs reported by '--gpu-video-device=help'.
+           Default is 'none'. System scope.
+
+	--gpuctxsw=
+
+	   Possible values are 'true' or 'false'.
+	   Trace GPU context switches. This switch requires CUDA driver r435.17 or higher.
+	   Default is 'false'. System scope.
+
+	-h, --help=[<tag>]
+
+	   Print the command's help menu. The switch can take one optional
+	   argument that will be used as a tag. If a tag is provided, only options
+	   relevant to the tag will be printed.
+	   The available help menu tags for this command are:
+
+	   app, application, backtrace, capture, cli, command, cpu, cuda, env,
+	   environment, export, file, filter, fork, frame, ftrace, gpu, hotkey,
+	   interactive, log, logs, memory, metrics, mpi, network, nic, nvtx, opengl, os,
+	   osrt, output, pmu, profile, profiling, range, run, sample, sampling, session,
+	   stats, switch, symbol, symbols, trace, user, uvm, vulkan, and wait.
+
+	--hotkey-capture=
+
+	   Possible values are `F1` to `F12`.
+	   Hotkey to trigger the profiling session.
+	   Note that this switch is applicable only when --capture-range=hotkey is specified.
+	   Default is `F12`.
+
+	--ib-net-info-devices=
+
+           A comma-separated list of NICs names.
+           The NICs which ibdiagnet will use for networks discovery.
+           This option creates the ibdiagnet files to be used for
+           collecting network information.
+           Example value: 'mlx5_0,mlx5_1'.
+           If the --ib-net-info-output option is set then Nsight Systems will store the network information at this path.
+           Otherwise it will be created at a temporary path
+           and will be discarded after processing.
+           If more than one NIC was specified, only the last network information file be saved.
+           Note that this option should not be used together with
+           the --ib-net-info-files option.
+
+	--ib-net-info-files=
+
+           A comma-separated list of file paths.
+           Paths of an existing ibdiagnet db_csv files, containing networks information data.
+           Nsight Systems will read the networks information from these files.
+           Don't use '~' alias within the path.
+           Note that this option should not be used together with
+           the --ib-net-info-devices option.
+
+	--ib-net-info-output=
+
+           Sets the path of a directory into which
+           ibdiagnet network discovery data will be written.
+           Use this option together with the --ib-net-info-devices option.
+           Don't use '~' alias within the path.
+
+	(Experimental) --ib-switch-congestion-device=<IB switch GUID>[,<IB switch GUID>...]
+
+	   A comma-separated list of InfiniBand switch GUIDs.
+	   Collect InfiniBand switch congestion events from switches identified by
+	   the specified GUIDs.
+	   This switch can be used multiple times.
+	   Default is an empty list. System scope.
+	   Use the --ib-switch-congestion-nic-device, --ib-switch-congestion-percent,
+	   and --ib-switch-congestion-threshold-high switches to further control how
+	   congestion events are collected.
+
+	(Experimental) --ib-switch-congestion-nic-device=
+
+	   The name of the NIC (HCA) through which InfiniBand switches will be
+	   accessed. By default, the first active NIC will be used.
+	   One way to find a NIC's name is via the
+	   `ibnetdiscover --Hca_list | grep "$(hostname)"` command.
+	   Example usage: --ib-switch-congestion-nic-device=mlx5_3
+
+	(Experimental) --ib-switch-congestion-percent=
+
+	   Percent of InfiniBand switch congestion events to be collected.
+	   This option enables reducing the network bandwidth consumed
+	   by reporting congestion events.
+	   Values are in the [1,100] range. Default value is 50.
+
+	(Experimental) --ib-switch-congestion-threshold-high=
+
+	   High threshold percentage for InfiniBand switch egress port queue size.
+	   When a packet enters an InfiniBand switch, its data is stored at an
+	   ingress port buffer. A pointer to the packet's data is inserted into
+	   the egress port's queue, from which the packet will be exiting the switch.
+	   At that point, the threshold given by this command line argument is compared
+	   to the egress queue data size. If the queue data size exceeds the threshold,
+	   a congestion event is reported.
+	   The threshold is given in percent of the ingress port size.
+	   An egress port queue can point data coming from multiple ingress port
+	   buffers, therefore the threshold can be bigger than 100%.
+	   Values are in the [1,1023] range, default value is 75 percent.
+
+	(Experimental) --ib-switch-metrics-device=<IB switch GUID>[,<IB switch GUID>...]
+
+	   A comma-separated list of InfiniBand switch GUIDs.
+	   Collect metrics from the specified InfiniBand switches.
+	   This switch can be used multiple times.
+	   Default is an empty list. System scope.
+
+	--kill=
+
+	   Possible values are 'none', 'sigkill', 'sigterm', or signal number.
+	   Send signal to the target application's process group when ending/shutting down profiling session.
+	   Default is 'sigterm', so the application is terminated when profiling session ends/is shutdown.
+
+	--mpi-impl=
+
+	   Possible values are 'openmpi' or 'mpich'.
+	   Specify the MPI implementation used by the application.
+	   Use 'mpich' for MPICH and its derivatives.
+	   Note that this switch is applicable only when --trace=mpi is specified.
+	   If no MPI implementation is specified, nsys tries to automatically detect it based on the
+	   dynamic linker's search path. If this fails, 'openmpi' is used.
+
+	-n, --inherit-environment=
+
+	   Possible values are 'true' or 'false'.
+	   Inherit environment variables.
+	   Default is 'true'.
+
+	--nic-metrics=
+
+	   Possible values are 'true' or 'false'.
+	   Collect metrics from NIC/HCA devices.
+	   Default is 'false'. System scope.
+
+	--nvtx-domain-[include|exclude]=
+
+	   Possible values are a comma-separated list of NVTX domains.
+	   Choose the include or exclude option to (only) include or exclude the specified domains. The
+	   options are mutually exclusive. 'default' filters the NVTX default domain. A domain with
+	   this name and commas in a domain name have to be escaped with '\'.
+	   Note that both switches are applicable only when --trace=nvtx is specified.
+
+	-o, --output=
+
+	   Output report filename.
+	   Any %q{ENV_VAR} pattern in the filename will be substituted with the value of the 
+	   environment variable.
+	   Any %h pattern in the filename will be substituted with the hostname of the system.
+	   Any %p pattern in the filename will be substituted with the PID of the target process or
+	   the PID of the root process if there is a process tree.
+	   Any %n pattern in the filename will be substituted with the minimal positive integer that is 
+	   not already occupied.
+	   Any %% pattern in the filename will be substituted with %.
+	   Default is 'report%n'.
+
+	--opengl-gpu-workload=
+
+	   Possible values are 'true' or 'false'.
+	   If true, trace the OpenGL workload's GPU activity.
+	   Note that this switch is applicable only when --trace=opengl is specified.
+	   Default is 'true'. Application scope.
+
+	--os-events=
+
+	   OS events to sample.
+	   Possible values are (for example) '0,3,...'.
+	   Use the '--os-events=help' switch to see the full list of events.
+	   Multiple values can be selected, separated by commas only (no spaces).
+	   Use the --event-sample switch to enable.
+
+	--osrt-backtrace-stack-size=
+
+	   Set the stack dump size, in bytes, to generate backtraces for OS runtime libraries calls.
+	   Default is 6144 (6 KiB).
+
+	--osrt-backtrace-threshold=
+
+	   Set the duration, in nanoseconds, that all OS  runtime  libraries calls must execute before
+	   backtraces are collected.
+	   Default is 80000 (80 microseconds).
+
+	--osrt-threshold=
+
+	   Set the duration, in nanoseconds, that Operating System Runtime (osrt) APIs must execute
+	   before they are traced. Values much less than 1000 may cause significant overhead and
+	   result in extremely large result files.
+	   Default is 1000 (1 microsecond).
+
+	-p, --nvtx-capture=
+
+	   Possible values are: `range@domain' to specify both range and domain, 
+	   `range' to specify range in default domain, `range@*' to specify a range in any domain.
+	   NVTX message and domain to trigger the profiling session.
+	   '@' can be escaped with backslash '\'.
+	   Note that this switch is applicable only when --capture-range=nvtx is specified.
+
+	--python-backtrace=
+
+	   Optional values are 'cuda' and 'none'. If no value is given, 'cuda' is assumed.
+	   Collect Python backtrace event when tracing the selected API's trigger.
+	   Note that tracing and backtraces of the selected API and CPU sampling must be enabled.
+	   Default is 'none'.
+
+	--python-functions-trace=
+
+	   Specify the path to the json file containing the requested
+	   Python functions to trace.
+	   Note that nvtx package must be installed on the target Python.
+	   See '/opt/nvidia/nsight-compute/2025.1.1/host/target-linux-x64/PythonFunctionsTrace/annotations.json' as an example.
+
+	--python-sampling=
+
+	   Possible values are 'true' or 'false'.
+	   Sample Python backtrace.
+	   Default is 'false'.
+	   Note: This feature provides meaningful backtraces for Python processes. 
+	   When profiling Python-only workflows, consider disabling the CPU sampling option to reduce overhead.
+
+	--python-sampling-frequency=
+
+	   Specify Python sampling frequency.
+	   Minimum supported frequency is '1' (Hz).
+	   Maximum supported frequency is '2000' (Hz).
+	   Default is '1000' (Hz).
+
+	--resolve-symbols=
+
+	   Possible values are 'true' or 'false'.
+	   Resolve symbols of captured samples and backtraces.
+	   Default is 'false' on Windows, 'true' on other platforms.
+
+	--run-as=
+
+	   Run the target application as the specified username.
+	   If not specified, the target application will be run by the same user
+	   as Nsight Systems.
+	   Requires root privileges.
+
+	-s, --sample=
+
+	   Possible values are 'process-tree', 'system-wide' or 'none'.
+	   Collect CPU IP/backtrace samples. Select 'none' to disable sampling. 
+	   'system-wide' requires root privileges or a paranoid level of 0 or less.
+	   If a target application is launched, the default is 'process-tree', otherwise the default
+	   is 'none'.
+
+	--samples-per-backtrace=
+
+	   Possible values are integers between 1 and 32.
+	   The number of CPU IP samples collected for every CPU IP sample backtrace collected. For 
+	   example, if set to 4, on the fourth CPU IP sample collected, a backtrace will also be 
+	   collected. Lower values increase the amount of data collected. Higher values can reduce 
+	   overhead and help reduce the number of CPU IP samples dropped. 
+	   Default is 1. If DWARF backtraces are collected, the default is 4.
+
+	--sampling-period=
+
+	   Possible values are integers between 31200000 and 243750.
+	   The number of CPU Clock (sw) events counted before a CPU instruction pointer (IP)
+	   sample is collected. 
+	   If configured, backtraces may also be collected. The smaller the sampling period, the higher
+	   the sampling rate. 
+	   Note that lower sampling periods will increase overhead and significantly increase the size
+	   of the result file(s). 
+	   Default is 1950000. If DWARF backtraces are collected, the default is 3900000.
+
+	--session-new=
+
+	   Start the collection in a new named session. The option  argument represents the session
+	   name.
+	   The session name must start with an alphabetical character followed by printable or space
+	   characters.
+	   Any '%q{ENV_VAR}' pattern in the session name will be substituted with the value of the
+	   environment variable.
+	   Any '%h' pattern in the option argument will be substituted with the hostname of the system.
+	   Any '%%' pattern in the option argument will be substituted with '%'.
+
+	--start-frame-index=
+
+	   Start the recording session when the frame index reaches the frame number preceding the
+	   start frame index. Minimum supported frame is '1'.
+	   Note when it is selected cannot include any other start options.
+	   If not specified the default is disabled. Application scope.
+
+	--stats=
+
+	   Possible values are 'true' or 'false'.
+	   Generate summary statistics after the collection.
+	   When set to true, an SQLite database file will be created after the collection.
+	   Default is 'false'.
+
+	(Experimental) --storage-metrics=
+
+	   Collect throughput and operations metrics from storage devices.
+	   For further information see:
+	   https://docs.nvidia.com/nsight-systems/UserGuide/#storage-metrics-profiling
+
+	-t, --trace=
+
+	   Possible values are 'cuda', 'nvtx', 'cublas', 'cublas-verbose', 'cusolver', 
+	   'cusolver-verbose', 'cusparse', 'cusparse-verbose', 'mpi', 'oshmem', 'ucx', 
+	   'osrt', 'cudnn', 'opengl', 'opengl-annotations', 'openacc', 'openmp', 
+	   'nvvideo', 'vulkan', 'vulkan-annotations', 'python-gil', 'syscall' or 'none'.
+	   Select the API(s) to trace. Multiple APIs can be selected, separated by commas only
+	   (no spaces).
+	   If '<api>-annotations' is selected, the corresponding API will also be traced.
+	   If 'none' is selected, no APIs are traced.
+	   Default is 'cuda,nvtx,osrt,opengl'. Application scope.
+
+	--trace-fork-before-exec=
+
+	   Possible values are 'true' or 'false'.
+	   If true, trace any child process after fork and before they call one of the exec functions.
+	   Beware, tracing in this interval relies on undefined behavior and might cause your
+	   application to crash or deadlock. This option is only available on Linux and Windows
+	   target platforms.
+	   Default is 'false'.
+
+	--vulkan-gpu-workload=
+
+	   Possible values are 'individual', 'batch', 'none', 'true' or 'false'.
+	   If individual or true, trace each Vulkan workload's GPU activity individually.
+	   If batch, trace Vulkan workloads' GPU activity in vkQueueSubmit call batches.
+	   If none or false, do not trace Vulkan workloads' GPU activity.
+	   Note that this switch is applicable only when --trace=vulkan is specified.
+	   Default is 'individual'. Application scope.
+
+	-w, --show-output=
+
+	   Possible values are 'true' or 'false'.
+	   If true, send target process's stdout and stderr streams to both the console and
+	   stdout/stderr files which are added to the report file.
+	   If false, only send target process stdout and stderr streams to the stdout/stderr files
+	   which are added to the report file.
+	   Default is 'true'.
+
+	--wait=
+
+	   Possible values are 'primary' or 'all'.
+	   If 'primary', the CLI will wait on the application process termination.
+	   If 'all', the CLI will additionally wait on re-parented processes created by the
+	   application.
+	   Default is 'all'.
+
+	-x, --stop-on-exit=
+
+	   Possible values are 'true' or 'false'.
+	   Stop profiling when the launched application exits.
+	   If stop-on-exit=false, duration must be greater than 0.
+	   Default is 'true'.
+
+	-Y, --start-later=
+
+	   Possible values are 'true' or 'false'.
+	   Delays collection indefinitely until the nsys start
+	   command is executed for this session.
+	   Enabling this option overrides the --delay option.
+	   Default is 'false'.
+
+	-y, --delay=
+
+	   Collection start delay in seconds.
+	   Default is 0.
+
+
+EXIT_CODE=0
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# 
+COMMAND: tar -xzf /root/autodl-tmp/cs336-gpu-study-source.tar.gz
+
+EXIT_CODE=0
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# 
+COMMAND: python scripts/run_logged.py --name worker-smoke -- python -m cs336_systems.gpu_experiments --model-size surrogate --mode train_step --context-length 32 --warmup 1 --steps 2 --stage-timing --output reports/gpu_study/data/worker-smoke.json
+COMMAND: python -m cs336_systems.gpu_experiments --model-size surrogate --mode train_step --context-length 32 --warmup 1 --steps 2 --stage-timing --output reports/gpu_study/data/worker-smoke.json
+{
+  "arguments": {
+    "model_size": "surrogate",
+    "mode": "train_step",
+    "precision": "fp32",
+    "device": "cuda",
+    "optimizer": "adam",
+    "batch_size": 4,
+    "vocab_size": 10000,
+    "context_length": 32,
+    "warmup": 1,
+    "steps": 2,
+    "profile": null,
+    "snapshot": null,
+    "nvtx": false,
+    "stage_timing": true,
+    "compile": false,
+    "checkpoint_group": 0,
+    "output": "reports/gpu_study/data/worker-smoke.json"
+  },
+  "parameters": 9316608,
+  "parameter_bytes": 37266432,
+  "persistent_lower_bound_bytes": 149065728,
+  "free_bytes": 12219580416,
+  "total_bytes": 12491292672,
+  "environment": {
+    "torch": "2.8.0+cu128",
+    "cuda": "12.8",
+    "gpu": "NVIDIA GeForce RTX 3080 Ti",
+    "tf32": false
+  },
+  "official_shape": false,
+  "warmup_peak_allocated_bytes": 210468352,
+  "measurement_start_allocated_bytes": 167590400,
+  "status": "ok",
+  "mean_ms": 21.09740488231182,
+  "std_ms": 1.8105140252836187,
+  "phase_ms": {
+    "forward": 7.361263990402222,
+    "loss": 0.0963359996676445,
+    "backward": 12.002560138702393,
+    "optimizer": 1.2355039715766907
+  },
+  "peak_allocated_bytes": 210468864,
+  "peak_reserved_bytes": 232783872,
+  "final_loss": 7.619588851928711,
+  "parameter_dtype": "torch.float32",
+  "process_work_seconds": 1.2944785477593541
+}
+EXIT_CODE=0 ELAPSED_S=4.635 LOG=reports/logs/gpu_study/20261116T075614617932-worker-smoke
+
+EXIT_CODE=0
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# 
+COMMAND: bash -c nohup\ python\ scripts/run_logged.py\ --name\ timings-suite\ --\ python\ scripts/run_gpu_study.py\ timings\ \>\ reports/logs/timings-suite.console.log\ 2\>\&1\ \<\ /dev/null\ \&\ echo\ \$\!\ \>\ reports/logs/timings-suite.pid\;\ cat\ reports/logs/timings-suite.pid
+2979
+
+EXIT_CODE=0
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# 
+COMMAND: tail -n 12 reports/logs/timings-suite.console.log
+  "status": "ok",
+  "mean_ms": 47.61462649330497,
+  "std_ms": 0.07580545303458458,
+  "phase_ms": {},
+  "peak_allocated_bytes": 764099584,
+  "peak_reserved_bytes": 937426944,
+  "final_loss": null,
+  "parameter_dtype": "torch.float32",
+  "process_work_seconds": 2.4282840294763446
+}
+EXIT_CODE=0 ELAPSED_S=5.651 LOG=reports/logs/gpu_study/20261116T075740377427-small-forward-fp32-w1-n512
+COMMAND: /root/miniconda3/bin/python -m cs336_systems.gpu_experiments --model-size small --mode forward_backward --precision fp32 --warmup 1 --steps 10 --context-length 512 --output reports/gpu_study/data/small-forward_backward-fp32-w1-n512.json
+
+EXIT_CODE=0
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# 
+COMMAND: bash -c /opt/nvidia/nsight-compute/2025.1.1/host/target-linux-x64/nsys\ profile\ --help\ \|\ grep\ -A\ 3\ -e\ cuda-memory-usage\ -e\ nvtx-capture\;\ /opt/nvidia/nsight-compute/2025.1.1/host/target-linux-x64/nsys\ stats\ --help\ \|\ head\ -n\ 12
+	--cuda-memory-usage=
+
+	   Possible values are 'true' or 'false'.
+	   Track the GPU memory usage. Applicable only when CUDA tracing is enabled.
+--
+	-p, --nvtx-capture=
+
+	   Possible values are: `range@domain' to specify both range and domain, 
+	   `range' to specify range in default domain, `range@*' to specify a range in any domain.
+
+usage: nsys stats [<args>] <input-file>
+
+<input-file> : Read data from a .nsys-rep or exported .sqlite file.
+
+	-f, --format <name[:args...][,name[:args...]...]>
+
+           Specify the output format. The special name "." indicates the
+           default format for the given output.
+
+           The default format for console is:    column
+           The default format for files is:      csv
+
+EXIT_CODE=0
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# 
+COMMAND: tail -n 5 reports/logs/timings-suite.console.log
+  "parameter_dtype": "torch.float32",
+  "process_work_seconds": 3.899680672213435
+}
+EXIT_CODE=0 ELAPSED_S=7.201 LOG=reports/logs/gpu_study/20261116T075855481675-small-train_step-bf16-w5-n512
+COMMAND: /root/miniconda3/bin/python -m cs336_systems.gpu_experiments --model-size medium --mode forward --precision fp32 --warmup 5 --steps 10 --context-length 512 --output reports/gpu_study/data/medium-forward-fp32-w5-n512.json
+
+EXIT_CODE=0
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# 
+COMMAND: tail -n 5 reports/logs/timings-suite.console.log
+  "error": "CUDA out of memory. Tried to allocate 40.00 MiB. GPU 0 has a total capacity of 11.63 GiB of which 5.50 MiB is free. Including non-PyTorch memory, this process has 11.62 GiB memory in use. Of the allocated memory 11.28 GiB is allocated by PyTorch, and 28.70 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)",
+  "process_work_seconds": 5.80091043934226
+}
+EXIT_CODE=42 ELAPSED_S=9.059 LOG=reports/logs/gpu_study/20261116T075958750135-medium-train_step-bf16-w5-n512
+COMMAND: /root/miniconda3/bin/python -m cs336_systems.gpu_experiments --model-size large --mode forward --precision fp32 --warmup 5 --steps 10 --context-length 512 --output reports/gpu_study/data/large-forward-fp32-w5-n512.json
+
+EXIT_CODE=0
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# 
+COMMAND: python -c from\ torch.cuda\ import\ _memory_viz\;\ import\ inspect\;\ print\(inspect.signature\(_memory_viz.trace_plot\)\)\;\ print\(inspect.signature\(_memory_viz.segment_plot\)\)
+(data, device=None, plot_segments=False)
+(data: Any, device=None)
+
+EXIT_CODE=0
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# 
+COMMAND: tail -n 8 reports/logs/timings-suite.console.log
+  },
+  "official_shape": true,
+  "status": "blocked_capacity_lower_bound",
+  "reason": "Persistent tensor lower bound already exceeds free VRAM; not an observed OOM",
+  "process_work_seconds": 0.4853106774389744
+}
+EXIT_CODE=43 ELAPSED_S=3.625 LOG=reports/logs/gpu_study/20261116T080158654015-10B-train_step-bf16-w5-n512
+EXIT_CODE=0 ELAPSED_S=282.232 LOG=reports/logs/gpu_study/20261116T075720194030-timings-suite
+
+EXIT_CODE=0
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# 
+COMMAND: python -c import\ json\;\ from\ pathlib\ import\ Path\;\ from\ collections\ import\ Counter\;\ r=\[json.loads\(p.read_text\(\)\)\ for\ p\ in\ Path\(\"reports/gpu_study/data\"\).glob\(\"\*.json\"\)\]\;\ print\(Counter\(x.get\(\"status\"\)\ for\ x\ in\ r\)\)\;\ print\(\"cases\"\,len\(r\)\)
+Counter({'ok': 22, 'blocked_capacity_lower_bound': 14, 'observed_oom': 4})
+cases 40
+
+EXIT_CODE=0
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# 
+COMMAND: python scripts/run_logged.py --name precision-probe -- python scripts/precision_probe.py
+COMMAND: python scripts/precision_probe.py
+{
+  "accumulation": [
+    {
+      "accumulator": "torch.float32",
+      "term": "torch.float32",
+      "explicit_cast": false,
+      "actual": 10.000133514404297,
+      "absolute_error": 0.000133514404296875
+    },
+    {
+      "accumulator": "torch.float16",
+      "term": "torch.float16",
+      "explicit_cast": false,
+      "actual": 9.953125,
+      "absolute_error": 0.046875
+    },
+    {
+      "accumulator": "torch.float32",
+      "term": "torch.float16",
+      "explicit_cast": false,
+      "actual": 10.00213623046875,
+      "absolute_error": 0.00213623046875
+    },
+    {
+      "accumulator": "torch.float32",
+      "term": "torch.float16",
+      "explicit_cast": true,
+      "actual": 10.00213623046875,
+      "absolute_error": 0.00213623046875
+    }
+  ],
+  "toy_dtypes": {
+    "torch.float16": {
+      "parameters_inside_autocast": [
+        "torch.float32"
+      ],
+      "fc1": "torch.float16",
+      "relu": "torch.float16",
+      "ln": "torch.float32",
+      "fc2": "torch.float16",
+      "logits": "torch.float16",
+      "loss": "torch.float32",
+      "gradients": [
+        "torch.float32"
+      ]
+    },
+    "torch.bfloat16": {
+      "parameters_inside_autocast": [
+        "torch.float32"
+      ],
+      "fc1": "torch.bfloat16",
+      "relu": "torch.bfloat16",
+      "ln": "torch.float32",
+      "fc2": "torch.bfloat16",
+      "logits": "torch.bfloat16",
+      "loss": "torch.float32",
+      "gradients": [
+        "torch.float32"
+      ]
+    }
+  },
+  "torch": "2.8.0+cu128"
+}
+EXIT_CODE=0 ELAPSED_S=2.971 LOG=reports/logs/gpu_study/20261116T080327476658-precision-probe
+
+EXIT_CODE=0
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# 
+COMMAND: python scripts/run_logged.py --name new-tests -- python -m pytest tests/test_gpu_experiments.py -q
+COMMAND: python -m pytest tests/test_gpu_experiments.py -q
+
+tests/test_gpu_experiments.py::test_parameter_capacity_formula[small] PASSED
+tests/test_gpu_experiments.py::test_parameter_capacity_formula[medium] PASSED
+tests/test_gpu_experiments.py::test_parameter_capacity_formula[large] PASSED
+tests/test_gpu_experiments.py::test_parameter_capacity_formula[xl] PASSED
+tests/test_gpu_experiments.py::test_parameter_capacity_formula[10B] PASSED
+tests/test_gpu_experiments.py::test_parameter_capacity_formula[surrogate] PASSED
+tests/test_gpu_experiments.py::test_checkpoint_preserves_output_and_gradients PASSED
+
+============================== 7 passed in 2.41s ===============================
+EXIT_CODE=0 ELAPSED_S=5.120 LOG=reports/logs/gpu_study/20261116T080330672828-new-tests
+
+EXIT_CODE=0
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# 
+COMMAND: bash -c nohup\ python\ scripts/run_logged.py\ --name\ profiles-suite\ --\ python\ scripts/run_gpu_study.py\ profiles\ \>\ reports/logs/profiles-suite.console.log\ 2\>\&1\ \<\ /dev/null\ \&\ echo\ \$\!\ \>\ reports/logs/profiles-suite.pid\;\ cat\ reports/logs/profiles-suite.pid
+3663
+
+EXIT_CODE=0
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# 
+COMMAND: tail -n 15 reports/logs/profiles-suite.console.log
+    "profile": null,
+    "snapshot": null,
+    "nvtx": true,
+    "stage_timing": false,
+    "compile": false,
+    "checkpoint_group": 0,
+    "output": "reports/gpu_study/data/medium-train_step-fp32-w5-n512-nsys.json"
+  },
+  "error": "CUDA out of memory. Tried to allocate 64.00 MiB. GPU 0 has a total capacity of 11.63 GiB of which 45.50 MiB is free. Including non-PyTorch memory, this process has 11.58 GiB memory in use. Of the allocated memory 10.92 GiB is allocated by PyTorch, and 339.87 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)",
+  "process_work_seconds": 6.299459969624877
+}
+Processing events...
+Generated:
+EXIT_CODE=42 ELAPSED_S=10.350 LOG=reports/logs/gpu_study/20261116T080434326248-medium-train_step-fp32-w5-n512-nsys
+COMMAND: /opt/nvidia/nsight-compute/2025.1.1/host/target-linux-x64/nsys profile --trace=cuda,nvtx,osrt --sample=none --cpuctxsw=none --cuda-memory-usage=true --capture-range=nvtx --nvtx-capture=measurement --capture-range-end=stop --output reports/gpu_study/artifacts/medium-train_step-fp32-w5-n1024-nsys /root/miniconda3/bin/python -m cs336_systems.gpu_experiments --model-size medium --mode train_step --precision fp32 --warmup 5 --steps 1 --context-length 1024 --output reports/gpu_study/data/medium-train_step-fp32-w5-n1024-nsys.json --optimizer reference_adamw --nvtx
+
+EXIT_CODE=0
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# 
+COMMAND: bash -c /opt/nvidia/nsight-compute/2025.1.1/host/target-linux-x64/nsys\ stats\ --help-reports\ \|\ grep\ -E\ \"nvtx\|cuda_gpu\"
+  cuda_api_gpu_sum[:nvtx-name][:base|:mangled] -- CUDA Summary (API/Kernels/MemOps)
+  cuda_gpu_kern_gb_sum[:nvtx-name][:base|:mangled] -- CUDA GPU Kernel/Grid/Block Summary
+  cuda_gpu_kern_sum[:nvtx-name][:base|:mangled] -- CUDA GPU Kernel Summary
+  cuda_gpu_mem_size_sum -- CUDA GPU MemOps Summary (by Size)
+  cuda_gpu_mem_time_sum -- CUDA GPU MemOps Summary (by Time)
+  cuda_gpu_sum[:nvtx-name][:base|:mangled] -- CUDA GPU Summary (Kernels/MemOps)
+  cuda_gpu_trace[:nvtx-name][:base|:mangled] -- CUDA GPU Trace
+  cuda_kern_exec_sum[:nvtx-name][:base|:mangled] -- CUDA Kernel Launch & Exec Time Summary
+  cuda_kern_exec_trace[:nvtx-name][:base|:mangled] -- CUDA Kernel Launch & Exec Time Trace
+  nvtx_gpu_proj_sum -- NVTX GPU Projection Summary
+  nvtx_gpu_proj_trace -- NVTX GPU Projection Trace
+  nvtx_kern_sum[:base|:mangled] -- NVTX Range Kernel Summary
+  nvtx_pushpop_sum -- NVTX Push/Pop Range Summary
+  nvtx_pushpop_trace -- NVTX Push/Pop Range Trace
+  nvtx_startend_sum -- NVTX Start/End Range Summary
+  nvtx_sum -- NVTX Range Summary
+
+EXIT_CODE=0
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# 
+COMMAND: bash -c ls\ -lh\ reports/gpu_study/artifacts\;\ grep\ -E\ \"nsys-rep\|ERROR\|Warning\|warning\"\ reports/logs/profiles-suite.console.log\ \|\ head\ -n\ 20\;\ tail\ -n\ 5\ reports/logs/profiles-suite.console.log
+total 3.5M
+-rw-rw-r-- 1 root root 1.7M Nov 16 16:04 medium-train_step-fp32-w5-n256-nsys.nsys-rep
+-rw-rw-r-- 1 root root 909K Nov 16 16:03 small-train_step-fp32-w5-n256-nsys.nsys-rep
+-rw-rw-r-- 1 root root 911K Nov 16 16:04 small-train_step-fp32-w5-n512-nsys.nsys-rep
+Generating '/tmp/nsys-report-5197.qdstrm'
+[1/1] [0%                          ] small-train_step-fp32-w5-n256-nsys.nsys-repProcessing events...
+[1/1] [0%                          ] small-train_step-fp32-w5-n256-nsys.nsys-rep
+[1/1] [8%                          ] small-train_step-fp32-w5-n256-nsys.nsys-rep
+[1/1] [===========53%              ] small-train_step-fp32-w5-n256-nsys.nsys-rep
+[1/1] [========================99% ] small-train_step-fp32-w5-n256-nsys.nsys-rep
+[1/1] [0%                          ] small-train_step-fp32-w5-n256-nsys.nsys-rep
+[1/1] [=16%                        ] small-train_step-fp32-w5-n256-nsys.nsys-rep
+[1/1] [=====32%                    ] small-train_step-fp32-w5-n256-nsys.nsys-rep
+[1/1] [============54%             ] small-train_step-fp32-w5-n256-nsys.nsys-rep
+[1/1] [=================73%        ] small-train_step-fp32-w5-n256-nsys.nsys-rep
+[1/1] [========================100%] small-train_step-fp32-w5-n256-nsys.nsys-rep
+[1/1] [========================100%] small-train_step-fp32-w5-n256-nsys.nsys-rep
+    /root/autodl-tmp/cs336-assignment2/reports/gpu_study/artifacts/small-train_step-fp32-w5-n256-nsys.nsys-rep
+Generating '/tmp/nsys-report-223f.qdstrm'
+[1/1] [0%                          ] small-train_step-fp32-w5-n512-nsys.nsys-repProcessing events...
+[1/1] [0%                          ] small-train_step-fp32-w5-n512-nsys.nsys-rep
+[1/1] [8%                          ] small-train_step-fp32-w5-n512-nsys.nsys-rep
+[1/1] [===========53%              ] small-train_step-fp32-w5-n512-nsys.nsys-rep
+[1/1] [========================99% ] small-train_step-fp32-w5-n512-nsys.nsys-rep
+}
+Processing events...
+Generated:
+EXIT_CODE=42 ELAPSED_S=8.847 LOG=reports/logs/gpu_study/20261116T080444874718-medium-train_step-fp32-w5-n1024-nsys
+COMMAND: /root/miniconda3/bin/python -m cs336_systems.gpu_experiments --model-size small --mode forward --precision fp32 --warmup 5 --steps 2 --context-length 512 --output reports/gpu_study/data/small-forward-fp32-w5-n512-torchprofile.json --optimizer reference_adamw --profile reports/gpu_study/artifacts/small-forward-torch --stage-timing
+
+EXIT_CODE=0
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# 
+COMMAND: tar -xzf /root/autodl-tmp/cs336-gpu-report-source.tar.gz
+
+EXIT_CODE=0
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# 
+COMMAND: tail -n 10 reports/logs/profiles-suite.console.log
+    "stage_timing": false,
+    "compile": false,
+    "checkpoint_group": 0,
+    "output": "reports/gpu_study/data/small-train_step-fp32-w5-n2048-capacity-probe.json"
+  },
+  "error": "CUDA out of memory. Tried to allocate 768.00 MiB. GPU 0 has a total capacity of 11.63 GiB of which 101.50 MiB is free. Including non-PyTorch memory, this process has 11.53 GiB memory in use. Of the allocated memory 10.97 GiB is allocated by PyTorch, and 269.63 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)",
+  "process_work_seconds": 1.9164948612451553
+}
+EXIT_CODE=42 ELAPSED_S=5.246 LOG=reports/logs/gpu_study/20261116T080516353256-small-train_step-fp32-w5-n2048-capacity-probe
+EXIT_CODE=0 ELAPSED_S=105.774 LOG=reports/logs/gpu_study/20261116T080335986607-profiles-suite
+
+EXIT_CODE=0
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# 
+COMMAND: ls -lh reports/gpu_study/artifacts
+total 55M
+-rw-rw-r-- 1 root root 1.7M Nov 16 16:04 medium-train_step-fp32-w5-n256-nsys.nsys-rep
+-rw-r--r-- 1 root root  21K Nov 16 16:05 small-forward-torch.operators.json
+-rw-r--r-- 1 root root  14M Nov 16 16:04 small-forward-torch.trace.json
+-rw-rw-r-- 1 root root 909K Nov 16 16:03 small-train_step-fp32-w5-n256-nsys.nsys-rep
+-rw-rw-r-- 1 root root 911K Nov 16 16:04 small-train_step-fp32-w5-n512-nsys.nsys-rep
+-rw-r--r-- 1 root root  50K Nov 16 16:05 small-train_step-torch.operators.json
+-rw-r--r-- 1 root root  38M Nov 16 16:05 small-train_step-torch.trace.json
+
+EXIT_CODE=0
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# 
+COMMAND: tail -n 8 reports/logs/profiles-suite.console.log
+    "checkpoint_group": 0,
+    "output": "reports/gpu_study/data/small-train_step-fp32-w5-n2048-capacity-probe.json"
+  },
+  "error": "CUDA out of memory. Tried to allocate 768.00 MiB. GPU 0 has a total capacity of 11.63 GiB of which 101.50 MiB is free. Including non-PyTorch memory, this process has 11.53 GiB memory in use. Of the allocated memory 10.97 GiB is allocated by PyTorch, and 269.63 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)",
+  "process_work_seconds": 1.9164948612451553
+}
+EXIT_CODE=42 ELAPSED_S=5.246 LOG=reports/logs/gpu_study/20261116T080516353256-small-train_step-fp32-w5-n2048-capacity-probe
+EXIT_CODE=0 ELAPSED_S=105.774 LOG=reports/logs/gpu_study/20261116T080335986607-profiles-suite
+
+EXIT_CODE=0
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# 
+COMMAND: ls -lh reports/gpu_study/artifacts
+total 55M
+-rw-rw-r-- 1 root root 1.7M Nov 16 16:04 medium-train_step-fp32-w5-n256-nsys.nsys-rep
+-rw-r--r-- 1 root root  21K Nov 16 16:05 small-forward-torch.operators.json
+-rw-r--r-- 1 root root  14M Nov 16 16:04 small-forward-torch.trace.json
+-rw-rw-r-- 1 root root 909K Nov 16 16:03 small-train_step-fp32-w5-n256-nsys.nsys-rep
+-rw-rw-r-- 1 root root 911K Nov 16 16:04 small-train_step-fp32-w5-n512-nsys.nsys-rep
+-rw-r--r-- 1 root root  50K Nov 16 16:05 small-train_step-torch.operators.json
+-rw-r--r-- 1 root root  38M Nov 16 16:05 small-train_step-torch.trace.json
+
+EXIT_CODE=0
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# 
+COMMAND: bash -c nohup\ python\ scripts/run_logged.py\ --name\ memory-suite\ --\ python\ scripts/run_gpu_study.py\ memory\ \>\ reports/logs/memory-suite.console.log\ 2\>\&1\ \<\ /dev/null\ \&\ echo\ \$\!\ \>\ reports/logs/memory-suite.pid\;\ cat\ reports/logs/memory-suite.pid
+4390
+
+EXIT_CODE=0
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# 
+COMMAND: /opt/nvidia/nsight-compute/2025.1.1/host/target-linux-x64/nsys stats --report cuda_gpu_kern_sum\,nvtx_gpu_proj_sum --format csv --output reports/gpu_study/artifacts/small-n512-summary reports/gpu_study/artifacts/small-train_step-fp32-w5-n512-nsys.nsys-rep
+Generating SQLite file reports/gpu_study/artifacts/small-train_step-fp32-w5-n512-nsys.sqlite from reports/gpu_study/artifacts/small-train_step-fp32-w5-n512-nsys.nsys-rep
+Processing [reports/gpu_study/artifacts/small-train_step-fp32-w5-n512-nsys.sqlite] with [/opt/nvidia/nsight-compute/2025.1.1/host/target-linux-x64/reports/cuda_gpu_kern_sum.py] to [reports/gpu_study/artifacts/small-n512-summary_cuda_gpu_kern_sum.csv]... PROCESSED
+
+Processing [reports/gpu_study/artifacts/small-train_step-fp32-w5-n512-nsys.sqlite] with [/opt/nvidia/nsight-compute/2025.1.1/host/target-linux-x64/reports/nvtx_gpu_proj_sum.py] to [reports/gpu_study/artifacts/small-n512-summary_nvtx_gpu_proj_sum.csv]... PROCESSED
+
+
+EXIT_CODE=0
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# 
+COMMAND: python -c import\ sqlite3\;\ from\ pathlib\ import\ Path\;\ p=next\(Path\(\"reports/gpu_study/artifacts\"\).glob\(\"\*.sqlite\"\)\)\;\ c=sqlite3.connect\(p\)\;\ print\(p\)\;\ print\(\[r\[0\]\ for\ r\ in\ c.execute\(\"select\ name\ from\ sqlite_master\ where\ type=\\\"table\\\"\"\)\]\)\;\ \[print\(t\,list\(c.execute\(\"pragma\ table_info\(\"+t+\"\)\"\)\)\)\ for\ t\ in\ \[\"NVTX_EVENTS\"\,\"CUPTI_ACTIVITY_KIND_KERNEL\"\,\"CUPTI_ACTIVITY_KIND_RUNTIME\"\,\"StringIds\"\]\]
+reports/gpu_study/artifacts/small-train_step-fp32-w5-n512-nsys.sqlite
+['StringIds', 'ANALYSIS_FILE', 'ProcessStreams', 'TARGET_INFO_SYSTEM_ENV', 'TARGET_INFO_NIC_INFO', 'TARGET_INFO_SESSION_START_TIME', 'ANALYSIS_DETAILS', 'DIAGNOSTIC_EVENT', 'NVTX_EVENTS', 'CUDA_GPU_MEMORY_USAGE_EVENTS', 'CUPTI_ACTIVITY_KIND_RUNTIME', 'CUPTI_ACTIVITY_KIND_SYNCHRONIZATION', 'CUPTI_ACTIVITY_KIND_KERNEL', 'CUPTI_ACTIVITY_KIND_MEMSET', 'PROFILER_OVERHEAD', 'CUPTI_ACTIVITY_KIND_MEMCPY', 'PROCESSES', 'OSRT_API', 'OSRT_CALLCHAINS', 'ThreadNames', 'TARGET_INFO_GPU', 'TARGET_INFO_CUDA_CONTEXT_INFO', 'ENUM_NSYS_EVENT_TYPE', 'ENUM_NSYS_EVENT_CLASS', 'ENUM_NSYS_GENERIC_EVENT_SOURCE', 'ENUM_NSYS_GENERIC_EVENT_GROUP', 'ENUM_NSYS_GENERIC_EVENT_FIELD_TYPE', 'ENUM_NSYS_GENERIC_EVENT_FIELD_ETW_PROPERTY', 'ENUM_NSYS_GENERIC_EVENT_FIELD_ETW_TYPE', 'ENUM_NSYS_GENERIC_EVENT_FIELD_ETW_FLAGS', 'ENUM_GPU_CTX_SWITCH', 'ENUM_CUDA_MEMCPY_OPER', 'ENUM_CUDA_MEM_KIND', 'ENUM_CUDA_MEMPOOL_TYPE', 'ENUM_CUDA_MEMPOOL_OPER', 'ENUM_CUDA_DEV_MEM_EVENT_OPER', 'ENUM_CUDA_KERNEL_LAUNCH_TYPE', 'ENUM_CUDA_SHARED_MEM_LIMIT_CONFIG', 'ENUM_CUDA_UNIF_MEM_MIGRATION', 'ENUM_CUDA_UNIF_MEM_ACCESS_TYPE', 'ENUM_CUDA_FUNC_CACHE_CONFIG', 'ENUM_CUPTI_STREAM_TYPE', 'ENUM_CUPTI_SYNC_TYPE', 'ENUM_STACK_UNWIND_METHOD', 'ENUM_SAMPLING_THREAD_STATE', 'ENUM_SCHEDULING_THREAD_BLOCK', 'ENUM_OPENGL_DEBUG_SOURCE', 'ENUM_OPENGL_DEBUG_TYPE', 'ENUM_OPENGL_DEBUG_SEVERITY', 'ENUM_VULKAN_PIPELINE_CREATION_FLAGS', 'ENUM_D3D12_HEAP_TYPE', 'ENUM_D3D12_PAGE_PROPERTY', 'ENUM_D3D12_HEAP_FLAGS', 'ENUM_D3D12_CMD_LIST_TYPE', 'ENUM_OPENACC_DEVICE', 'ENUM_OPENACC_EVENT_KIND', 'ENUM_OPENMP_EVENT_KIND', 'ENUM_OPENMP_THREAD', 'ENUM_OPENMP_DISPATCH', 'ENUM_OPENMP_SYNC_REGION', 'ENUM_OPENMP_WORK', 'ENUM_OPENMP_MUTEX', 'ENUM_OPENMP_TASK_FLAG', 'ENUM_OPENMP_TASK_STATUS', 'ENUM_SLI_TRANSER', 'ENUM_DXGI_FORMAT', 'ENUM_NVDRIVER_EVENT_ID', 'ENUM_WDDM_PAGING_QUEUE_TYPE', 'ENUM_WDDM_PACKET_TYPE', 'ENUM_WDDM_ENGINE_TYPE', 'ENUM_WDDM_INTERRUPT_TYPE', 'ENUM_WDDM_VIDMM_OP_TYPE', 'ENUM_NET_LINK_TYPE', 'ENUM_NET_DEVICE_ID', 'ENUM_NET_VENDOR_ID', 'ENUM_ETW_MEMORY_TRANSFER_TYPE', 'ENUM_PMU_EVENT_SOURCE', 'ENUM_PMU_UNIT_TYPE', 'ENUM_VIDEO_ENGINE_TYPE', 'ENUM_VIDEO_ENGINE_CODEC', 'ENUM_DIAGNOSTIC_SEVERITY_LEVEL', 'ENUM_DIAGNOSTIC_SOURCE_TYPE', 'ENUM_DIAGNOSTIC_TIMESTAMP_SOURCE', 'ENUM_NET_IB_DEVICE_TYPE', 'META_DATA_CAPTURE', 'META_DATA_EXPORT']
+NVTX_EVENTS [(0, 'start', 'INTEGER', 1, None, 0), (1, 'end', 'INTEGER', 0, None, 0), (2, 'eventType', 'INTEGER', 1, None, 0), (3, 'rangeId', 'INTEGER', 0, None, 0), (4, 'category', 'INTEGER', 0, None, 0), (5, 'color', 'INTEGER', 0, None, 0), (6, 'text', 'TEXT', 0, None, 0), (7, 'globalTid', 'INTEGER', 0, None, 0), (8, 'endGlobalTid', 'INTEGER', 0, None, 0), (9, 'textId', 'INTEGER', 0, None, 0), (10, 'domainId', 'INTEGER', 0, None, 0), (11, 'uint64Value', 'INTEGER', 0, None, 0), (12, 'int64Value', 'INTEGER', 0, None, 0), (13, 'doubleValue', 'REAL', 0, None, 0), (14, 'uint32Value', 'INTEGER', 0, None, 0), (15, 'int32Value', 'INTEGER', 0, None, 0), (16, 'floatValue', 'REAL', 0, None, 0), (17, 'jsonTextId', 'INTEGER', 0, None, 0), (18, 'jsonText', 'TEXT', 0, None, 0), (19, 'binaryData', 'TEXT', 0, None, 0)]
+CUPTI_ACTIVITY_KIND_KERNEL [(0, 'start', 'INTEGER', 1, None, 0), (1, 'end', 'INTEGER', 1, None, 0), (2, 'deviceId', 'INTEGER', 1, None, 0), (3, 'contextId', 'INTEGER', 1, None, 0), (4, 'greenContextId', 'INTEGER', 0, None, 0), (5, 'streamId', 'INTEGER', 1, None, 0), (6, 'correlationId', 'INTEGER', 0, None, 0), (7, 'globalPid', 'INTEGER', 0, None, 0), (8, 'demangledName', 'INTEGER', 1, None, 0), (9, 'shortName', 'INTEGER', 1, None, 0), (10, 'mangledName', 'INTEGER', 0, None, 0), (11, 'launchType', 'INTEGER', 0, None, 0), (12, 'cacheConfig', 'INTEGER', 0, None, 0), (13, 'registersPerThread', 'INTEGER', 1, None, 0), (14, 'gridX', 'INTEGER', 1, None, 0), (15, 'gridY', 'INTEGER', 1, None, 0), (16, 'gridZ', 'INTEGER', 1, None, 0), (17, 'blockX', 'INTEGER', 1, None, 0), (18, 'blockY', 'INTEGER', 1, None, 0), (19, 'blockZ', 'INTEGER', 1, None, 0), (20, 'staticSharedMemory', 'INTEGER', 1, None, 0), (21, 'dynamicSharedMemory', 'INTEGER', 1, None, 0), (22, 'localMemoryPerThread', 'INTEGER', 1, None, 0), (23, 'localMemoryTotal', 'INTEGER', 1, None, 0), (24, 'gridId', 'INTEGER', 1, None, 0), (25, 'sharedMemoryExecuted', 'INTEGER', 0, None, 0), (26, 'graphNodeId', 'INTEGER', 0, None, 0), (27, 'sharedMemoryLimitConfig', 'INTEGER', 0, None, 0)]
+CUPTI_ACTIVITY_KIND_RUNTIME [(0, 'start', 'INTEGER', 1, None, 0), (1, 'end', 'INTEGER', 1, None, 0), (2, 'eventClass', 'INTEGER', 1, None, 0), (3, 'globalTid', 'INTEGER', 0, None, 0), (4, 'correlationId', 'INTEGER', 0, None, 0), (5, 'nameId', 'INTEGER', 1, None, 0), (6, 'returnValue', 'INTEGER', 1, None, 0), (7, 'callchainId', 'INTEGER', 0, None, 0)]
+StringIds [(0, 'id', 'INTEGER', 1, None, 1), (1, 'value', 'TEXT', 1, None, 0)]
+
+EXIT_CODE=0
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# 
+COMMAND: python -c import\ sqlite3\;\ from\ pathlib\ import\ Path\;\ c=sqlite3.connect\(next\(Path\(\"reports/gpu_study/artifacts\"\).glob\(\"\*.sqlite\"\)\)\)\;\ print\(list\(c.execute\(\"pragma\ table_info\(TARGET_INFO_SYSTEM_ENV\)\"\)\)\)
+[(0, 'globalVid', 'INTEGER', 0, None, 0), (1, 'devStateName', 'TEXT', 1, None, 0), (2, 'name', 'TEXT', 1, None, 0), (3, 'nameEnum', 'INTEGER', 1, None, 0), (4, 'value', 'TEXT', 1, None, 0)]
+
+EXIT_CODE=0
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# 
+COMMAND: tail -n 5 reports/logs/memory-suite.console.log
+  "parameter_dtype": "torch.float32",
+  "process_work_seconds": 44.353175323456526
+}
+EXIT_CODE=0 ELAPSED_S=47.780 LOG=reports/logs/gpu_study/20261116T080819983103-small-forward-fp32-w5-n128-memory
+COMMAND: /root/miniconda3/bin/python -m cs336_systems.gpu_experiments --model-size small --mode train_step --precision fp32 --warmup 5 --steps 1 --context-length 128 --output reports/gpu_study/data/small-train_step-fp32-w5-n128-memory.json --snapshot reports/gpu_study/artifacts/small-train_step-fp32-n128.pickle --stage-timing --optimizer reference_adamw
+
+EXIT_CODE=0
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# 
+COMMAND: python -c import\ sqlite3\;\ from\ pathlib\ import\ Path\;\ c=sqlite3.connect\(next\(Path\(\"reports/gpu_study/artifacts\"\).glob\(\"\*.sqlite\"\)\)\)\;\ print\(\"Sensitive-looking\ environment\ key\ names\ only:\"\,\ \[r\[0\]\ for\ r\ in\ c.execute\(\"select\ name\ from\ TARGET_INFO_SYSTEM_ENV\"\)\ if\ any\(x\ in\ r\[0\].upper\(\)\ for\ x\ in\ \(\"TOKEN\"\,\"PASS\"\,\"SECRET\"\,\"CREDENTIAL\"\,\"PRIVATE\"\,\"API_KEY\"\)\)\]\)
+Sensitive-looking environment key names only: []
+
+EXIT_CODE=0
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# 
+COMMAND: tail -n 8 reports/logs/memory-suite.console.log
+    "checkpoint_group": 0,
+    "output": "reports/gpu_study/data/small-train_step-fp32-w5-n2048-memory.json"
+  },
+  "error": "CUDA out of memory. Tried to allocate 768.00 MiB. GPU 0 has a total capacity of 11.63 GiB of which 101.50 MiB is free. Including non-PyTorch memory, this process has 11.53 GiB memory in use. Of the allocated memory 10.97 GiB is allocated by PyTorch, and 269.63 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)",
+  "process_work_seconds": 1.9627961609512568
+}
+EXIT_CODE=42 ELAPSED_S=5.143 LOG=reports/logs/gpu_study/20261116T081224753819-small-train_step-fp32-w5-n2048-memory
+COMMAND: /root/miniconda3/bin/python -m cs336_systems.gpu_experiments --model-size small --mode forward --precision bf16 --warmup 5 --steps 1 --context-length 2048 --output reports/gpu_study/data/small-forward-bf16-w5-n2048-memory.json --snapshot reports/gpu_study/artifacts/small-forward-bf16-n2048.pickle --stage-timing --optimizer reference_adamw
+
+EXIT_CODE=0
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# 
+COMMAND: python -c import\ json\;\ from\ pathlib\ import\ Path\;\ rows=\[json.loads\(p.read_text\(\)\)\ for\ p\ in\ Path\(\"reports/gpu_study/data\"\).glob\(\"\*memory.json\"\)\]\;\ print\(\[\(r\[\"arguments\"\]\[\"model_size\"\]\,r\[\"arguments\"\]\[\"context_length\"\]\,r\[\"arguments\"\]\[\"mode\"\]\,r\[\"arguments\"\]\[\"precision\"\]\,r\[\"status\"\]\)\ for\ r\ in\ rows\]\)
+[('xl', 128, 'forward', 'fp32', 'blocked_capacity_lower_bound'), ('xl', 128, 'train_step', 'fp32', 'blocked_capacity_lower_bound'), ('xl', 128, 'forward', 'bf16', 'blocked_capacity_lower_bound'), ('xl', 128, 'train_step', 'bf16', 'blocked_capacity_lower_bound'), ('xl', 2048, 'forward', 'fp32', 'blocked_capacity_lower_bound'), ('xl', 2048, 'train_step', 'fp32', 'blocked_capacity_lower_bound'), ('xl', 2048, 'forward', 'bf16', 'blocked_capacity_lower_bound'), ('xl', 2048, 'train_step', 'bf16', 'blocked_capacity_lower_bound'), ('small', 128, 'forward', 'fp32', 'ok'), ('small', 128, 'train_step', 'fp32', 'ok'), ('small', 128, 'forward', 'bf16', 'ok'), ('small', 128, 'train_step', 'bf16', 'ok'), ('small', 2048, 'forward', 'fp32', 'ok'), ('small', 2048, 'train_step', 'fp32', 'observed_oom')]
+
+EXIT_CODE=0
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# 
+COMMAND: tar -xzf /root/autodl-tmp/cs336-analysis-source.tar.gz
+
+EXIT_CODE=0
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# 
+COMMAND: tail -n 5 reports/logs/memory-suite.console.log
+  "error": "CUDA out of memory. Tried to allocate 768.00 MiB. GPU 0 has a total capacity of 11.63 GiB of which 33.50 MiB is free. Including non-PyTorch memory, this process has 11.59 GiB memory in use. Of the allocated memory 10.94 GiB is allocated by PyTorch, and 355.75 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)",
+  "process_work_seconds": 2.1567695206031203
+}
+EXIT_CODE=42 ELAPSED_S=5.387 LOG=reports/logs/gpu_study/20261116T081318751988-small-train_step-bf16-w5-n2048-memory
+EXIT_CODE=0 ELAPSED_S=334.515 LOG=reports/logs/gpu_study/20261116T080749762780-memory-suite
+
+EXIT_CODE=0
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# 
+COMMAND: tail -n 5 reports/logs/memory-suite.console.log
+  "error": "CUDA out of memory. Tried to allocate 768.00 MiB. GPU 0 has a total capacity of 11.63 GiB of which 33.50 MiB is free. Including non-PyTorch memory, this process has 11.59 GiB memory in use. Of the allocated memory 10.94 GiB is allocated by PyTorch, and 355.75 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)",
+  "process_work_seconds": 2.1567695206031203
+}
+EXIT_CODE=42 ELAPSED_S=5.387 LOG=reports/logs/gpu_study/20261116T081318751988-small-train_step-bf16-w5-n2048-memory
+EXIT_CODE=0 ELAPSED_S=334.515 LOG=reports/logs/gpu_study/20261116T080749762780-memory-suite
+
+EXIT_CODE=0
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# 
+COMMAND: bash -c for\ f\ in\ reports/logs/\*suite.pid\;\ do\ pid=\$\(cat\ \"\$f\"\)\;\ if\ kill\ -0\ \"\$pid\"\ 2\>/dev/null\;\ then\ ps\ -o\ pid\,etime\,stat\,args\ -p\ \"\$pid\"\;\ else\ printf\ \"%s\ FINISHED\\n\"\ \"\$f\"\;\ fi\;\ done\;\ nvidia-smi\ --query-compute-apps=pid\,used_memory\ --format=csv\,noheader\;\ du\ -sh\ reports/gpu_study/artifacts\;\ ls\ -lh\ reports/gpu_study/artifacts/\*.pickle
+reports/logs/memory-suite.pid FINISHED
+reports/logs/profiles-suite.pid FINISHED
+reports/logs/timings-suite.pid FINISHED
+66M	reports/gpu_study/artifacts
+-rw-r--r-- 1 root root 890K Nov 16 16:10 reports/gpu_study/artifacts/small-forward-bf16-n128.pickle
+-rw-r--r-- 1 root root 890K Nov 16 16:13 reports/gpu_study/artifacts/small-forward-bf16-n2048.pickle
+-rw-r--r-- 1 root root 679K Nov 16 16:09 reports/gpu_study/artifacts/small-forward-fp32-n128.pickle
+-rw-r--r-- 1 root root 680K Nov 16 16:12 reports/gpu_study/artifacts/small-forward-fp32-n2048.pickle
+-rw-r--r-- 1 root root 1.9M Nov 16 16:11 reports/gpu_study/artifacts/small-train_step-bf16-n128.pickle
+-rw-r--r-- 1 root root 1.7M Nov 16 16:09 reports/gpu_study/artifacts/small-train_step-fp32-n128.pickle
+
+EXIT_CODE=0
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# 
+COMMAND: python scripts/run_logged.py --name summarize-existing -- python scripts/summarize_gpu_study.py
+COMMAND: python scripts/summarize_gpu_study.py
+{
+  "cases": 65,
+  "statuses": {
+    "blocked_capacity_lower_bound": 22,
+    "observed_oom": 10,
+    "ok": 33
+  },
+  "report": "reports/gpu_study/RESULTS.md"
+}
+EXIT_CODE=0 ELAPSED_S=4.013 LOG=reports/logs/gpu_study/20261116T081603188128-summarize-existing
+
+EXIT_CODE=0
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# 
+COMMAND: python scripts/run_logged.py --name analyze-existing-nsys -- python scripts/analyze_nsys.py
+COMMAND: python scripts/analyze_nsys.py
+COMMAND: /opt/nvidia/nsight-compute/2025.1.1/host/target-linux-x64/nsys export --type=sqlite --output reports/gpu_study/artifacts/medium-train_step-fp32-w5-n256-nsys.sqlite reports/gpu_study/artifacts/medium-train_step-fp32-w5-n256-nsys.nsys-rep
+
+Processing 53240 events: [1%                                                   ]
+Processing 53240 events: [2%                                                   ]
+Processing 53240 events: [3%                                                   ]
+Processing 53240 events: [4%                                                   ]
+Processing 53240 events: [5%                                                   ]
+Processing 53240 events: [=6%                                                  ]
+Processing 53240 events: [=7%                                                  ]
+Processing 53240 events: [==8%                                                 ]
+Processing 53240 events: [==9%                                                 ]
+Processing 53240 events: [==10%                                                ]
+Processing 53240 events: [==11%                                                ]
+Processing 53240 events: [===12%                                               ]
+Processing 53240 events: [===13%                                               ]
+Processing 53240 events: [====14%                                              ]
+Processing 53240 events: [====15%                                              ]
+Processing 53240 events: [=====16%                                             ]
+Processing 53240 events: [======17%                                            ]
+Processing 53240 events: [======18%                                            ]
+Processing 53240 events: [=======19%                                           ]
+Processing 53240 events: [=======20%                                           ]
+Processing 53240 events: [========21%                                          ]
+Processing 53240 events: [========22%                                          ]
+Processing 53240 events: [=========23%                                         ]
+Processing 53240 events: [=========24%                                         ]
+Processing 53240 events: [==========25%                                        ]
+Processing 53240 events: [==========26%                                        ]
+Processing 53240 events: [===========27%                                       ]
+Processing 53240 events: [===========28%                                       ]
+Processing 53240 events: [============29%                                      ]
+Processing 53240 events: [============30%                                      ]
+Processing 53240 events: [=============31%                                     ]
+Processing 53240 events: [=============32%                                     ]
+Processing 53240 events: [==============33%                                    ]
+Processing 53240 events: [===============34%                                   ]
+Processing 53240 events: [===============35%                                   ]
+Processing 53240 events: [================36%                                  ]
+Processing 53240 events: [================37%                                  ]
+Processing 53240 events: [=================38%                                 ]
+Processing 53240 events: [=================39%                                 ]
+Processing 53240 events: [==================40%                                ]
+Processing 53240 events: [==================41%                                ]
+Processing 53240 events: [===================42%                               ]
+Processing 53240 events: [===================43%                               ]
+Processing 53240 events: [====================44%                              ]
+Processing 53240 events: [====================45%                              ]
+Processing 53240 events: [=====================46%                             ]
+Processing 53240 events: [=====================47%                             ]
+Processing 53240 events: [======================48%                            ]
+Processing 53240 events: [======================49%                            ]
+Processing 53240 events: [=======================50%                           ]
+Processing 53240 events: [========================51%                          ]
+Processing 53240 events: [========================52%                          ]
+Processing 53240 events: [=========================53%                         ]
+Processing 53240 events: [=========================54%                         ]
+Processing 53240 events: [==========================55%                        ]
+Processing 53240 events: [==========================56%                        ]
+Processing 53240 events: [===========================57%                       ]
+Processing 53240 events: [===========================58%                       ]
+Processing 53240 events: [============================59%                      ]
+Processing 53240 events: [============================60%                      ]
+Processing 53240 events: [=============================61%                     ]
+Processing 53240 events: [=============================62%                     ]
+Processing 53240 events: [==============================63%                    ]
+Processing 53240 events: [==============================64%                    ]
+Processing 53240 events: [===============================65%                   ]
+Processing 53240 events: [===============================66%                   ]
+Processing 53240 events: [================================67%                  ]
+Processing 53240 events: [=================================68%                 ]
+Processing 53240 events: [=================================69%                 ]
+Processing 53240 events: [==================================70%                ]
+Processing 53240 events: [==================================71%                ]
+Processing 53240 events: [===================================72%               ]
+Processing 53240 events: [===================================73%               ]
+Processing 53240 events: [====================================74%              ]
+Processing 53240 events: [====================================75%              ]
+Processing 53240 events: [=====================================76%             ]
+Processing 53240 events: [=====================================77%             ]
+Processing 53240 events: [======================================78%            ]
+Processing 53240 events: [======================================79%            ]
+Processing 53240 events: [=======================================80%           ]
+Processing 53240 events: [=======================================81%           ]
+Processing 53240 events: [========================================82%          ]
+Processing 53240 events: [========================================83%          ]
+Processing 53240 events: [=========================================84%         ]
+Processing 53240 events: [==========================================85%        ]
+Processing 53240 events: [==========================================86%        ]
+Processing 53240 events: [===========================================87%       ]
+Processing 53240 events: [===========================================88%       ]
+Processing 53240 events: [============================================89%      ]
+Processing 53240 events: [============================================90%      ]
+Processing 53240 events: [=============================================91%     ]
+Processing 53240 events: [=============================================92%     ]
+Processing 53240 events: [==============================================93%    ]
+Processing 53240 events: [==============================================94%    ]
+Processing 53240 events: [===============================================95%   ]
+Processing 53240 events: [===============================================96%   ]
+Processing 53240 events: [================================================97%  ]
+Processing 53240 events: [================================================98%  ]
+Processing 53240 events: [=================================================99% ]
+Processing 53240 events: [=================================================100%]
+EXIT_CODE=0 ELAPSED_S=0.198 LOG=reports/logs/gpu_study/20261116T081607949908-export-medium-train_step-fp32-w5-n256-nsys
+medium-train_step-fp32-w5-n256-nsys {'forward': 62.723, 'loss': 0.123, 'backward': 0.001, 'optimizer': 72.663, 'attention_scores_matmul': 2.173, 'attention_mask_softmax': 5.108, 'attention_output_matmul': 1.821}
+COMMAND: /opt/nvidia/nsight-compute/2025.1.1/host/target-linux-x64/nsys export --type=sqlite --output reports/gpu_study/artifacts/small-train_step-fp32-w5-n256-nsys.sqlite reports/gpu_study/artifacts/small-train_step-fp32-w5-n256-nsys.nsys-rep
+
+Processing 28033 events: [1%                                                   ]
+Processing 28033 events: [2%                                                   ]
+Processing 28033 events: [3%                                                   ]
+Processing 28033 events: [4%                                                   ]
+Processing 28033 events: [5%                                                   ]
+Processing 28033 events: [=6%                                                  ]
+Processing 28033 events: [=7%                                                  ]
+Processing 28033 events: [==8%                                                 ]
+Processing 28033 events: [==9%                                                 ]
+Processing 28033 events: [==10%                                                ]
+Processing 28033 events: [==11%                                                ]
+Processing 28033 events: [===12%                                               ]
+Processing 28033 events: [===13%                                               ]
+Processing 28033 events: [====14%                                              ]
+Processing 28033 events: [====15%                                              ]
+Processing 28033 events: [=====16%                                             ]
+Processing 28033 events: [======17%                                            ]
+Processing 28033 events: [======18%                                            ]
+Processing 28033 events: [=======19%                                           ]
+Processing 28033 events: [=======20%                                           ]
+Processing 28033 events: [========21%                                          ]
+Processing 28033 events: [========22%                                          ]
+Processing 28033 events: [=========23%                                         ]
+Processing 28033 events: [=========24%                                         ]
+Processing 28033 events: [==========25%                                        ]
+Processing 28033 events: [==========26%                                        ]
+Processing 28033 events: [===========27%                                       ]
+Processing 28033 events: [===========28%                                       ]
+Processing 28033 events: [============29%                                      ]
+Processing 28033 events: [============30%                                      ]
+Processing 28033 events: [=============31%                                     ]
+Processing 28033 events: [=============32%                                     ]
+Processing 28033 events: [==============33%                                    ]
+Processing 28033 events: [===============34%                                   ]
+Processing 28033 events: [===============35%                                   ]
+Processing 28033 events: [================36%                                  ]
+Processing 28033 events: [================37%                                  ]
+Processing 28033 events: [=================38%                                 ]
+Processing 28033 events: [=================39%                                 ]
+Processing 28033 events: [==================40%                                ]
+Processing 28033 events: [==================41%                                ]
+Processing 28033 events: [===================42%                               ]
+Processing 28033 events: [===================43%                               ]
+Processing 28033 events: [====================44%                              ]
+Processing 28033 events: [====================45%                              ]
+Processing 28033 events: [=====================46%                             ]
+Processing 28033 events: [=====================47%                             ]
+Processing 28033 events: [======================48%                            ]
+Processing 28033 events: [======================49%                            ]
+Processing 28033 events: [=======================50%                           ]
+Processing 28033 events: [========================51%                          ]
+Processing 28033 events: [========================52%                          ]
+Processing 28033 events: [=========================53%                         ]
+Processing 28033 events: [=========================54%                         ]
+Processing 28033 events: [==========================55%                        ]
+Processing 28033 events: [==========================56%                        ]
+Processing 28033 events: [===========================57%                       ]
+Processing 28033 events: [===========================58%                       ]
+Processing 28033 events: [============================59%                      ]
+Processing 28033 events: [============================60%                      ]
+Processing 28033 events: [=============================61%                     ]
+Processing 28033 events: [=============================62%                     ]
+Processing 28033 events: [==============================63%                    ]
+Processing 28033 events: [==============================64%                    ]
+Processing 28033 events: [===============================65%                   ]
+Processing 28033 events: [===============================66%                   ]
+Processing 28033 events: [================================67%                  ]
+Processing 28033 events: [=================================68%                 ]
+Processing 28033 events: [=================================69%                 ]
+Processing 28033 events: [==================================70%                ]
+Processing 28033 events: [==================================71%                ]
+Processing 28033 events: [===================================72%               ]
+Processing 28033 events: [===================================73%               ]
+Processing 28033 events: [====================================74%              ]
+Processing 28033 events: [====================================75%              ]
+Processing 28033 events: [=====================================76%             ]
+Processing 28033 events: [=====================================77%             ]
+Processing 28033 events: [======================================78%            ]
+Processing 28033 events: [======================================79%            ]
+Processing 28033 events: [=======================================80%           ]
+Processing 28033 events: [=======================================81%           ]
+Processing 28033 events: [========================================82%          ]
+Processing 28033 events: [========================================83%          ]
+Processing 28033 events: [=========================================84%         ]
+Processing 28033 events: [==========================================85%        ]
+Processing 28033 events: [==========================================86%        ]
+Processing 28033 events: [===========================================87%       ]
+Processing 28033 events: [===========================================88%       ]
+Processing 28033 events: [============================================89%      ]
+Processing 28033 events: [============================================90%      ]
+Processing 28033 events: [=============================================91%     ]
+Processing 28033 events: [=============================================92%     ]
+Processing 28033 events: [==============================================93%    ]
+Processing 28033 events: [==============================================94%    ]
+Processing 28033 events: [===============================================95%   ]
+Processing 28033 events: [===============================================96%   ]
+Processing 28033 events: [================================================97%  ]
+Processing 28033 events: [================================================98%  ]
+Processing 28033 events: [=================================================99% ]
+Processing 28033 events: [=================================================100%]
+EXIT_CODE=0 ELAPSED_S=0.123 LOG=reports/logs/gpu_study/20261116T081608538527-export-small-train_step-fp32-w5-n256-nsys
+small-train_step-fp32-w5-n256-nsys {'forward': 19.89, 'loss': 0.124, 'backward': 0.001, 'optimizer': 22.449, 'attention_scores_matmul': 0.794, 'attention_mask_softmax': 1.949, 'attention_output_matmul': 0.855}
+small-train_step-fp32-w5-n512-nsys {'forward': 44.734, 'loss': 0.223, 'backward': 0.001, 'optimizer': 22.65, 'attention_scores_matmul': 2.795, 'attention_mask_softmax': 7.18, 'attention_output_matmul': 2.286}
+EXIT_CODE=0 ELAPSED_S=1.866 LOG=reports/logs/gpu_study/20261116T081607421673-analyze-existing-nsys
+
+EXIT_CODE=0
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# > > > > > > > > > > 
+COMMAND: python -
+Fixed cross-thread attribution; no model execution
+
+EXIT_CODE=0
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# 
+COMMAND: python scripts/run_logged.py --name analyze-existing-nsys-fixed -- python scripts/analyze_nsys.py
+COMMAND: python scripts/analyze_nsys.py
+medium-train_step-fp32-w5-n256-nsys {'forward': 62.723, 'loss': 0.123, 'backward': 126.015, 'optimizer': 72.663, 'attention_scores_matmul': 2.173, 'attention_mask_softmax': 5.108, 'attention_output_matmul': 1.821}
+small-train_step-fp32-w5-n256-nsys {'forward': 19.89, 'loss': 0.124, 'backward': 41.808, 'optimizer': 22.449, 'attention_scores_matmul': 0.794, 'attention_mask_softmax': 1.949, 'attention_output_matmul': 0.855}
+small-train_step-fp32-w5-n512-nsys {'forward': 44.734, 'loss': 0.223, 'backward': 94.488, 'optimizer': 22.65, 'attention_scores_matmul': 2.795, 'attention_mask_softmax': 7.18, 'attention_output_matmul': 2.286}
+EXIT_CODE=0 ELAPSED_S=1.053 LOG=reports/logs/gpu_study/20261116T081802129038-analyze-existing-nsys-fixed
+
+EXIT_CODE=0
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# > > > > > > > > 
+COMMAND: python -
+medium-train_step-fp32-w5-n256-nsys {'forward': 62.723, 'loss': 0.123, 'backward': 126.015, 'optimizer': 72.663, 'attention_scores_matmul': 2.173, 'attention_mask_softmax': 5.108, 'attention_output_matmul': 1.821}
+small-train_step-fp32-w5-n256-nsys {'forward': 19.89, 'loss': 0.124, 'backward': 41.808, 'optimizer': 22.449, 'attention_scores_matmul': 0.794, 'attention_mask_softmax': 1.949, 'attention_output_matmul': 0.855}
+small-train_step-fp32-w5-n512-nsys {'forward': 44.734, 'loss': 0.223, 'backward': 94.488, 'optimizer': 22.65, 'attention_scores_matmul': 2.795, 'attention_mask_softmax': 7.18, 'attention_output_matmul': 2.286}
+# RTX 3080 Ti：GPU Benchmark、Profiling 与显存实验
+
+
+这些数据来自实际 RTX 3080 Ti 12GB，不代表 B200。官方模型形状与硬件平台是两件事；表中 small/medium/large 使用讲义模型尺寸、batch=4、vocab=10,000。surrogate 明确属于替代实验。计时使用独立进程、CUDA 同步和 perf_counter，标准差为样本标准差；所有 JSON 保留每轮数据。
+
+
+## 官方尺寸 FP32 / BF16 对照
+
+
+单元格为平均值 ± 标准差 / PyTorch peak allocated；warmup=5，测量=10。参数和梯度保持 FP32，BF16 只通过 autocast 使用。计时表使用 torch.optim.Adam，与原 benchmark 一致；Profiler/快照另使用作业参考 AdamW，不混算。
+
+
+| 模型 | 模式 | FP32 | BF16 autocast | 加速比 |
+| --- | --- | --- | --- | --- |
+| small | forward | 47.519 ± 0.080 ms / 0.712 GiB | 27.990 ± 0.073 ms / 0.888 GiB | 1.70× |
+| small | forward_backward | 145.316 ± 0.350 ms / 4.060 GiB | 84.850 ± 0.076 ms / 3.165 GiB | 1.71× |
+| small | train_step | 156.181 ± 0.324 ms / 5.024 GiB | 96.518 ± 0.307 ms / 4.115 GiB | 1.62× |
+| medium | forward | 144.975 ± 0.150 ms / 1.884 GiB | 75.533 ± 0.095 ms / 2.542 GiB | 1.92× |
+| medium | forward_backward | 432.810 ± 0.349 ms / 10.564 GiB | 237.435 ± 0.193 ms / 8.364 GiB | 1.82× |
+| medium | train_step | 实测 OOM (exit 42) | 实测 OOM (exit 42) | N/A |
+| large | forward | 294.879 ± 0.228 ms / 4.096 GiB | 146.678 ± 0.086 ms / 5.744 GiB | 2.01× |
+| large | forward_backward | 实测 OOM (exit 42) | 实测 OOM (exit 42) | N/A |
+| large | train_step | 容量下界超限 (exit 43) | 容量下界超限 (exit 43) | N/A |
+| xl | forward | 容量下界超限 (exit 43) | 容量下界超限 (exit 43) | N/A |
+| xl | forward_backward | 容量下界超限 (exit 43) | 容量下界超限 (exit 43) | N/A |
+| xl | train_step | 容量下界超限 (exit 43) | 容量下界超限 (exit 43) | N/A |
+| 10B | forward | 容量下界超限 (exit 43) | 容量下界超限 (exit 43) | N/A |
+| 10B | forward_backward | 容量下界超限 (exit 43) | 容量下界超限 (exit 43) | N/A |
+| 10B | train_step | 容量下界超限 (exit 43) | 容量下界超限 (exit 43) | N/A |
+
+
+## Warmup 对照
+所有 case 在新进程运行，w=0 包含首次内核/library/optimizer 初始化。不能把不同模式的均值相减当成直接测得的阶段耗时。
+
+
+| small FP32 | w=0 | w=1 | w=2 | w=5 |
+| --- | --- | --- | --- | --- |
+| forward | 72.552 ± 78.869 ms / 0.712 GiB | 47.615 ± 0.076 ms / 0.712 GiB | 47.847 ± 0.138 ms / 0.712 GiB | 47.519 ± 0.080 ms / 0.712 GiB |
+| forward_backward | 184.661 ± 124.523 ms / 4.060 GiB | 145.688 ± 0.455 ms / 4.060 GiB | 145.994 ± 0.384 ms / 4.060 GiB | 145.316 ± 0.350 ms / 4.060 GiB |
+| train_step | 196.979 ± 129.077 ms / 5.024 GiB | 157.005 ± 0.368 ms / 5.024 GiB | 156.590 ± 0.428 ms / 5.024 GiB | 156.181 ± 0.324 ms / 5.024 GiB |
+
+
+![warmup](figures/warmup.png)
+
+## 显存快照
+
+
+| 模型 | context | 模式 | 精度 | 结果 |
+| --- | --- | --- | --- | --- |
+| small | 128 | forward | bf16 | 27.685 ± 0.000 ms / 0.756 GiB |
+| small | 2048 | forward | bf16 | 216.085 ± 0.000 ms / 3.097 GiB |
+| small | 128 | forward | fp32 | 25.101 ± 0.000 ms / 0.516 GiB |
+| small | 2048 | forward | fp32 | 316.302 ± 0.000 ms / 3.634 GiB |
+| small | 128 | train_step | bf16 | 108.476 ± 0.000 ms / 2.185 GiB |
+| small | 2048 | train_step | bf16 | 实测 OOM (exit 42) |
+| small | 128 | train_step | fp32 | 97.327 ± 0.000 ms / 2.190 GiB |
+| small | 2048 | train_step | fp32 | 实测 OOM (exit 42) |
+| xl | 128 | forward | bf16 | 容量下界超限 (exit 43) |
+| xl | 2048 | forward | bf16 | 容量下界超限 (exit 43) |
+| xl | 128 | forward | fp32 | 容量下界超限 (exit 43) |
+| xl | 2048 | forward | fp32 | 容量下界超限 (exit 43) |
+| xl | 128 | train_step | bf16 | 容量下界超限 (exit 43) |
+| xl | 2048 | train_step | bf16 | 容量下界超限 (exit 43) |
+| xl | 128 | train_step | fp32 | 容量下界超限 (exit 43) |
+| xl | 2048 | train_step | fp32 | 容量下界超限 (exit 43) |
+
+
+![small-forward-fp32-n128](figures/small-forward-fp32-n128-memory.png)
+
+
+
+![small-train_step-fp32-n128](figures/small-train_step-fp32-n128-memory.png)
+
+
+
+![small-forward-bf16-n128](figures/small-forward-bf16-n128-memory.png)
+
+
+
+![small-train_step-bf16-n128](figures/small-train_step-bf16-n128-memory.png)
+
+
+
+![small-forward-fp32-n2048](figures/small-forward-fp32-n2048-memory.png)
+
+
+
+![small-forward-bf16-n2048](figures/small-forward-bf16-n2048-memory.png)
+
+
+
+上述 PNG 由真实快照重建，横轴是分配事件编号，不是秒。交互式 `.memory.html` 使用 PyTorch memory_viz；这些是 small 替代图，不是讲义要求的 XL 官方截图。peak allocated、peak reserved 与 nvidia-smi 的进程占用含义不同，不可互换。
+
+
+
+## Profiler 阶段计时
+开启 Profiler 会扰动运行；以下诊断结果不替代上面的纯计时结果。CUDA event 阶段时长包含该流上的调度间隙，不等于 kernel 时长之和。
+
+
+| case | Forward | Loss | Backward | Optimizer |
+| --- | --- | --- | --- | --- |
+| small-forward-bf16-w5-n128-memory.json | 27.266 | 0.000 | 0.000 | 0.000 |
+| small-forward-bf16-w5-n2048-memory.json | 215.896 | 0.000 | 0.000 | 0.000 |
+| small-forward-fp32-w5-n128-memory.json | 24.763 | 0.000 | 0.000 | 0.000 |
+| small-forward-fp32-w5-n2048-memory.json | 316.095 | 0.000 | 0.000 | 0.000 |
+| small-forward-fp32-w5-n512-torchprofile.json | 50.844 | 0.000 | 0.000 | 0.000 |
+| small-train_step-bf16-w5-n128-memory.json | 30.994 | 0.201 | 49.128 | 27.643 |
+| small-train_step-fp32-w5-n128-memory.json | 27.154 | 0.075 | 41.699 | 28.037 |
+| small-train_step-fp32-w5-n512-torchprofile.json | 55.618 | 0.225 | 107.193 | 41.160 |
+| worker-smoke.json | 7.361 | 0.096 | 12.003 | 1.236 |
+
+
+## 累加与 ToyModel dtype 实测
+```json
+{
+  "accumulation": [
+    {
+      "accumulator": "torch.float32",
+      "term": "torch.float32",
+      "explicit_cast": false,
+      "actual": 10.000133514404297,
+      "absolute_error": 0.000133514404296875
+    },
+    {
+      "accumulator": "torch.float16",
+      "term": "torch.float16",
+      "explicit_cast": false,
+      "actual": 9.953125,
+      "absolute_error": 0.046875
+    },
+    {
+      "accumulator": "torch.float32",
+      "term": "torch.float16",
+      "explicit_cast": false,
+      "actual": 10.00213623046875,
+      "absolute_error": 0.00213623046875
+    },
+    {
+      "accumulator": "torch.float32",
+      "term": "torch.float16",
+      "explicit_cast": true,
+      "actual": 10.00213623046875,
+      "absolute_error": 0.00213623046875
+    }
+  ],
+  "toy_dtypes": {
+    "torch.float16": {
+      "parameters_inside_autocast": [
+        "torch.float32"
+      ],
+      "fc1": "torch.float16",
+      "relu": "torch.float16",
+      "ln": "torch.float32",
+      "fc2": "torch.float16",
+      "logits": "torch.float16",
+      "loss": "torch.float32",
+      "gradients": [
+        "torch.float32"
+      ]
+    },
+    "torch.bfloat16": {
+      "parameters_inside_autocast": [
+        "torch.float32"
+      ],
+      "fc1": "torch.bfloat16",
+      "relu": "torch.bfloat16",
+      "ln": "torch.float32",
+      "fc2": "torch.bfloat16",
+      "logits": "torch.bfloat16",
+      "loss": "torch.float32",
+      "gradients": [
+        "torch.float32"
+      ]
+    }
+  },
+  "torch": "2.8.0+cu128"
+}
+```
+
+
+
+## 数据与可复现性
+原始 JSON：`data/`；命令/stdout/stderr/exit code/GPU telemetry：`../logs/gpu_study/`；Nsight 报告、Chrome trace、显存快照：`artifacts/`。退出码 42 是实测 OOM；43 是容量下界阻断；不能把它们当作成功 benchmark。所有当前无法完成的官方结果须在最终 writeup 标为缺失。
+
+
+EXIT_CODE=0
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# > > > > > > > > > > > 
+COMMAND: python -
+GEMM fractions forward/all 0.6319529170590045 0.5142373938445182
+Forward top kernel {'kernel': 'ampere_sgemm_128x64_tn', 'count': 85, 'ms': 24.892328}
+Non-GEMM forward [{'kernel': 'void at::native::vectorized_elementwise_kernel<(int)4, at::native::BinaryFunctor<float, float, float, at::native::binary_internal::MulFunctor<float>>, std::array<char *, (unsigned long)3>>(int, T2, T3)', 'count': 24, 'ms': 2.229807}, {'kernel': 'void at::native::elementwise_kernel<(int)128, (int)2, void at::native::gpu_kernel_impl_nocast<at::native::BinaryFunctor<float, float, float, at::native::binary_internal::MulFunctor<float>>>(at::TensorIteratorBase &, const T1 &)::[lambda(int) (instance 1)]>(int, T3)', 'count': 146, 'ms': 2.182209}, {'kernel': 'void at::native::vectorized_elementwise_kernel<(int)4, at::native::BUnaryFunctor<float, float, float, at::native::binary_internal::MulFunctor<float>>, std::array<char *, (unsigned long)2>>(int, T2, T3)', 'count': 12, 'ms': 1.482627}]
+timings-suite 282.23238894622773 0
+profiles-suite 105.77372467983514 0
+memory-suite 334.514945208095 0
+Report counts 10 6
+
+EXIT_CODE=0
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# 
+COMMAND: git status --short
+ M tests/adapters.py
+?? cs336_systems/benchmark.py
+?? cs336_systems/flash_attention.py
+?? cs336_systems/flash_attention_triton.py
+?? cs336_systems/gpu_experiments.py
+?? reports/
+?? scripts/
+?? tests/test_gpu_experiments.py
+
+EXIT_CODE=0
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# 
+COMMAND: git branch --show-current
+main
+
+EXIT_CODE=0
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# 
+COMMAND: sha256sum cs336_systems/benchmark.py cs336_systems/flash_attention.py cs336_systems/flash_attention_triton.py tests/adapters.py scripts/analyze_nsys.py scripts/precision_probe.py scripts/residual_probe.py scripts/run_gpu_study.py scripts/run_logged.py scripts/summarize_gpu_study.py cs336_systems/gpu_experiments.py tests/test_gpu_experiments.py
+5392f9fd47019cfec3ed4692b1e1b1b505c69f88ec1b20b76859548455ca7c3e  cs336_systems/benchmark.py
+d55f3d64d22068673b5ba37117385a0e1ae54befa429852079cf3ee8cbcd4605  cs336_systems/flash_attention.py
+d05773603dffc32be4f4fe1c1876720a775c1b0430a1b074335da9a31cdbe531  cs336_systems/flash_attention_triton.py
+9558377ec5f92ead26aebfd07dab4d2cb129e5cd8bddb66db7ccada575d6001b  tests/adapters.py
+baf8f900f0d6497a621b4862b821ccbd724acb260473695563ca11541488b689  scripts/analyze_nsys.py
+ad893c3a4040a0e8a9ab945e1268669584d72f492d10227056f76a35e6e2332f  scripts/precision_probe.py
+6a08b77fe574b843b72df879397848ef051d31f0e6b889cbb3e0cfa1500c0cd8  scripts/residual_probe.py
+153277c1cce3f609fe7dc91c0ab3906d5b200879f209d7b4a80daf8cd7ae27b6  scripts/run_gpu_study.py
+8fe50a19ad238b0513ee37bbd64b853b77caba8da500cddfef673ca6462aa85b  scripts/run_logged.py
+42dc912b25f18794d84617d7c7396665363f0a4270a3fa2dc10b0f42b5240ae9  scripts/summarize_gpu_study.py
+8882d61f8cc9f0be95577c9bd732450e6d691fa6a7691723d0aab16a7cb14d26  cs336_systems/gpu_experiments.py
+f66babae4402eed8e92c20fbb4fc65d1a3bde15611127df44db5eeb53f5b1e2b  tests/test_gpu_experiments.py
+
+EXIT_CODE=0
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# 
+COMMAND: date -Is
+2026-11-16T16:25:34+08:00
+
+EXIT_CODE=0
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# > > > > > > > > > > > > > > > > > > > > > > > > > > > > 
+COMMAND: python -

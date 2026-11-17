@@ -1,0 +1,405 @@
+Script started on 2026-11-16 16:56:59+08:00 [TERM="dumb" TTY="/dev/pts/1" COLUMNS="80" LINES="24"]
++-----------------------------------------------AutoDL-----------------------------------------------------+
+[32m目录说明:[0m
+╔═════════════════╦════════╦════╦═════════════════════════════════════════════════════════════════════════╗
+║目录             ║名称    ║速度║说明                                                                     ║
+╠═════════════════╬════════╬════╬═════════════════════════════════════════════════════════════════════════╣
+║/                ║系 统 盘║一般║实例关机数据不会丢失，可存放代码等。会随保存镜像一起保存。               ║
+║/root/autodl-tmp ║数 据 盘║ 快 ║实例关机数据不会丢失，可存放读写IO要求高的数据。但不会随保存镜像一起保存 ║
+╚═════════════════╩════════╩════╩═════════════════════════════════════════════════════════════════════════╝
+[32mCPU[0m ：10 核心
+[32m内存[0m：30 GB
+[32mGPU [0m：NVIDIA GeForce RTX 3080 Ti, 1
+[32m存储[0m：
+[32m  系 统 盘/               [0m：22% 6.5G/30G
+[32m  数 据 盘/root/autodl-tmp[0m：1% 101M/50G
++----------------------------------------------------------------------------------------------------------+
+[31m*注意: [0m
+[31m1.系统盘较小请将大的数据存放于数据盘或文件存储中，重置系统时数据盘和文件存储中的数据不受影响[0m
+[31m2.清理系统盘请参考：https://www.autodl.com/docs/qa1/[0m
+[31m3.终端中长期执行命令请使用screen等工具开后台运行，确保程序不受SSH连接中断影响：https://www.autodl.com/docs/daemon/[0m
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# <:~/autodl-tmp/cs336-assignment2# git status --short                      
+ M tests/adapters.py
+?? cs336_systems/benchmark.py
+?? cs336_systems/flash_attention.py
+?? cs336_systems/flash_attention_triton.py
+?? cs336_systems/gpu_experiments.py
+?? reports/
+?? scripts/
+?? tests/test_gpu_experiments.py
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# <dl-tmp/cs336-assignment2# git branch --show-current                      
+main
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# <:~/autodl-tmp/cs336-assignment2# git rev-parse HEAD                      
+ca8bc81a59b70516f7ebb2da4808daade877c736
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# <36_systems/gpu_experiments.py scripts/run_logged.py                      
+8882d61f8cc9f0be95577c9bd732450e6d691fa6a7691723d0aab16a7cb14d26  cs336_systems/gpu_experiments.py
+8fe50a19ad238b0513ee37bbd64b853b77caba8da500cddfef673ca6462aa85b  scripts/run_logged.py
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# <uery-gpu=name,memory.free,memory.total --format=csv                      
+n,inspect; print(torch.__version__,torch.version.cuda,triton.__version__); print(inspect.signature(torch.compile))"
+name, memory.free [MiB], memory.total [MiB]
+NVIDIA GeForce RTX 3080 Ti, 11912 MiB, 12288 MiB
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# <ersion__); print(inspect.signature(torch.compile))"                      
+2.8.0+cu128 12.8 3.4.0
+(model: Optional[Callable[~_InputT, ~_RetT]] = None, *, fullgraph: bool = False, dynamic: Optional[bool] = None, backend: Union[str, Callable] = 'inductor', mode: Optional[str] = None, options: Optional[dict[str, Union[str, int, bool, Callable]]] = None, disable: bool = False) -> Union[Callable[[Callable[~_InputT, ~_RetT]], Callable[~_InputT, ~_RetT]], Callable[~_InputT, ~_RetT]]
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# <1-d49a9814:~/autodl-tmp/cs336-assignment2# mkdir /t                      mp/cs336-compile-upload
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# <1-d49a9814:~/autodl-tmp/cs336-assignment2# sha256su                      <signment2# sha256sum /tmp/cs336-compile-upload/*.py
+2c6b7fa206520e1d4b573aef7dc91706acedc6506b5e207473299cd1591d1ea9  /tmp/cs336-compile-upload/compile_study.py
+8ee70c7cc219c74bbe5c85598faba85d7d59bddf25ad811a423a181a7d264e46  /tmp/cs336-compile-upload/gpu_experiments.py
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# <~/autodl-tmp/cs336-assignment2# if [ "$(sha256sum c                      <s336_systems/gpu_experiments.py | cut -d' ' -f1)" =<d61f8cc9f0be95577c9bd732450e6d691fa6a7691723d0aab16<pts/compile_study.py; else echo SOURCE_CONFLICT; fi
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# <1 MKL_NUM_THREADS=1 TORCHINDUCTOR_COMPILE_THREADS=1                      
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# <ACHE_DIR=/root/autodl-tmp/cs336-compile-study-cache                      
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# <mpile_study.py run; else echo CACHE_EXISTS_STOP; fi                      
+COMMAND: python scripts/compile_study.py run
+COMMAND: timeout --signal=TERM --kill-after=10s 420s /root/miniconda3/bin/python /root/autodl-tmp/cs336-assignment2/scripts/compile_study.py eager
+{"first_step_ms": 557.2172421962023, "compiled": false}
+{
+  "arguments": {
+    "model_size": "small",
+    "mode": "train_step",
+    "precision": "fp32",
+    "device": "cuda",
+    "optimizer": "adam",
+    "batch_size": 4,
+    "vocab_size": 10000,
+    "context_length": 512,
+    "warmup": 5,
+    "steps": 10,
+    "profile": null,
+    "snapshot": null,
+    "nvtx": false,
+    "stage_timing": false,
+    "compile": false,
+    "checkpoint_group": 0,
+    "output": "reports/compile_study/eager.json"
+  },
+  "parameters": 128625408,
+  "parameter_bytes": 514501632,
+  "persistent_lower_bound_bytes": 2058006528,
+  "free_bytes": 12219580416,
+  "total_bytes": 12491292672,
+  "environment": {
+    "torch": "2.8.0+cu128",
+    "cuda": "12.8",
+    "gpu": "NVIDIA GeForce RTX 3080 Ti",
+    "tf32": false
+  },
+  "official_shape": true,
+  "warmup_step_ms": [
+    557.2172421962023,
+    154.6860821545124,
+    155.39922937750816,
+    155.3473137319088,
+    155.44880740344524
+  ],
+  "first_step_ms": 557.2172421962023,
+  "first_step_peak_allocated_bytes": 4350988288,
+  "warmup_peak_allocated_bytes": 5394704896,
+  "measurement_start_allocated_bytes": 2098131456,
+  "status": "ok",
+  "per_step_ms": [
+    155.60154896229506,
+    155.40790744125843,
+    155.45671619474888,
+    155.56686278432608,
+    155.4211489856243,
+    155.59382922947407,
+    155.488358810544,
+    155.6259961798787,
+    155.50378896296024,
+    155.7119768112898
+  ],
+  "mean_ms": 155.53781343623996,
+  "std_ms": 0.09821703711313244,
+  "phase_ms": {},
+  "memory_points": [
+    {
+      "step": 1,
+      "allocated_bytes": 2180051968,
+      "peak_allocated_bytes": 5394704896
+    },
+    {
+      "step": 2,
+      "allocated_bytes": 2180051968,
+      "peak_allocated_bytes": 5394704896
+    },
+    {
+      "step": 3,
+      "allocated_bytes": 2180051968,
+      "peak_allocated_bytes": 5394704896
+    },
+    {
+      "step": 4,
+      "allocated_bytes": 2180051968,
+      "peak_allocated_bytes": 5394704896
+    },
+    {
+      "step": 5,
+      "allocated_bytes": 2180051968,
+      "peak_allocated_bytes": 5394704896
+    },
+    {
+      "step": 6,
+      "allocated_bytes": 2180051968,
+      "peak_allocated_bytes": 5394704896
+    },
+    {
+      "step": 7,
+      "allocated_bytes": 2180051968,
+      "peak_allocated_bytes": 5394704896
+    },
+    {
+      "step": 8,
+      "allocated_bytes": 2180051968,
+      "peak_allocated_bytes": 5394704896
+    },
+    {
+      "step": 9,
+      "allocated_bytes": 2180051968,
+      "peak_allocated_bytes": 5394704896
+    },
+    {
+      "step": 10,
+      "allocated_bytes": 2180051968,
+      "peak_allocated_bytes": 5394704896
+    }
+  ],
+  "peak_allocated_bytes": 5394704896,
+  "peak_reserved_bytes": 5721030656,
+  "final_loss": 2.2716445922851562,
+  "parameter_dtype": "torch.float32",
+  "process_work_seconds": 4.35139452945441,
+  "exit_code": 0,
+  "cache_directory": "/root/autodl-tmp/cs336-compile-study-cache",
+  "compile_threads": "1"
+}
+EXIT_CODE=0 ELAPSED_S=7.520 LOG=reports/logs/compile_study/20261116T090107320190-eager
+COMMAND: timeout --signal=TERM --kill-after=10s 420s /root/miniconda3/bin/python /root/autodl-tmp/cs336-assignment2/scripts/compile_study.py compiled
+/root/miniconda3/lib/python3.12/site-packages/torch/_inductor/compile_fx.py:282: UserWarning: TensorFloat32 tensor cores for float32 matrix multiplication available but not enabled. Consider setting `torch.set_float32_matmul_precision('high')` for better performance.
+  warnings.warn(
+{"first_step_ms": 39129.89834230393, "compiled": true}
+{
+  "arguments": {
+    "model_size": "small",
+    "mode": "train_step",
+    "precision": "fp32",
+    "device": "cuda",
+    "optimizer": "adam",
+    "batch_size": 4,
+    "vocab_size": 10000,
+    "context_length": 512,
+    "warmup": 5,
+    "steps": 10,
+    "profile": null,
+    "snapshot": null,
+    "nvtx": false,
+    "stage_timing": false,
+    "compile": true,
+    "checkpoint_group": 0,
+    "output": "reports/compile_study/compiled.json"
+  },
+  "parameters": 128625408,
+  "parameter_bytes": 514501632,
+  "persistent_lower_bound_bytes": 2058006528,
+  "free_bytes": 12219580416,
+  "total_bytes": 12491292672,
+  "environment": {
+    "torch": "2.8.0+cu128",
+    "cuda": "12.8",
+    "gpu": "NVIDIA GeForce RTX 3080 Ti",
+    "tf32": false
+  },
+  "official_shape": true,
+  "compile_settings": {
+    "backend": "inductor",
+    "mode": "default",
+    "dynamic": null,
+    "fullgraph": false,
+    "scope": "model forward and generated backward; optimizer eager"
+  },
+  "compile_wrapper_ms": 1379.8746298998594,
+  "warmup_step_ms": [
+    39129.89834230393,
+    157.9527212306857,
+    119.9283143505454,
+    119.92200277745724,
+    120.26274856179953
+  ],
+  "first_step_ms": 39129.89834230393,
+  "first_step_peak_allocated_bytes": 3586805760,
+  "warmup_peak_allocated_bytes": 4628670976,
+  "measurement_start_allocated_bytes": 2082386432,
+  "status": "ok",
+  "per_step_ms": [
+    119.79206837713718,
+    120.32592296600342,
+    120.3520679846406,
+    120.39102613925934,
+    120.43439410626888,
+    120.55849935859442,
+    120.30638661235571,
+    120.07223721593618,
+    120.04658672958612,
+    120.24722713977098
+  ],
+  "mean_ms": 120.25264166295528,
+  "std_ms": 0.2238647595365162,
+  "phase_ms": {},
+  "memory_points": [
+    {
+      "step": 1,
+      "allocated_bytes": 2164438016,
+      "peak_allocated_bytes": 4628670976
+    },
+    {
+      "step": 2,
+      "allocated_bytes": 2164438016,
+      "peak_allocated_bytes": 4628670976
+    },
+    {
+      "step": 3,
+      "allocated_bytes": 2164438016,
+      "peak_allocated_bytes": 4628670976
+    },
+    {
+      "step": 4,
+      "allocated_bytes": 2164438016,
+      "peak_allocated_bytes": 4628670976
+    },
+    {
+      "step": 5,
+      "allocated_bytes": 2164438016,
+      "peak_allocated_bytes": 4628670976
+    },
+    {
+      "step": 6,
+      "allocated_bytes": 2164438016,
+      "peak_allocated_bytes": 4628670976
+    },
+    {
+      "step": 7,
+      "allocated_bytes": 2164438016,
+      "peak_allocated_bytes": 4628670976
+    },
+    {
+      "step": 8,
+      "allocated_bytes": 2164438016,
+      "peak_allocated_bytes": 4628670976
+    },
+    {
+      "step": 9,
+      "allocated_bytes": 2164438016,
+      "peak_allocated_bytes": 4628670976
+    },
+    {
+      "step": 10,
+      "allocated_bytes": 2164438016,
+      "peak_allocated_bytes": 4628670976
+    }
+  ],
+  "peak_allocated_bytes": 4628670976,
+  "peak_reserved_bytes": 4901044224,
+  "final_loss": 2.2708230018615723,
+  "parameter_dtype": "torch.float32",
+  "verification": {
+    "status": "passed",
+    "parameter_tensors_checked": 111,
+    "max_output_absolute_error": 4.76837158203125e-06,
+    "max_gradient_absolute_error": 2.3283064365386963e-09,
+    "eager_loss": 1.540560007095337,
+    "compiled_loss": 1.5405601263046265,
+    "loss_absolute_error": 1.1920928955078125e-07,
+    "tolerances": {
+      "output": [
+        1e-05,
+        0.0001
+      ],
+      "loss": [
+        1e-05,
+        1e-05
+      ],
+      "gradient": [
+        1e-05,
+        0.001
+      ]
+    },
+    "failures": []
+  },
+  "process_work_seconds": 47.27133690007031,
+  "exit_code": 0,
+  "cache_directory": "/root/autodl-tmp/cs336-compile-study-cache",
+  "compile_threads": "1"
+}
+EXIT_CODE=0 ELAPSED_S=51.441 LOG=reports/logs/compile_study/20261116T090115011210-compiled
+EXIT_CODE=0 ELAPSED_S=62.457 LOG=reports/logs/compile_study/20261116T090104749715-suite
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# <336-assignment2# printf 'SUITE_EXIT_CODE=%s\n' "$?"                      
+SUITE_EXIT_CODE=0
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# <814:~/autodl-tmp/cs336-assignment2# python - <<'PY'                      
+> import json
+> from pathlib import Path
+> r=Path('reports/compile_study')
+> </'compiled.json').read_text()); v=c['verification']
+> <_allocated_bytes']; delta=e['mean_ms']-c['mean_ms']
+> lines=['# torch.compile GPU 对照：small FP32 Train Step','',
+> '## A. 目标与作业范围',
+> < 对照，不能将本表当作整题完成。','',
+> '## B. 环境与方法',
+> <rch.optim.Adam(lr=1e-3)，seed=42，TF32关闭。',
+> <。未开启checkpoint、BF16、profile或NVTX。',
+> <pe固定。OMP/MKL/Inductor编译线程均为1。',
+> <�能声称所有层级缓存完全冷启动。','',
+> '## C. 修改文件',
+> <�可选verification回调。原CLI保持兼容。',
+> <�断言。未修改任何原有测试断言。','',
+> '## D. 关键代码与原理','```python','model = torch.compile(mod<d="inductor", mode="default", dynamic=None)','```',                  
+> <�不能据此断言某个kernel是实测瓶颈。',
+> <�，未把整个Python optimizer.step编译。','',
+> '## E. 实际命令与日志','```bash',
+> <MKL_NUM_THREADS=1 TORCHINDUCTOR_COMPILE_THREADS=1',
+> <HE_DIR=/root/autodl-tmp/cs336-compile-study-cache',
+> <name suite -- python scripts/compile_study.py run',
+> '```',
+> <，compiled进程51.441秒，全部exit_code=0。',
+> <�小型CPU回归，没有重跑历史GPU实验。',
+> <��持FP32对照一致，未修改TF32设置。','',
+> <ted GiB|OOM|','|---|---:|---:|---:|---:|---:|---|']
+> for name,d in [('eager',e),('compile',c)]:
+> <]:.3f}|{d['peak_allocated_bytes']/2**30:.3f}|否|")
+> <d:.3f}x，Step时间减少 {1-1/speed:.1%}，alloca<��次原始耗时及首次Step峰值均在JSON。',
+> <�身耗时，二者不能称为纯编译耗时。',
+> <�平。这是线性估算，不是额外测量。",
+> <��误差{v['max_gradient_absolute_error']:.9g}。",
+> <��1e-5/1e-3。验证3类全部通过，失败0。",
+> <轨迹的Loss代替同权重正确性检查。",'',
+> '## G. 本地同步',
+> <S。不同步编译缓存、环境或数据。','',
+> '## H. 核心知识',
+> <行足够多Step才可能赚回启动成本。','',
+> '## I. 未完成与停止',
+> <前环境，不能外推到B200或其他配置。']
+> (r/'RESULTS.md').write_text('\n'.join(lines)+'\n')
+> <ng_ms':delta,'verification':v['status']},indent=2))
+> PY
+{
+  "speedup": 1.2934253359039058,
+  "memory_saving": 0.1419973723804595,
+  "mean_step_saving_ms": 35.285171773284674,
+  "verification": "passed"
+}
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# <36-assignment2# printf 'REPORT_EXIT_CODE=%s\n' "$?"                      
+REPORT_EXIT_CODE=0
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# <:~/autodl-tmp/cs336-assignment2# git status --short                      
+ M tests/adapters.py
+?? cs336_systems/benchmark.py
+?? cs336_systems/flash_attention.py
+?? cs336_systems/flash_attention_triton.py
+?? cs336_systems/gpu_experiments.py
+?? reports/
+?? scripts/
+?? tests/test_gpu_experiments.py
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# <systems/gpu_experiments.py scripts/compile_study.py                      
+8ee70c7cc219c74bbe5c85598faba85d7d59bddf25ad811a423a181a7d264e46  cs336_systems/gpu_experiments.py
+2c6b7fa206520e1d4b573aef7dc91706acedc6506b5e207473299cd1591d1ea9  scripts/compile_study.py
+root@autodl-container-5pyx0m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# <m3pb1-d49a9814:~/autodl-tmp/cs336-assignment2# exit                      
+exit
+
+Script done on 2026-11-16 17:03:45+08:00 [COMMAND_EXIT_CODE="0"]

@@ -1,0 +1,9 @@
+{
+  "cases": 65,
+  "statuses": {
+    "blocked_capacity_lower_bound": 22,
+    "observed_oom": 10,
+    "ok": 33
+  },
+  "report": "reports/gpu_study/RESULTS.md"
+}

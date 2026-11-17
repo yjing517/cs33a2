@@ -1,0 +1,36 @@
+NCCL version 2.27.3+cuda12.9
+Capture range started in the application.
+Capture range ended in the application.
+Generating '/tmp/nsys-report-0258.qdstrm'
+
+[1/1] [0%                          ] trace-small-fsdp-float16.nsys-repProcessing events...
+
+[1/1] [0%                          ] trace-small-fsdp-float16.nsys-rep
+[1/1] [=========43%                ] trace-small-fsdp-float16.nsys-rep
+[1/1] [=====================86%    ] trace-small-fsdp-float16.nsys-rep
+[1/1] [=======================93%  ] trace-small-fsdp-float16.nsys-rep
+[1/1] [========================99% ] trace-small-fsdp-float16.nsys-rep
+[1/1] [=17%                        ] trace-small-fsdp-float16.nsys-rep
+[1/1] [13%                         ] trace-small-fsdp-float16.nsys-rep
+[1/1] [10%                         ] trace-small-fsdp-float16.nsys-rep
+[1/1] [8%                          ] trace-small-fsdp-float16.nsys-rep
+[1/1] [7%                          ] trace-small-fsdp-float16.nsys-rep
+[1/1] [6%                          ] trace-small-fsdp-float16.nsys-rep
+[1/1] [5%                          ] trace-small-fsdp-float16.nsys-rep
+[1/1] [8%                          ] trace-small-fsdp-float16.nsys-rep
+[1/1] [12%                         ] trace-small-fsdp-float16.nsys-rep
+[1/1] [=17%                        ] trace-small-fsdp-float16.nsys-rep
+[1/1] [==21%                       ] trace-small-fsdp-float16.nsys-rep
+[1/1] [====25%                     ] trace-small-fsdp-float16.nsys-rep
+[1/1] [=====29%                    ] trace-small-fsdp-float16.nsys-rep
+[1/1] [======33%                   ] trace-small-fsdp-float16.nsys-rep
+[1/1] [========40%                 ] trace-small-fsdp-float16.nsys-rep
+[1/1] [==========48%               ] trace-small-fsdp-float16.nsys-rep
+[1/1] [============55%             ] trace-small-fsdp-float16.nsys-rep
+[1/1] [=============60%            ] trace-small-fsdp-float16.nsys-rep
+[1/1] [==================78%       ] trace-small-fsdp-float16.nsys-rep
+[1/1] [========================100%] trace-small-fsdp-float16.nsys-rep
+[1/1] [========================100%] trace-small-fsdp-float16.nsys-rep
+{"status": "passed", "mode": "fsdp", "dtype": "float16", "median_ms": 211.1009125, "global_tokens_per_s": 2425.380326103517, "ranks": [{"rank": 0, "state_bytes": 514578876, "peak": {"allocated_bytes": 1151304192, "max_memory_allocated": 1428738048, "reserved_bytes": 1585446912, "max_memory_reserved": 1585446912}}, {"rank": 1, "state_bytes": 514578876, "peak": {"allocated_bytes": 1151828480, "max_memory_allocated": 1427845120, "reserved_bytes": 1585446912, "max_memory_reserved": 1585446912}}]}
+Generated:
+    /root/autodl-tmp/cs336-assignment2/reports/fsdp/20261117T021755Z/trace-small-fsdp-float16.nsys-rep

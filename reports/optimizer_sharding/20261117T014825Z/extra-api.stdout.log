@@ -1,0 +1,5 @@
+
+tests/test_sharded_optimizer_extra.py::test_groups_closure_checkpoint_and_empty_shard[AdamW] PASSED
+tests/test_sharded_optimizer_extra.py::test_groups_closure_checkpoint_and_empty_shard[SGD] PASSED
+
+============================== 2 passed in 7.79s ===============================

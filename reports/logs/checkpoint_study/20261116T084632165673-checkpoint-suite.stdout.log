@@ -1,0 +1,147 @@
+COMMAND: /root/miniconda3/bin/python scripts/checkpoint_study.py verify
+{"group": 1, "status": "passed", "parameter_tensors_checked": 111, "max_output_absolute_error": 0.0, "max_gradient_absolute_error": 0.0, "atol": 1e-06, "rtol": 1e-05}
+{"group": 2, "status": "passed", "parameter_tensors_checked": 111, "max_output_absolute_error": 0.0, "max_gradient_absolute_error": 0.0, "atol": 1e-06, "rtol": 1e-05}
+EXIT_CODE=0 ELAPSED_S=11.742 LOG=reports/logs/checkpoint_study/20261116T084634649442-checkpoint-verification
+COMMAND: /root/miniconda3/bin/python -m cs336_systems.gpu_experiments --model-size small --mode train_step --precision fp32 --optimizer adam --batch-size 4 --context-length 512 --warmup 5 --steps 10 --checkpoint-group 0 --output reports/checkpoint_study/group0.json
+{
+  "arguments": {
+    "model_size": "small",
+    "mode": "train_step",
+    "precision": "fp32",
+    "device": "cuda",
+    "optimizer": "adam",
+    "batch_size": 4,
+    "vocab_size": 10000,
+    "context_length": 512,
+    "warmup": 5,
+    "steps": 10,
+    "profile": null,
+    "snapshot": null,
+    "nvtx": false,
+    "stage_timing": false,
+    "compile": false,
+    "checkpoint_group": 0,
+    "output": "reports/checkpoint_study/group0.json"
+  },
+  "parameters": 128625408,
+  "parameter_bytes": 514501632,
+  "persistent_lower_bound_bytes": 2058006528,
+  "free_bytes": 12219580416,
+  "total_bytes": 12491292672,
+  "environment": {
+    "torch": "2.8.0+cu128",
+    "cuda": "12.8",
+    "gpu": "NVIDIA GeForce RTX 3080 Ti",
+    "tf32": false
+  },
+  "official_shape": true,
+  "warmup_peak_allocated_bytes": 5394704896,
+  "measurement_start_allocated_bytes": 2098131456,
+  "status": "ok",
+  "mean_ms": 156.1018048785627,
+  "std_ms": 0.13355244431885674,
+  "phase_ms": {},
+  "peak_allocated_bytes": 5394704896,
+  "peak_reserved_bytes": 5721030656,
+  "final_loss": 2.2716445922851562,
+  "parameter_dtype": "torch.float32",
+  "process_work_seconds": 4.604044857434928
+}
+EXIT_CODE=0 ELAPSED_S=7.913 LOG=reports/logs/checkpoint_study/20261116T084646561766-checkpoint-group0
+COMMAND: /root/miniconda3/bin/python -m cs336_systems.gpu_experiments --model-size small --mode train_step --precision fp32 --optimizer adam --batch-size 4 --context-length 512 --warmup 5 --steps 10 --checkpoint-group 1 --output reports/checkpoint_study/group1.json
+{
+  "arguments": {
+    "model_size": "small",
+    "mode": "train_step",
+    "precision": "fp32",
+    "device": "cuda",
+    "optimizer": "adam",
+    "batch_size": 4,
+    "vocab_size": 10000,
+    "context_length": 512,
+    "warmup": 5,
+    "steps": 10,
+    "profile": null,
+    "snapshot": null,
+    "nvtx": false,
+    "stage_timing": false,
+    "compile": false,
+    "checkpoint_group": 1,
+    "output": "reports/checkpoint_study/group1.json"
+  },
+  "parameters": 128625408,
+  "parameter_bytes": 514501632,
+  "persistent_lower_bound_bytes": 2058006528,
+  "free_bytes": 12219580416,
+  "total_bytes": 12491292672,
+  "environment": {
+    "torch": "2.8.0+cu128",
+    "cuda": "12.8",
+    "gpu": "NVIDIA GeForce RTX 3080 Ti",
+    "tf32": false
+  },
+  "official_shape": true,
+  "warmup_peak_allocated_bytes": 2694914048,
+  "measurement_start_allocated_bytes": 2092331520,
+  "status": "ok",
+  "mean_ms": 195.62026970088482,
+  "std_ms": 0.4314424033583045,
+  "phase_ms": {},
+  "peak_allocated_bytes": 2694914048,
+  "peak_reserved_bytes": 3160408064,
+  "final_loss": 2.2716445922851562,
+  "parameter_dtype": "torch.float32",
+  "process_work_seconds": 5.194563488475978
+}
+EXIT_CODE=0 ELAPSED_S=8.514 LOG=reports/logs/checkpoint_study/20261116T084654700839-checkpoint-group1
+COMMAND: /root/miniconda3/bin/python -m cs336_systems.gpu_experiments --model-size small --mode train_step --precision fp32 --optimizer adam --batch-size 4 --context-length 512 --warmup 5 --steps 10 --checkpoint-group 2 --output reports/checkpoint_study/group2.json
+{
+  "arguments": {
+    "model_size": "small",
+    "mode": "train_step",
+    "precision": "fp32",
+    "device": "cuda",
+    "optimizer": "adam",
+    "batch_size": 4,
+    "vocab_size": 10000,
+    "context_length": 512,
+    "warmup": 5,
+    "steps": 10,
+    "profile": null,
+    "snapshot": null,
+    "nvtx": false,
+    "stage_timing": false,
+    "compile": false,
+    "checkpoint_group": 2,
+    "output": "reports/checkpoint_study/group2.json"
+  },
+  "parameters": 128625408,
+  "parameter_bytes": 514501632,
+  "persistent_lower_bound_bytes": 2058006528,
+  "free_bytes": 12219580416,
+  "total_bytes": 12491292672,
+  "environment": {
+    "torch": "2.8.0+cu128",
+    "cuda": "12.8",
+    "gpu": "NVIDIA GeForce RTX 3080 Ti",
+    "tf32": false
+  },
+  "official_shape": true,
+  "warmup_peak_allocated_bytes": 2743792128,
+  "measurement_start_allocated_bytes": 2100277760,
+  "status": "ok",
+  "mean_ms": 199.4090899825096,
+  "std_ms": 0.3191907581851168,
+  "phase_ms": {},
+  "peak_allocated_bytes": 2743005696,
+  "peak_reserved_bytes": 3365928960,
+  "final_loss": 2.2716445922851562,
+  "parameter_dtype": "torch.float32",
+  "process_work_seconds": 5.103929118253291
+}
+EXIT_CODE=0 ELAPSED_S=8.345 LOG=reports/logs/checkpoint_study/20261116T084703426553-checkpoint-group2
+|Checkpoint组大小|训练Step平均ms|样本标准差ms|峰值allocated GiB|显存减少|时间增加|OOM|
+|---|---:|---:|---:|---:|---:|---|
+|关闭|156.102|0.134|5.024|0.0%|0.0%|否|
+|每1层|195.620|0.431|2.510|50.0%|25.3%|否|
+|每2层|199.409|0.319|2.555|49.2%|27.7%|否|

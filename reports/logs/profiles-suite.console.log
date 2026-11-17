@@ -1,0 +1,614 @@
+COMMAND: python scripts/run_gpu_study.py profiles
+COMMAND: /opt/nvidia/nsight-compute/2025.1.1/host/target-linux-x64/nsys profile --trace=cuda,nvtx,osrt --sample=none --cpuctxsw=none --cuda-memory-usage=true --capture-range=nvtx --nvtx-capture=measurement --capture-range-end=stop --output reports/gpu_study/artifacts/small-train_step-fp32-w5-n256-nsys /root/miniconda3/bin/python -m cs336_systems.gpu_experiments --model-size small --mode train_step --precision fp32 --warmup 5 --steps 1 --context-length 256 --output reports/gpu_study/data/small-train_step-fp32-w5-n256-nsys.json --optimizer reference_adamw --nvtx
+Capture range started in the application.
+Capture range ended in the application.
+Generating '/tmp/nsys-report-5197.qdstrm'
+
+[1/1] [0%                          ] small-train_step-fp32-w5-n256-nsys.nsys-repProcessing events...
+
+[1/1] [0%                          ] small-train_step-fp32-w5-n256-nsys.nsys-rep
+[1/1] [8%                          ] small-train_step-fp32-w5-n256-nsys.nsys-rep
+[1/1] [===========53%              ] small-train_step-fp32-w5-n256-nsys.nsys-rep
+[1/1] [========================99% ] small-train_step-fp32-w5-n256-nsys.nsys-rep
+[1/1] [0%                          ] small-train_step-fp32-w5-n256-nsys.nsys-rep
+[1/1] [=16%                        ] small-train_step-fp32-w5-n256-nsys.nsys-rep
+[1/1] [=====32%                    ] small-train_step-fp32-w5-n256-nsys.nsys-rep
+[1/1] [============54%             ] small-train_step-fp32-w5-n256-nsys.nsys-rep
+[1/1] [=================73%        ] small-train_step-fp32-w5-n256-nsys.nsys-rep
+[1/1] [========================100%] small-train_step-fp32-w5-n256-nsys.nsys-rep
+[1/1] [========================100%] small-train_step-fp32-w5-n256-nsys.nsys-rep
+{
+  "arguments": {
+    "model_size": "small",
+    "mode": "train_step",
+    "precision": "fp32",
+    "device": "cuda",
+    "optimizer": "reference_adamw",
+    "batch_size": 4,
+    "vocab_size": 10000,
+    "context_length": 256,
+    "warmup": 5,
+    "steps": 1,
+    "profile": null,
+    "snapshot": null,
+    "nvtx": true,
+    "stage_timing": false,
+    "compile": false,
+    "checkpoint_group": 0,
+    "output": "reports/gpu_study/data/small-train_step-fp32-w5-n256-nsys.json"
+  },
+  "parameters": 128625408,
+  "parameter_bytes": 514501632,
+  "persistent_lower_bound_bytes": 2058006528,
+  "free_bytes": 12190220288,
+  "total_bytes": 12491292672,
+  "environment": {
+    "torch": "2.8.0+cu128",
+    "cuda": "12.8",
+    "gpu": "NVIDIA GeForce RTX 3080 Ti",
+    "tf32": false
+  },
+  "official_shape": true,
+  "warmup_peak_allocated_bytes": 3234339328,
+  "measurement_start_allocated_bytes": 2167419392,
+  "status": "ok",
+  "mean_ms": 222.5076062604785,
+  "std_ms": 0.0,
+  "phase_ms": {},
+  "peak_allocated_bytes": 3235699200,
+  "peak_reserved_bytes": 3443523584,
+  "final_loss": 5.479974746704102,
+  "parameter_dtype": "torch.float32",
+  "process_work_seconds": 11.337867902591825
+}
+Generated:
+    /root/autodl-tmp/cs336-assignment2/reports/gpu_study/artifacts/small-train_step-fp32-w5-n256-nsys.nsys-rep
+EXIT_CODE=0 ELAPSED_S=15.610 LOG=reports/logs/gpu_study/20261116T080336112921-small-train_step-fp32-w5-n256-nsys
+COMMAND: /opt/nvidia/nsight-compute/2025.1.1/host/target-linux-x64/nsys profile --trace=cuda,nvtx,osrt --sample=none --cpuctxsw=none --cuda-memory-usage=true --capture-range=nvtx --nvtx-capture=measurement --capture-range-end=stop --output reports/gpu_study/artifacts/small-train_step-fp32-w5-n512-nsys /root/miniconda3/bin/python -m cs336_systems.gpu_experiments --model-size small --mode train_step --precision fp32 --warmup 5 --steps 1 --context-length 512 --output reports/gpu_study/data/small-train_step-fp32-w5-n512-nsys.json --optimizer reference_adamw --nvtx
+Capture range started in the application.
+Capture range ended in the application.
+Generating '/tmp/nsys-report-223f.qdstrm'
+
+[1/1] [0%                          ] small-train_step-fp32-w5-n512-nsys.nsys-repProcessing events...
+
+[1/1] [0%                          ] small-train_step-fp32-w5-n512-nsys.nsys-rep
+[1/1] [8%                          ] small-train_step-fp32-w5-n512-nsys.nsys-rep
+[1/1] [===========53%              ] small-train_step-fp32-w5-n512-nsys.nsys-rep
+[1/1] [========================99% ] small-train_step-fp32-w5-n512-nsys.nsys-rep
+[1/1] [0%                          ] small-train_step-fp32-w5-n512-nsys.nsys-rep
+[1/1] [=16%                        ] small-train_step-fp32-w5-n512-nsys.nsys-rep
+[1/1] [=====32%                    ] small-train_step-fp32-w5-n512-nsys.nsys-rep
+[1/1] [============54%             ] small-train_step-fp32-w5-n512-nsys.nsys-rep
+[1/1] [=================73%        ] small-train_step-fp32-w5-n512-nsys.nsys-rep
+[1/1] [========================100%] small-train_step-fp32-w5-n512-nsys.nsys-rep
+[1/1] [========================100%] small-train_step-fp32-w5-n512-nsys.nsys-rep
+{
+  "arguments": {
+    "model_size": "small",
+    "mode": "train_step",
+    "precision": "fp32",
+    "device": "cuda",
+    "optimizer": "reference_adamw",
+    "batch_size": 4,
+    "vocab_size": 10000,
+    "context_length": 512,
+    "warmup": 5,
+    "steps": 1,
+    "profile": null,
+    "snapshot": null,
+    "nvtx": true,
+    "stage_timing": false,
+    "compile": false,
+    "checkpoint_group": 0,
+    "output": "reports/gpu_study/data/small-train_step-fp32-w5-n512-nsys.json"
+  },
+  "parameters": 128625408,
+  "parameter_bytes": 514501632,
+  "persistent_lower_bound_bytes": 2058006528,
+  "free_bytes": 12190220288,
+  "total_bytes": 12491292672,
+  "environment": {
+    "torch": "2.8.0+cu128",
+    "cuda": "12.8",
+    "gpu": "NVIDIA GeForce RTX 3080 Ti",
+    "tf32": false
+  },
+  "official_shape": true,
+  "warmup_peak_allocated_bytes": 5401324032,
+  "measurement_start_allocated_bytes": 2100032000,
+  "status": "ok",
+  "mean_ms": 224.57674145698547,
+  "std_ms": 0.0,
+  "phase_ms": {},
+  "peak_allocated_bytes": 5405469184,
+  "peak_reserved_bytes": 5804916736,
+  "final_loss": 6.549947738647461,
+  "parameter_dtype": "torch.float32",
+  "process_work_seconds": 11.966905400156975
+}
+Generated:
+    /root/autodl-tmp/cs336-assignment2/reports/gpu_study/artifacts/small-train_step-fp32-w5-n512-nsys.nsys-rep
+EXIT_CODE=0 ELAPSED_S=15.936 LOG=reports/logs/gpu_study/20261116T080351921593-small-train_step-fp32-w5-n512-nsys
+COMMAND: /opt/nvidia/nsight-compute/2025.1.1/host/target-linux-x64/nsys profile --trace=cuda,nvtx,osrt --sample=none --cpuctxsw=none --cuda-memory-usage=true --capture-range=nvtx --nvtx-capture=measurement --capture-range-end=stop --output reports/gpu_study/artifacts/small-train_step-fp32-w5-n1024-nsys /root/miniconda3/bin/python -m cs336_systems.gpu_experiments --model-size small --mode train_step --precision fp32 --warmup 5 --steps 1 --context-length 1024 --output reports/gpu_study/data/small-train_step-fp32-w5-n1024-nsys.json --optimizer reference_adamw --nvtx
+Traceback (most recent call last):
+  File "/root/autodl-tmp/cs336-assignment2/cs336_systems/gpu_experiments.py", line 226, in main
+    result, code = experiment(args)
+                   ^^^^^^^^^^^^^^^^
+  File "/root/autodl-tmp/cs336-assignment2/cs336_systems/gpu_experiments.py", line 149, in experiment
+    step(False)
+  File "/root/autodl-tmp/cs336-assignment2/cs336_systems/gpu_experiments.py", line 132, in step
+    loss.backward()
+  File "/root/miniconda3/lib/python3.12/site-packages/torch/_tensor.py", line 647, in backward
+    torch.autograd.backward(
+  File "/root/miniconda3/lib/python3.12/site-packages/torch/autograd/__init__.py", line 354, in backward
+    _engine_run_backward(
+  File "/root/miniconda3/lib/python3.12/site-packages/torch/autograd/graph.py", line 829, in _engine_run_backward
+    return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 192.00 MiB. GPU 0 has a total capacity of 11.63 GiB of which 73.50 MiB is free. Including non-PyTorch memory, this process has 11.55 GiB memory in use. Of the allocated memory 10.71 GiB is allocated by PyTorch, and 528.68 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+{
+  "status": "observed_oom",
+  "arguments": {
+    "model_size": "small",
+    "mode": "train_step",
+    "precision": "fp32",
+    "device": "cuda",
+    "optimizer": "reference_adamw",
+    "batch_size": 4,
+    "vocab_size": 10000,
+    "context_length": 1024,
+    "warmup": 5,
+    "steps": 1,
+    "profile": null,
+    "snapshot": null,
+    "nvtx": true,
+    "stage_timing": false,
+    "compile": false,
+    "checkpoint_group": 0,
+    "output": "reports/gpu_study/data/small-train_step-fp32-w5-n1024-nsys.json"
+  },
+  "error": "CUDA out of memory. Tried to allocate 192.00 MiB. GPU 0 has a total capacity of 11.63 GiB of which 73.50 MiB is free. Including non-PyTorch memory, this process has 11.55 GiB memory in use. Of the allocated memory 10.71 GiB is allocated by PyTorch, and 528.68 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)",
+  "process_work_seconds": 2.805979705415666
+}
+Processing events...
+Generated:
+EXIT_CODE=42 ELAPSED_S=6.584 LOG=reports/logs/gpu_study/20261116T080407994681-small-train_step-fp32-w5-n1024-nsys
+COMMAND: /opt/nvidia/nsight-compute/2025.1.1/host/target-linux-x64/nsys profile --trace=cuda,nvtx,osrt --sample=none --cpuctxsw=none --cuda-memory-usage=true --capture-range=nvtx --nvtx-capture=measurement --capture-range-end=stop --output reports/gpu_study/artifacts/medium-train_step-fp32-w5-n256-nsys /root/miniconda3/bin/python -m cs336_systems.gpu_experiments --model-size medium --mode train_step --precision fp32 --warmup 5 --steps 1 --context-length 256 --output reports/gpu_study/data/medium-train_step-fp32-w5-n256-nsys.json --optimizer reference_adamw --nvtx
+Capture range started in the application.
+Capture range ended in the application.
+Generating '/tmp/nsys-report-9862.qdstrm'
+
+[1/1] [0%                          ] medium-train_step-fp32-w5-n256-nsys.nsys-repProcessing events...
+
+[1/1] [0%                          ] medium-train_step-fp32-w5-n256-nsys.nsys-rep
+[1/1] [8%                          ] medium-train_step-fp32-w5-n256-nsys.nsys-rep
+[1/1] [===========53%              ] medium-train_step-fp32-w5-n256-nsys.nsys-rep
+[1/1] [========================99% ] medium-train_step-fp32-w5-n256-nsys.nsys-rep
+[1/1] [0%                          ] medium-train_step-fp32-w5-n256-nsys.nsys-rep
+[1/1] [8%                          ] medium-train_step-fp32-w5-n256-nsys.nsys-rep
+[1/1] [=16%                        ] medium-train_step-fp32-w5-n256-nsys.nsys-rep
+[1/1] [====25%                     ] medium-train_step-fp32-w5-n256-nsys.nsys-rep
+[1/1] [======33%                   ] medium-train_step-fp32-w5-n256-nsys.nsys-rep
+[1/1] [========42%                 ] medium-train_step-fp32-w5-n256-nsys.nsys-rep
+[1/1] [============54%             ] medium-train_step-fp32-w5-n256-nsys.nsys-rep
+[1/1] [=================74%        ] medium-train_step-fp32-w5-n256-nsys.nsys-rep
+[1/1] [========================100%] medium-train_step-fp32-w5-n256-nsys.nsys-rep
+[1/1] [========================100%] medium-train_step-fp32-w5-n256-nsys.nsys-rep
+{
+  "arguments": {
+    "model_size": "medium",
+    "mode": "train_step",
+    "precision": "fp32",
+    "device": "cuda",
+    "optimizer": "reference_adamw",
+    "batch_size": 4,
+    "vocab_size": 10000,
+    "context_length": 256,
+    "warmup": 5,
+    "steps": 1,
+    "profile": null,
+    "snapshot": null,
+    "nvtx": true,
+    "stage_timing": false,
+    "compile": false,
+    "checkpoint_group": 0,
+    "output": "reports/gpu_study/data/medium-train_step-fp32-w5-n256-nsys.json"
+  },
+  "parameters": 423183360,
+  "parameter_bytes": 1692733440,
+  "persistent_lower_bound_bytes": 6770933760,
+  "free_bytes": 12190220288,
+  "total_bytes": 12491292672,
+  "environment": {
+    "torch": "2.8.0+cu128",
+    "cuda": "12.8",
+    "gpu": "NVIDIA GeForce RTX 3080 Ti",
+    "tf32": false
+  },
+  "official_shape": true,
+  "warmup_peak_allocated_bytes": 9113273856,
+  "measurement_start_allocated_bytes": 6795919872,
+  "status": "ok",
+  "mean_ms": 415.35019874572754,
+  "std_ms": 0.0,
+  "phase_ms": {},
+  "peak_allocated_bytes": 9113273856,
+  "peak_reserved_bytes": 9181331456,
+  "final_loss": 6.509315490722656,
+  "parameter_dtype": "torch.float32",
+  "process_work_seconds": 15.40295287873596
+}
+Generated:
+    /root/autodl-tmp/cs336-assignment2/reports/gpu_study/artifacts/medium-train_step-fp32-w5-n256-nsys.nsys-rep
+EXIT_CODE=0 ELAPSED_S=19.280 LOG=reports/logs/gpu_study/20261116T080414825407-medium-train_step-fp32-w5-n256-nsys
+COMMAND: /opt/nvidia/nsight-compute/2025.1.1/host/target-linux-x64/nsys profile --trace=cuda,nvtx,osrt --sample=none --cpuctxsw=none --cuda-memory-usage=true --capture-range=nvtx --nvtx-capture=measurement --capture-range-end=stop --output reports/gpu_study/artifacts/medium-train_step-fp32-w5-n512-nsys /root/miniconda3/bin/python -m cs336_systems.gpu_experiments --model-size medium --mode train_step --precision fp32 --warmup 5 --steps 1 --context-length 512 --output reports/gpu_study/data/medium-train_step-fp32-w5-n512-nsys.json --optimizer reference_adamw --nvtx
+Traceback (most recent call last):
+  File "/root/autodl-tmp/cs336-assignment2/cs336_systems/gpu_experiments.py", line 226, in main
+    result, code = experiment(args)
+                   ^^^^^^^^^^^^^^^^
+  File "/root/autodl-tmp/cs336-assignment2/cs336_systems/gpu_experiments.py", line 149, in experiment
+    step(False)
+  File "/root/autodl-tmp/cs336-assignment2/cs336_systems/gpu_experiments.py", line 126, in step
+    logits = model(x)
+             ^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/autodl-tmp/cs336-assignment2/cs336-basics/cs336_basics/model.py", line 253, in forward
+    x = layer(x)
+        ^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/autodl-tmp/cs336-assignment2/cs336-basics/cs336_basics/model.py", line 382, in forward
+    x_attn = self.attn(self.ln1(x))
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/autodl-tmp/cs336-assignment2/cs336-basics/cs336_basics/model.py", line 520, in forward
+    attn_output = scaled_dot_product_attention(K=K, Q=Q, V=V, mask=causal_mask)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/autodl-tmp/cs336-assignment2/cs336_systems/gpu_experiments.py", line 68, in attention
+    scores = einsum(Q, K, "... q d, ... k d -> ... q k") / math.sqrt(K.shape[-1])
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/einops/einops.py", line 939, in einsum
+    return get_backend(tensors[0]).einsum(pattern, *tensors)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/einops/_backends.py", line 291, in einsum
+    return self.torch.einsum(pattern, *x)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/torch/functional.py", line 422, in einsum
+    return _VF.einsum(equation, operands)  # type: ignore[attr-defined]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 64.00 MiB. GPU 0 has a total capacity of 11.63 GiB of which 45.50 MiB is free. Including non-PyTorch memory, this process has 11.58 GiB memory in use. Of the allocated memory 10.92 GiB is allocated by PyTorch, and 339.87 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+{
+  "status": "observed_oom",
+  "arguments": {
+    "model_size": "medium",
+    "mode": "train_step",
+    "precision": "fp32",
+    "device": "cuda",
+    "optimizer": "reference_adamw",
+    "batch_size": 4,
+    "vocab_size": 10000,
+    "context_length": 512,
+    "warmup": 5,
+    "steps": 1,
+    "profile": null,
+    "snapshot": null,
+    "nvtx": true,
+    "stage_timing": false,
+    "compile": false,
+    "checkpoint_group": 0,
+    "output": "reports/gpu_study/data/medium-train_step-fp32-w5-n512-nsys.json"
+  },
+  "error": "CUDA out of memory. Tried to allocate 64.00 MiB. GPU 0 has a total capacity of 11.63 GiB of which 45.50 MiB is free. Including non-PyTorch memory, this process has 11.58 GiB memory in use. Of the allocated memory 10.92 GiB is allocated by PyTorch, and 339.87 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)",
+  "process_work_seconds": 6.299459969624877
+}
+Processing events...
+Generated:
+EXIT_CODE=42 ELAPSED_S=10.350 LOG=reports/logs/gpu_study/20261116T080434326248-medium-train_step-fp32-w5-n512-nsys
+COMMAND: /opt/nvidia/nsight-compute/2025.1.1/host/target-linux-x64/nsys profile --trace=cuda,nvtx,osrt --sample=none --cpuctxsw=none --cuda-memory-usage=true --capture-range=nvtx --nvtx-capture=measurement --capture-range-end=stop --output reports/gpu_study/artifacts/medium-train_step-fp32-w5-n1024-nsys /root/miniconda3/bin/python -m cs336_systems.gpu_experiments --model-size medium --mode train_step --precision fp32 --warmup 5 --steps 1 --context-length 1024 --output reports/gpu_study/data/medium-train_step-fp32-w5-n1024-nsys.json --optimizer reference_adamw --nvtx
+Traceback (most recent call last):
+  File "/root/autodl-tmp/cs336-assignment2/cs336_systems/gpu_experiments.py", line 226, in main
+    result, code = experiment(args)
+                   ^^^^^^^^^^^^^^^^
+  File "/root/autodl-tmp/cs336-assignment2/cs336_systems/gpu_experiments.py", line 149, in experiment
+    step(False)
+  File "/root/autodl-tmp/cs336-assignment2/cs336_systems/gpu_experiments.py", line 126, in step
+    logits = model(x)
+             ^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/autodl-tmp/cs336-assignment2/cs336-basics/cs336_basics/model.py", line 253, in forward
+    x = layer(x)
+        ^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/autodl-tmp/cs336-assignment2/cs336-basics/cs336_basics/model.py", line 382, in forward
+    x_attn = self.attn(self.ln1(x))
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/autodl-tmp/cs336-assignment2/cs336-basics/cs336_basics/model.py", line 520, in forward
+    attn_output = scaled_dot_product_attention(K=K, Q=Q, V=V, mask=causal_mask)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/autodl-tmp/cs336-assignment2/cs336_systems/gpu_experiments.py", line 72, in attention
+    weights = basics.softmax(scores, dim=-1)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/autodl-tmp/cs336-assignment2/cs336-basics/cs336_basics/nn_utils.py", line 7, in softmax
+    return exponentiated_rescaled_input / torch.sum(exponentiated_rescaled_input, dim=dim, keepdim=True)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 256.00 MiB. GPU 0 has a total capacity of 11.63 GiB of which 37.50 MiB is free. Including non-PyTorch memory, this process has 11.59 GiB memory in use. Of the allocated memory 11.17 GiB is allocated by PyTorch, and 101.57 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+{
+  "status": "observed_oom",
+  "arguments": {
+    "model_size": "medium",
+    "mode": "train_step",
+    "precision": "fp32",
+    "device": "cuda",
+    "optimizer": "reference_adamw",
+    "batch_size": 4,
+    "vocab_size": 10000,
+    "context_length": 1024,
+    "warmup": 5,
+    "steps": 1,
+    "profile": null,
+    "snapshot": null,
+    "nvtx": true,
+    "stage_timing": false,
+    "compile": false,
+    "checkpoint_group": 0,
+    "output": "reports/gpu_study/data/medium-train_step-fp32-w5-n1024-nsys.json"
+  },
+  "error": "CUDA out of memory. Tried to allocate 256.00 MiB. GPU 0 has a total capacity of 11.63 GiB of which 37.50 MiB is free. Including non-PyTorch memory, this process has 11.59 GiB memory in use. Of the allocated memory 11.17 GiB is allocated by PyTorch, and 101.57 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)",
+  "process_work_seconds": 4.944415914826095
+}
+Processing events...
+Generated:
+EXIT_CODE=42 ELAPSED_S=8.847 LOG=reports/logs/gpu_study/20261116T080444874718-medium-train_step-fp32-w5-n1024-nsys
+COMMAND: /root/miniconda3/bin/python -m cs336_systems.gpu_experiments --model-size small --mode forward --precision fp32 --warmup 5 --steps 2 --context-length 512 --output reports/gpu_study/data/small-forward-fp32-w5-n512-torchprofile.json --optimizer reference_adamw --profile reports/gpu_study/artifacts/small-forward-torch --stage-timing
+-------------------------------------------------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  
+                                                   Name    Self CPU %      Self CPU   CPU total %     CPU total  CPU time avg     Self CUDA   Self CUDA %    CUDA total  CUDA time avg       CPU Mem  Self CPU Mem      CUDA Mem  Self CUDA Mem    # of Calls  
+-------------------------------------------------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  
+                                                forward         0.00%       0.000us         0.00%       0.000us       0.000us     101.142ms       109.26%     101.142ms      50.571ms           0 B           0 B           0 B           0 B             2  
+                                              aten::bmm         6.13%       6.372ms         9.52%       9.895ms      45.391us      59.384ms        64.15%      59.384ms     272.404us           0 B           0 B       3.25 GB       3.25 GB           218  
+                                 ampere_sgemm_128x64_tn         0.00%       0.000us         0.00%       0.000us       0.000us      52.047ms        56.23%      52.047ms     306.157us           0 B           0 B           0 B           0 B           170  
+                                 attention_mask_softmax         0.00%       0.000us         0.00%       0.000us       0.000us      14.731ms        15.91%      14.731ms     613.797us           0 B           0 B           0 B           0 B            24  
+                                              aten::mul         3.43%       3.564ms         5.85%       6.083ms      17.892us       8.883ms         9.60%       8.883ms      26.127us           0 B           0 B       2.27 GB       2.27 GB           340  
+                                              aten::div         0.66%     682.414us         1.05%       1.092ms      22.743us       5.936ms         6.41%       5.936ms     123.662us           0 B           0 B       2.25 GB       2.25 GB            48  
+                                attention_scores_matmul         0.00%       0.000us         0.00%       0.000us       0.000us       5.727ms         6.19%       5.727ms     238.617us           0 B           0 B           0 B           0 B            24  
+                                attention_output_matmul         0.00%       0.000us         0.00%       0.000us       0.000us       4.973ms         5.37%       4.973ms     207.207us           0 B           0 B           0 B           0 B            24  
+                                ampere_sgemm_128x128_nn         0.00%       0.000us         0.00%       0.000us       0.000us       4.478ms         4.84%       4.478ms     186.593us           0 B           0 B           0 B           0 B            24  
+void at::native::vectorized_elementwise_kernel<4, at...         0.00%       0.000us         0.00%       0.000us       0.000us       4.457ms         4.81%       4.457ms      92.856us           0 B           0 B           0 B           0 B            48  
+void at::native::elementwise_kernel<128, 2, at::nati...         0.00%       0.000us         0.00%       0.000us       0.000us       4.426ms         4.78%       4.426ms      15.158us           0 B           0 B           0 B           0 B           292  
+                                              aten::sub         0.77%     795.543us         1.23%       1.277ms      17.743us       3.333ms         3.60%       3.333ms      46.288us           0 B           0 B       1.27 GB       1.27 GB            72  
+void at::native::vectorized_elementwise_kernel<4, at...         0.00%       0.000us         0.00%       0.000us       0.000us       2.978ms         3.22%       2.978ms     124.065us           0 B           0 B           0 B           0 B            24  
+                                              aten::exp         0.23%     235.983us         0.39%     407.056us      16.961us       2.964ms         3.20%       2.964ms     123.492us           0 B           0 B       1.12 GB       1.12 GB            24  
+void at::native::vectorized_elementwise_kernel<4, at...         0.00%       0.000us         0.00%       0.000us       0.000us       2.964ms         3.20%       2.964ms     123.492us           0 B           0 B           0 B           0 B            24  
+void at::native::elementwise_kernel<128, 2, at::nati...         0.00%       0.000us         0.00%       0.000us       0.000us       2.958ms         3.20%       2.958ms     123.260us           0 B           0 B           0 B           0 B            24  
+void at::native::elementwise_kernel<128, 2, at::nati...         0.00%       0.000us         0.00%       0.000us       0.000us       2.905ms         3.14%       2.905ms     121.055us           0 B           0 B           0 B           0 B            24  
+                                ampere_sgemm_128x128_tn         0.00%       0.000us         0.00%       0.000us       0.000us       2.731ms         2.95%       2.731ms     113.808us           0 B           0 B           0 B           0 B            24  
+                                            aten::where         0.59%     612.940us         2.64%       2.746ms      57.218us       2.284ms         2.47%       4.604ms      95.907us           0 B           0 B       2.25 GB     -12.00 KB            48  
+void at::native::elementwise_kernel<128, 2, at::nati...         0.00%       0.000us         0.00%       0.000us       0.000us       2.284ms         2.47%       2.284ms      95.173us           0 B           0 B           0 B           0 B            24  
+-------------------------------------------------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  
+Self CPU time total: 103.937ms
+Self CUDA time total: 92.567ms
+
+{
+  "arguments": {
+    "model_size": "small",
+    "mode": "forward",
+    "precision": "fp32",
+    "device": "cuda",
+    "optimizer": "reference_adamw",
+    "batch_size": 4,
+    "vocab_size": 10000,
+    "context_length": 512,
+    "warmup": 5,
+    "steps": 2,
+    "profile": "reports/gpu_study/artifacts/small-forward-torch",
+    "snapshot": null,
+    "nvtx": false,
+    "stage_timing": true,
+    "compile": false,
+    "checkpoint_group": 0,
+    "output": "reports/gpu_study/data/small-forward-fp32-w5-n512-torchprofile.json"
+  },
+  "parameters": 128625408,
+  "parameter_bytes": 514501632,
+  "persistent_lower_bound_bytes": 514501632,
+  "free_bytes": 12219580416,
+  "total_bytes": 12491292672,
+  "environment": {
+    "torch": "2.8.0+cu128",
+    "cuda": "12.8",
+    "gpu": "NVIDIA GeForce RTX 3080 Ti",
+    "tf32": false
+  },
+  "official_shape": true,
+  "warmup_peak_allocated_bytes": 764099584,
+  "measurement_start_allocated_bytes": 524659712,
+  "status": "ok",
+  "mean_ms": 51.20783252641559,
+  "std_ms": 2.6279356885397087,
+  "phase_ms": {
+    "forward": 50.843807220458984
+  },
+  "peak_allocated_bytes": 764099584,
+  "peak_reserved_bytes": 937426944,
+  "final_loss": null,
+  "parameter_dtype": "torch.float32",
+  "process_work_seconds": 4.2015222273766994
+}
+EXIT_CODE=0 ELAPSED_S=7.680 LOG=reports/logs/gpu_study/20261116T080453889004-small-forward-fp32-w5-n512-torchprofile
+COMMAND: /root/miniconda3/bin/python -m cs336_systems.gpu_experiments --model-size small --mode train_step --precision fp32 --warmup 5 --steps 2 --context-length 512 --output reports/gpu_study/data/small-train_step-fp32-w5-n512-torchprofile.json --optimizer reference_adamw --profile reports/gpu_study/artifacts/small-train_step-torch --stage-timing
+-------------------------------------------------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  
+                                                   Name    Self CPU %      Self CPU   CPU total %     CPU total  CPU time avg     Self CUDA   Self CUDA %    CUDA total  CUDA time avg       CPU Mem  Self CPU Mem      CUDA Mem  Self CUDA Mem    # of Calls  
+-------------------------------------------------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  
+                                              aten::bmm         3.47%      20.250ms         5.20%      30.377ms      46.448us     169.964ms        51.70%     169.964ms     259.884us           0 B           0 B       7.12 GB       7.12 GB           654  
+                                                forward         0.00%       0.000us         0.00%       0.000us       0.000us     110.725ms        33.68%     110.725ms      55.362ms           0 B           0 B           0 B           0 B             2  
+                              Optimizer.step#AdamW.step         0.00%       0.000us         0.00%       0.000us       0.000us      82.034ms        24.95%      82.034ms      41.017ms           0 B           0 B           0 B           0 B             2  
+                                              aten::mul         4.60%      26.882ms         7.59%      44.318ms      18.389us      51.086ms        15.54%      51.086ms      21.197us           8 B           8 B      14.89 GB      14.89 GB          2410  
+                                 ampere_sgemm_128x64_tn         0.00%       0.000us         0.00%       0.000us       0.000us      50.946ms        15.50%      50.946ms     299.682us           0 B           0 B           0 B           0 B           170  
+                                 ampere_sgemm_128x64_nn         0.00%       0.000us         0.00%       0.000us       0.000us      47.539ms        14.46%      47.539ms     282.970us           0 B           0 B           0 B           0 B           168  
+void at::native::vectorized_elementwise_kernel<4, at...         0.00%       0.000us         0.00%       0.000us       0.000us      28.202ms         8.58%      28.202ms      20.953us           0 B           0 B           0 B           0 B          1346  
+void at::native::vectorized_elementwise_kernel<4, at...         0.00%       0.000us         0.00%       0.000us       0.000us      25.822ms         7.85%      25.822ms      65.872us           0 B           0 B           0 B           0 B           392  
+void cutlass::Kernel2<cutlass_80_simt_sgemm_128x64_8...         0.00%       0.000us         0.00%       0.000us       0.000us      23.987ms         7.30%      23.987ms     199.893us           0 B           0 B           0 B           0 B           120  
+                                              aten::div         0.91%       5.330ms         1.48%       8.667ms      20.833us      22.175ms         6.74%      22.175ms      53.305us           0 B           0 B       8.01 GB       8.01 GB           416  
+void cutlass::Kernel2<cutlass_80_simt_sgemm_256x128_...         0.00%       0.000us         0.00%       0.000us       0.000us      21.207ms         6.45%      21.207ms     424.133us           0 B           0 B           0 B           0 B            50  
+void at::native::vectorized_elementwise_kernel<4, at...         0.00%       0.000us         0.00%       0.000us       0.000us      17.159ms         5.22%      17.159ms      11.983us           0 B           0 B           0 B           0 B          1432  
+                                 attention_mask_softmax         0.00%       0.000us         0.00%       0.000us       0.000us      15.455ms         4.70%      15.455ms     643.960us           0 B           0 B           0 B           0 B            24  
+                                             aten::add_         0.46%       2.683ms         0.90%       5.272ms      18.178us      13.221ms         4.02%      13.221ms      45.590us           0 B           0 B           0 B           0 B           290  
+                                              aten::add         1.41%       8.265ms         2.33%      13.597ms      15.810us      12.657ms         3.85%      12.657ms      14.718us           0 B           0 B       3.60 GB       3.60 GB           860  
+void at::native::elementwise_kernel<128, 2, at::nati...         0.00%       0.000us         0.00%       0.000us       0.000us      11.983ms         3.64%      11.983ms     124.825us           0 B           0 B           0 B           0 B            96  
+                                            aten::copy_         0.85%       4.939ms         1.78%      10.371ms      25.051us       8.875ms         2.70%       8.875ms      21.437us           0 B           0 B           0 B           0 B           414  
+                                ampere_sgemm_128x128_nn         0.00%       0.000us         0.00%       0.000us       0.000us       8.785ms         2.67%       8.785ms     183.017us           0 B           0 B           0 B           0 B            48  
+                                ampere_sgemm_128x128_nt         0.00%       0.000us         0.00%       0.000us       0.000us       8.744ms         2.66%       8.744ms     182.171us           0 B           0 B           0 B           0 B            48  
+void at::native::elementwise_kernel<128, 2, at::nati...         0.00%       0.000us         0.00%       0.000us       0.000us       8.101ms         2.46%       8.101ms      13.872us           0 B           0 B           0 B           0 B           584  
+-------------------------------------------------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  
+Self CPU time total: 584.117ms
+Self CUDA time total: 328.779ms
+
+{
+  "arguments": {
+    "model_size": "small",
+    "mode": "train_step",
+    "precision": "fp32",
+    "device": "cuda",
+    "optimizer": "reference_adamw",
+    "batch_size": 4,
+    "vocab_size": 10000,
+    "context_length": 512,
+    "warmup": 5,
+    "steps": 2,
+    "profile": "reports/gpu_study/artifacts/small-train_step-torch",
+    "snapshot": null,
+    "nvtx": false,
+    "stage_timing": true,
+    "compile": false,
+    "checkpoint_group": 0,
+    "output": "reports/gpu_study/data/small-train_step-fp32-w5-n512-torchprofile.json"
+  },
+  "parameters": 128625408,
+  "parameter_bytes": 514501632,
+  "persistent_lower_bound_bytes": 2058006528,
+  "free_bytes": 12219580416,
+  "total_bytes": 12491292672,
+  "environment": {
+    "torch": "2.8.0+cu128",
+    "cuda": "12.8",
+    "gpu": "NVIDIA GeForce RTX 3080 Ti",
+    "tf32": false
+  },
+  "official_shape": true,
+  "warmup_peak_allocated_bytes": 5401635328,
+  "measurement_start_allocated_bytes": 2099868160,
+  "status": "ok",
+  "mean_ms": 204.8795484006405,
+  "std_ms": 4.4520203404993275,
+  "phase_ms": {
+    "forward": 55.61759948730469,
+    "loss": 0.22465600073337555,
+    "backward": 107.1925277709961,
+    "optimizer": 41.15969657897949
+  },
+  "peak_allocated_bytes": 5402847744,
+  "peak_reserved_bytes": 5804916736,
+  "final_loss": 6.404736518859863,
+  "parameter_dtype": "torch.float32",
+  "process_work_seconds": 10.530833311378956
+}
+EXIT_CODE=0 ELAPSED_S=14.354 LOG=reports/logs/gpu_study/20261116T080501807591-small-train_step-fp32-w5-n512-torchprofile
+COMMAND: /root/miniconda3/bin/python -m cs336_systems.gpu_experiments --model-size small --mode train_step --precision fp32 --warmup 5 --steps 1 --context-length 2048 --output reports/gpu_study/data/small-train_step-fp32-w5-n2048-capacity-probe.json
+Traceback (most recent call last):
+  File "/root/autodl-tmp/cs336-assignment2/cs336_systems/gpu_experiments.py", line 226, in main
+    result, code = experiment(args)
+                   ^^^^^^^^^^^^^^^^
+  File "/root/autodl-tmp/cs336-assignment2/cs336_systems/gpu_experiments.py", line 149, in experiment
+    step(False)
+  File "/root/autodl-tmp/cs336-assignment2/cs336_systems/gpu_experiments.py", line 126, in step
+    logits = model(x)
+             ^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/autodl-tmp/cs336-assignment2/cs336-basics/cs336_basics/model.py", line 253, in forward
+    x = layer(x)
+        ^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/autodl-tmp/cs336-assignment2/cs336-basics/cs336_basics/model.py", line 382, in forward
+    x_attn = self.attn(self.ln1(x))
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/autodl-tmp/cs336-assignment2/cs336-basics/cs336_basics/model.py", line 520, in forward
+    attn_output = scaled_dot_product_attention(K=K, Q=Q, V=V, mask=causal_mask)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/autodl-tmp/cs336-assignment2/cs336-basics/cs336_basics/model.py", line 432, in scaled_dot_product_attention
+    attention_weights = softmax(attention_scores, dim=-1)  # Softmax over the key dimension
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/autodl-tmp/cs336-assignment2/cs336-basics/cs336_basics/nn_utils.py", line 6, in softmax
+    exponentiated_rescaled_input = torch.exp(rescaled_input)
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 768.00 MiB. GPU 0 has a total capacity of 11.63 GiB of which 101.50 MiB is free. Including non-PyTorch memory, this process has 11.53 GiB memory in use. Of the allocated memory 10.97 GiB is allocated by PyTorch, and 269.63 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+{
+  "status": "observed_oom",
+  "arguments": {
+    "model_size": "small",
+    "mode": "train_step",
+    "precision": "fp32",
+    "device": "cuda",
+    "optimizer": "adam",
+    "batch_size": 4,
+    "vocab_size": 10000,
+    "context_length": 2048,
+    "warmup": 5,
+    "steps": 1,
+    "profile": null,
+    "snapshot": null,
+    "nvtx": false,
+    "stage_timing": false,
+    "compile": false,
+    "checkpoint_group": 0,
+    "output": "reports/gpu_study/data/small-train_step-fp32-w5-n2048-capacity-probe.json"
+  },
+  "error": "CUDA out of memory. Tried to allocate 768.00 MiB. GPU 0 has a total capacity of 11.63 GiB of which 101.50 MiB is free. Including non-PyTorch memory, this process has 11.53 GiB memory in use. Of the allocated memory 10.97 GiB is allocated by PyTorch, and 269.63 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)",
+  "process_work_seconds": 1.9164948612451553
+}
+EXIT_CODE=42 ELAPSED_S=5.246 LOG=reports/logs/gpu_study/20261116T080516353256-small-train_step-fp32-w5-n2048-capacity-probe
+EXIT_CODE=0 ELAPSED_S=105.774 LOG=reports/logs/gpu_study/20261116T080335986607-profiles-suite
