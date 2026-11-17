@@ -1,0 +1,56 @@
+ M .gitignore
+ M CHANGELOG.md
+ M CLAUDE.md
+ M LICENSE
+ M README.md
+ M cs336-basics/README.md
+ M cs336-basics/cs336_basics/__init__.py
+ M cs336-basics/cs336_basics/data.py
+ M cs336-basics/cs336_basics/model.py
+ M cs336-basics/cs336_basics/nn_utils.py
+ M cs336-basics/cs336_basics/optimizer.py
+ M cs336-basics/pyproject.toml
+ M cs336_systems/__init__.py
+ M cs336_systems/benchmark.py
+ M pyproject.toml
+ M test_and_make_submission.sh
+ M tests/adapters.py
+ M tests/common.py
+ M tests/conftest.py
+ M tests/test_attention.py
+ M tests/test_ddp.py
+ M tests/test_fsdp.py
+ M tests/test_sharded_optimizer.py
+?? cs336_systems/flash_attention.py
+?? cs336_systems/flash_attention_triton.py
+?? cs336_systems/fsdp.py
+?? cs336_systems/gpu_experiments.py
+?? cs336_systems/sharded_optimizer.py
+?? reports/checkpoint_study/
+?? reports/compile_study/
+?? reports/ddp_nccl/
+?? reports/fsdp/
+?? reports/gpu_study/
+?? reports/logs/
+?? reports/optimizer_sharding/
+?? scripts/analyze_ddp_results.py
+?? scripts/analyze_nsys.py
+?? scripts/benchmark_ddp.py
+?? scripts/benchmark_nccl_allreduce.py
+?? scripts/check_fsdp.py
+?? scripts/check_sharded_optimizer.py
+?? scripts/check_sharded_optimizer_memory.py
+?? scripts/checkpoint_study.py
+?? scripts/compile_study.py
+?? scripts/experiment_fsdp.py
+?? scripts/experiment_sharded_timing.py
+?? scripts/precision_probe.py
+?? scripts/residual_probe.py
+?? scripts/run_gpu_study.py
+?? scripts/run_logged.py
+?? scripts/run_multigpu_completion.py
+?? scripts/summarize_gpu_study.py
+?? test-remote.ps1
+?? tests/test_fsdp_extra.py
+?? tests/test_gpu_experiments.py
+?? tests/test_sharded_optimizer_extra.py

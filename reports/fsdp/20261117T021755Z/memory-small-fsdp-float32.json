@@ -1,0 +1,161 @@
+{
+  "status": "passed",
+  "configuration": {
+    "vocab_size": 10000,
+    "context_length": 128,
+    "d_model": 768,
+    "d_ff": 3072,
+    "num_layers": 12,
+    "num_heads": 12,
+    "batch_size_per_rank": 2,
+    "optimizer": "torch.optim.AdamW",
+    "lr": 0.001,
+    "weight_decay": 0.03,
+    "betas": [
+      0.9,
+      0.99
+    ],
+    "master_dtype": "float32",
+    "compute_dtype": "float32",
+    "warmup": 0,
+    "steps": 1,
+    "mode": "fsdp",
+    "profile": false
+  },
+  "torch": "2.8.0+cu128",
+  "ranks": [
+    {
+      "rank": 0,
+      "pid": 7877,
+      "device": 0,
+      "rows": [
+        {
+          "start_ns": 29810798720491201,
+          "end_ns": 29810799196192807,
+          "local_ms": 475.701606,
+          "loss": 9.273115158081055
+        }
+      ],
+      "memory_points": {
+        "after_model_init": {
+          "allocated_bytes": 277720064,
+          "max_memory_allocated": 562826240,
+          "reserved_bytes": 616562688,
+          "max_memory_reserved": 616562688
+        },
+        "before_optimizer_step": {
+          "allocated_bytes": 631106560,
+          "max_memory_allocated": 769967616,
+          "reserved_bytes": 893386752,
+          "max_memory_reserved": 893386752
+        },
+        "after_optimizer_step": {
+          "allocated_bytes": 1172194304,
+          "max_memory_allocated": 1440944128,
+          "reserved_bytes": 1577058304,
+          "max_memory_reserved": 1577058304
+        }
+      },
+      "measurement_peak": {
+        "allocated_bytes": 1161953792,
+        "max_memory_allocated": 1440944128,
+        "reserved_bytes": 1577058304,
+        "max_memory_reserved": 1577058304
+      },
+      "parameter_bytes": 257289216,
+      "gradient_bytes": 257289216,
+      "state_bytes": 514578876,
+      "communication": {
+        "all_gather": {
+          "torch.float32": {
+            "calls": 172,
+            "input_bytes": 514424832
+          }
+        },
+        "reduce_scatter": {
+          "torch.float32": {
+            "calls": 86,
+            "input_bytes": 514424832
+          }
+        },
+        "all_reduce": {
+          "torch.float32": {
+            "calls": 25,
+            "input_bytes": 76800
+          }
+        }
+      }
+    },
+    {
+      "rank": 1,
+      "pid": 7878,
+      "device": 1,
+      "rows": [
+        {
+          "start_ns": 29810798720473307,
+          "end_ns": 29810799187860670,
+          "local_ms": 467.387363,
+          "loss": 9.330879211425781
+        }
+      ],
+      "memory_points": {
+        "after_model_init": {
+          "allocated_bytes": 277720064,
+          "max_memory_allocated": 562826240,
+          "reserved_bytes": 616562688,
+          "max_memory_reserved": 616562688
+        },
+        "before_optimizer_step": {
+          "allocated_bytes": 631106560,
+          "max_memory_allocated": 769967616,
+          "reserved_bytes": 893386752,
+          "max_memory_reserved": 893386752
+        },
+        "after_optimizer_step": {
+          "allocated_bytes": 1172194304,
+          "max_memory_allocated": 1440944128,
+          "reserved_bytes": 1577058304,
+          "max_memory_reserved": 1577058304
+        }
+      },
+      "measurement_peak": {
+        "allocated_bytes": 1161953792,
+        "max_memory_allocated": 1440944128,
+        "reserved_bytes": 1577058304,
+        "max_memory_reserved": 1577058304
+      },
+      "parameter_bytes": 257289216,
+      "gradient_bytes": 257289216,
+      "state_bytes": 514578876,
+      "communication": {
+        "all_gather": {
+          "torch.float32": {
+            "calls": 172,
+            "input_bytes": 514424832
+          }
+        },
+        "reduce_scatter": {
+          "torch.float32": {
+            "calls": 86,
+            "input_bytes": 514424832
+          }
+        },
+        "all_reduce": {
+          "torch.float32": {
+            "calls": 25,
+            "input_bytes": 76800
+          }
+        }
+      }
+    }
+  ],
+  "global_step_ms": [
+    475.7195
+  ],
+  "median_ms": 475.7195,
+  "min_ms": 475.7195,
+  "max_ms": 475.7195,
+  "global_tokens_per_s": 1076.2644793833342,
+  "timing": "max rank end minus min rank start; synchronized CUDA, barrier excluded; first step includes three memory snapshot calls; performance median has 10 measured steps",
+  "communication_definition": "Python collective input tensor payload bytes, not physical link traffic; all-gather input is a shard, reduce-scatter input is full FP32 gradient; weight traffic casts before collective"
+}

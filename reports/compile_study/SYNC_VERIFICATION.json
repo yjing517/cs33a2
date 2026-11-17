@@ -1,0 +1,21 @@
+{
+    "status":  "verified",
+    "files_verified":  15,
+    "archive_sha256":  "767bb577e4dff443f7df50075bca91f97c25b515a79e7b13110735efc42d89c5",
+    "local_root":  "/home/yangjing/projects/cs336/assignment2-systems",
+    "remote_root":  "/root/autodl-tmp/cs336-assignment2",
+    "method":  "SCP; extract only absent report directories; sha256sum -c",
+    "source_files":  [
+                         "cs336_systems/gpu_experiments.py",
+                         "scripts/compile_study.py"
+                     ],
+    "existing_sources_overwritten":  false,
+    "conflicts":  0,
+    "unsynced_delivery_files":  [
+
+                                ],
+    "excluded":  [
+                     "Inductor compilation cache",
+                     "Python environment"
+                 ]
+}

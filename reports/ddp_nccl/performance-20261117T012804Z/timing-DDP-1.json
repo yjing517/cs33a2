@@ -1,0 +1,243 @@
+{
+  "status": "ok",
+  "arguments": {
+    "implementation": "DDP",
+    "model_size": "small",
+    "batch_size": 4,
+    "context_length": 512,
+    "vocab_size": 10000,
+    "warmup": 5,
+    "steps": 10,
+    "profile": false,
+    "output": "reports/ddp_nccl/performance-20261117T012804Z/timing-DDP-1.json"
+  },
+  "dtype": "float32",
+  "optimizer": "torch.optim.AdamW",
+  "lr": 0.0001,
+  "seed": 42,
+  "tf32": false,
+  "torch": "2.8.0+cu128",
+  "cuda": "12.8",
+  "gpu": "NVIDIA GeForce RTX 4090",
+  "world_size": 2,
+  "parameters": 128625408,
+  "shape": {
+    "d_model": 768,
+    "d_ff": 3072,
+    "num_layers": 12,
+    "num_heads": 12
+  },
+  "ranks": [
+    {
+      "rank": 0,
+      "pid": 3472,
+      "device": 0,
+      "records": [
+        {
+          "rank": 0,
+          "step": 0,
+          "start_ns": 29806695620420826,
+          "end_ns": 29806695748950459,
+          "local_ms": 128.529633,
+          "gradient_sync_tail_ms": 37.252960205078125
+        },
+        {
+          "rank": 0,
+          "step": 1,
+          "start_ns": 29806695751493243,
+          "end_ns": 29806695879502502,
+          "local_ms": 128.009259,
+          "gradient_sync_tail_ms": 36.943870544433594
+        },
+        {
+          "rank": 0,
+          "step": 2,
+          "start_ns": 29806695880553321,
+          "end_ns": 29806696008226781,
+          "local_ms": 127.67346,
+          "gradient_sync_tail_ms": 37.00012969970703
+        },
+        {
+          "rank": 0,
+          "step": 3,
+          "start_ns": 29806696009688331,
+          "end_ns": 29806696137482436,
+          "local_ms": 127.794105,
+          "gradient_sync_tail_ms": 36.9172477722168
+        },
+        {
+          "rank": 0,
+          "step": 4,
+          "start_ns": 29806696138582406,
+          "end_ns": 29806696266380193,
+          "local_ms": 127.797787,
+          "gradient_sync_tail_ms": 37.36899185180664
+        },
+        {
+          "rank": 0,
+          "step": 5,
+          "start_ns": 29806696268359336,
+          "end_ns": 29806696399585599,
+          "local_ms": 131.226263,
+          "gradient_sync_tail_ms": 36.80972671508789
+        },
+        {
+          "rank": 0,
+          "step": 6,
+          "start_ns": 29806696400841573,
+          "end_ns": 29806696532891036,
+          "local_ms": 132.049463,
+          "gradient_sync_tail_ms": 36.87936019897461
+        },
+        {
+          "rank": 0,
+          "step": 7,
+          "start_ns": 29806696533955331,
+          "end_ns": 29806696662054288,
+          "local_ms": 128.098957,
+          "gradient_sync_tail_ms": 37.10054397583008
+        },
+        {
+          "rank": 0,
+          "step": 8,
+          "start_ns": 29806696664418511,
+          "end_ns": 29806696795864991,
+          "local_ms": 131.44648,
+          "gradient_sync_tail_ms": 36.71859359741211
+        },
+        {
+          "rank": 0,
+          "step": 9,
+          "start_ns": 29806696797126860,
+          "end_ns": 29806696924968023,
+          "local_ms": 127.841163,
+          "gradient_sync_tail_ms": 36.910911560058594
+        }
+      ],
+      "final_loss": 5.662379264831543,
+      "peak_memory_bytes": 5394705408
+    },
+    {
+      "rank": 1,
+      "pid": 3473,
+      "device": 1,
+      "records": [
+        {
+          "rank": 1,
+          "step": 0,
+          "start_ns": 29806695620433323,
+          "end_ns": 29806695748899824,
+          "local_ms": 128.466501,
+          "gradient_sync_tail_ms": 36.8836784362793
+        },
+        {
+          "rank": 1,
+          "step": 1,
+          "start_ns": 29806695751409469,
+          "end_ns": 29806695879498563,
+          "local_ms": 128.089094,
+          "gradient_sync_tail_ms": 36.84147262573242
+        },
+        {
+          "rank": 1,
+          "step": 2,
+          "start_ns": 29806695880576999,
+          "end_ns": 29806696008254858,
+          "local_ms": 127.677859,
+          "gradient_sync_tail_ms": 36.84761428833008
+        },
+        {
+          "rank": 1,
+          "step": 3,
+          "start_ns": 29806696009671280,
+          "end_ns": 29806696137476496,
+          "local_ms": 127.805216,
+          "gradient_sync_tail_ms": 36.79657745361328
+        },
+        {
+          "rank": 1,
+          "step": 4,
+          "start_ns": 29806696138547302,
+          "end_ns": 29806696266320133,
+          "local_ms": 127.772831,
+          "gradient_sync_tail_ms": 36.92339324951172
+        },
+        {
+          "rank": 1,
+          "step": 5,
+          "start_ns": 29806696268248632,
+          "end_ns": 29806696399585535,
+          "local_ms": 131.336903,
+          "gradient_sync_tail_ms": 38.04364776611328
+        },
+        {
+          "rank": 1,
+          "step": 6,
+          "start_ns": 29806696400816567,
+          "end_ns": 29806696532886931,
+          "local_ms": 132.070364,
+          "gradient_sync_tail_ms": 40.712223052978516
+        },
+        {
+          "rank": 1,
+          "step": 7,
+          "start_ns": 29806696533956766,
+          "end_ns": 29806696661909888,
+          "local_ms": 127.953122,
+          "gradient_sync_tail_ms": 36.785152435302734
+        },
+        {
+          "rank": 1,
+          "step": 8,
+          "start_ns": 29806696664133407,
+          "end_ns": 29806696795911244,
+          "local_ms": 131.777837,
+          "gradient_sync_tail_ms": 40.74524688720703
+        },
+        {
+          "rank": 1,
+          "step": 9,
+          "start_ns": 29806696797145107,
+          "end_ns": 29806696924938529,
+          "local_ms": 127.793422,
+          "gradient_sync_tail_ms": 36.838401794433594
+        }
+      ],
+      "final_loss": 5.784566879272461,
+      "peak_memory_bytes": 5394705408
+    }
+  ],
+  "global_step_ms": [
+    128.529633,
+    128.093033,
+    127.701537,
+    127.811156,
+    127.832891,
+    131.336967,
+    132.074469,
+    128.098957,
+    131.777837,
+    127.841163
+  ],
+  "median_ms": 128.09599500000002,
+  "min_ms": 127.701537,
+  "max_ms": 132.074469,
+  "mean_ms": 129.1097643,
+  "std_ms": 1.8309010029932755,
+  "global_tokens_per_step": 4096,
+  "global_tokens_per_s": 31724.94367259874,
+  "gradient_sync_tail_ms": [
+    37.252960205078125,
+    36.943870544433594,
+    37.00012969970703,
+    36.9172477722168,
+    37.36899185180664,
+    38.04364776611328,
+    40.712223052978516,
+    37.10054397583008,
+    40.74524688720703,
+    36.910911560058594
+  ],
+  "timing_definition": "max(rank end_ns)-min(rank start_ns), shared host monotonic clock; zero_grad+forward+loss+backward+gradient sync+optimizer+CUDA synchronize; barrier excluded",
+  "sync_tail_definition": "CUDA events around finish_gradient_synchronization including pack/copy/wait; OverlapDDP excludes communication already executed in backward"
+}

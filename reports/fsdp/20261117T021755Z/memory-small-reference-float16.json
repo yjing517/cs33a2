@@ -1,0 +1,141 @@
+{
+  "status": "passed",
+  "configuration": {
+    "vocab_size": 10000,
+    "context_length": 128,
+    "d_model": 768,
+    "d_ff": 3072,
+    "num_layers": 12,
+    "num_heads": 12,
+    "batch_size_per_rank": 2,
+    "optimizer": "torch.optim.AdamW",
+    "lr": 0.001,
+    "weight_decay": 0.03,
+    "betas": [
+      0.9,
+      0.99
+    ],
+    "master_dtype": "float32",
+    "compute_dtype": "float16",
+    "warmup": 0,
+    "steps": 1,
+    "mode": "reference",
+    "profile": false
+  },
+  "torch": "2.8.0+cu128",
+  "ranks": [
+    {
+      "rank": 0,
+      "pid": 7840,
+      "device": 0,
+      "rows": [
+        {
+          "start_ns": 29810790502481106,
+          "end_ns": 29810791182024363,
+          "local_ms": 679.543257,
+          "loss": 9.273038864135742
+        }
+      ],
+      "memory_points": {
+        "after_model_init": {
+          "allocated_bytes": 516008960,
+          "max_memory_allocated": 516008960,
+          "reserved_bytes": 568328192,
+          "max_memory_reserved": 568328192
+        },
+        "before_optimizer_step": {
+          "allocated_bytes": 1109593088,
+          "max_memory_allocated": 1124953600,
+          "reserved_bytes": 1333788672,
+          "max_memory_reserved": 1333788672
+        },
+        "after_optimizer_step": {
+          "allocated_bytes": 2142856192,
+          "max_memory_allocated": 2658832384,
+          "reserved_bytes": 2990538752,
+          "max_memory_reserved": 2990538752
+        }
+      },
+      "measurement_peak": {
+        "allocated_bytes": 2137735680,
+        "max_memory_allocated": 2658832384,
+        "reserved_bytes": 2990538752,
+        "max_memory_reserved": 2990538752
+      },
+      "parameter_bytes": 514501632,
+      "gradient_bytes": 514501632,
+      "state_bytes": 1029003708,
+      "communication": {
+        "all_gather": {},
+        "reduce_scatter": {},
+        "all_reduce": {
+          "torch.float32": {
+            "calls": 111,
+            "input_bytes": 514501632
+          }
+        }
+      }
+    },
+    {
+      "rank": 1,
+      "pid": 7841,
+      "device": 1,
+      "rows": [
+        {
+          "start_ns": 29810790502495758,
+          "end_ns": 29810791181937516,
+          "local_ms": 679.441758,
+          "loss": 9.330886840820312
+        }
+      ],
+      "memory_points": {
+        "after_model_init": {
+          "allocated_bytes": 516008960,
+          "max_memory_allocated": 516008960,
+          "reserved_bytes": 568328192,
+          "max_memory_reserved": 568328192
+        },
+        "before_optimizer_step": {
+          "allocated_bytes": 1109593088,
+          "max_memory_allocated": 1124953600,
+          "reserved_bytes": 1333788672,
+          "max_memory_reserved": 1333788672
+        },
+        "after_optimizer_step": {
+          "allocated_bytes": 2142856192,
+          "max_memory_allocated": 2658832384,
+          "reserved_bytes": 2990538752,
+          "max_memory_reserved": 2990538752
+        }
+      },
+      "measurement_peak": {
+        "allocated_bytes": 2137735680,
+        "max_memory_allocated": 2658832384,
+        "reserved_bytes": 2990538752,
+        "max_memory_reserved": 2990538752
+      },
+      "parameter_bytes": 514501632,
+      "gradient_bytes": 514501632,
+      "state_bytes": 1029003708,
+      "communication": {
+        "all_gather": {},
+        "reduce_scatter": {},
+        "all_reduce": {
+          "torch.float32": {
+            "calls": 111,
+            "input_bytes": 514501632
+          }
+        }
+      }
+    }
+  ],
+  "global_step_ms": [
+    679.543257
+  ],
+  "median_ms": 679.543257,
+  "min_ms": 679.543257,
+  "max_ms": 679.543257,
+  "global_tokens_per_s": 753.4472525860116,
+  "timing": "max rank end minus min rank start; synchronized CUDA, barrier excluded; first step includes three memory snapshot calls; performance median has 10 measured steps",
+  "communication_definition": "Python collective input tensor payload bytes, not physical link traffic; all-gather input is a shard, reduce-scatter input is full FP32 gradient; weight traffic casts before collective"
+}

@@ -1,0 +1,17 @@
+{
+  "argv": [
+    "/home/yangjing/projects/cs336/assignment2-systems/.venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "tests/test_sharded_optimizer.py"
+  ],
+  "cwd": "/home/yangjing/projects/cs336/assignment2-systems",
+  "env": {
+    "CUDA_VISIBLE_DEVICES": "",
+    "OMP_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  },
+  "elapsed_s": 9.159200727999632,
+  "torch_version": "2.11.0+cu130"
+}

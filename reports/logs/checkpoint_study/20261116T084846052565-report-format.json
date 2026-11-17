@@ -1,0 +1,21 @@
+{
+  "command": [
+    "python",
+    "scripts/checkpoint_study.py",
+    "report"
+  ],
+  "cwd": "/root/autodl-tmp/cs336-assignment2",
+  "start_utc": "20261116T084846052565",
+  "gpu_before": {
+    "exit_code": 0,
+    "stdout": "NVIDIA GeForce RTX 3080 Ti, 1 MiB, 12288 MiB, 33, P8\n",
+    "stderr": ""
+  },
+  "exit_code": 0,
+  "elapsed_s": 2.892869133502245,
+  "gpu_after": {
+    "exit_code": 0,
+    "stdout": "NVIDIA GeForce RTX 3080 Ti, 1 MiB, 12288 MiB, 33, P8\n",
+    "stderr": ""
+  }
+}

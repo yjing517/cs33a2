@@ -1,0 +1,40 @@
+{
+  "command": [
+    "/root/miniconda3/bin/python",
+    "-m",
+    "cs336_systems.gpu_experiments",
+    "--model-size",
+    "small",
+    "--mode",
+    "forward",
+    "--precision",
+    "bf16",
+    "--warmup",
+    "5",
+    "--steps",
+    "1",
+    "--context-length",
+    "128",
+    "--output",
+    "reports/gpu_study/data/small-forward-bf16-w5-n128-memory.json",
+    "--snapshot",
+    "reports/gpu_study/artifacts/small-forward-bf16-n128.pickle",
+    "--stage-timing",
+    "--optimizer",
+    "reference_adamw"
+  ],
+  "cwd": "/root/autodl-tmp/cs336-assignment2",
+  "start_utc": "20261116T080957980360",
+  "gpu_before": {
+    "exit_code": 0,
+    "stdout": "NVIDIA GeForce RTX 3080 Ti, 1 MiB, 12288 MiB, 37, P0\n",
+    "stderr": ""
+  },
+  "exit_code": 0,
+  "elapsed_s": 46.870739170350134,
+  "gpu_after": {
+    "exit_code": 0,
+    "stdout": "NVIDIA GeForce RTX 3080 Ti, 1 MiB, 12288 MiB, 35, P5\n",
+    "stderr": ""
+  }
+}

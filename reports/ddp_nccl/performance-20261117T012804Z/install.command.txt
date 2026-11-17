@@ -1,0 +1,1 @@
+/root/miniconda3/bin/python -m pip install --target /root/autodl-tmp/cs336-ddp-deps-20261117 einx==0.4.3 einops==0.8.2 jaxtyping==0.3.9 frozendict==2.4.7 wadler-lindig==0.1.7

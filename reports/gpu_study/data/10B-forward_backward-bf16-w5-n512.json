@@ -1,0 +1,36 @@
+{
+  "arguments": {
+    "model_size": "10B",
+    "mode": "forward_backward",
+    "precision": "bf16",
+    "device": "cuda",
+    "optimizer": "adam",
+    "batch_size": 4,
+    "vocab_size": 10000,
+    "context_length": 512,
+    "warmup": 5,
+    "steps": 10,
+    "profile": null,
+    "snapshot": null,
+    "nvtx": false,
+    "stage_timing": false,
+    "compile": false,
+    "checkpoint_group": 0,
+    "output": "reports/gpu_study/data/10B-forward_backward-bf16-w5-n512.json"
+  },
+  "parameters": 12832823808,
+  "parameter_bytes": 51331295232,
+  "persistent_lower_bound_bytes": 102662590464,
+  "free_bytes": 12219580416,
+  "total_bytes": 12491292672,
+  "environment": {
+    "torch": "2.8.0+cu128",
+    "cuda": "12.8",
+    "gpu": "NVIDIA GeForce RTX 3080 Ti",
+    "tf32": false
+  },
+  "official_shape": true,
+  "status": "blocked_capacity_lower_bound",
+  "reason": "Persistent tensor lower bound already exceeds free VRAM; not an observed OOM",
+  "process_work_seconds": 0.3869278710335493
+}

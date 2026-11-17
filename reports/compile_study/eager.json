@@ -1,0 +1,120 @@
+{
+  "arguments": {
+    "model_size": "small",
+    "mode": "train_step",
+    "precision": "fp32",
+    "device": "cuda",
+    "optimizer": "adam",
+    "batch_size": 4,
+    "vocab_size": 10000,
+    "context_length": 512,
+    "warmup": 5,
+    "steps": 10,
+    "profile": null,
+    "snapshot": null,
+    "nvtx": false,
+    "stage_timing": false,
+    "compile": false,
+    "checkpoint_group": 0,
+    "output": "reports/compile_study/eager.json"
+  },
+  "parameters": 128625408,
+  "parameter_bytes": 514501632,
+  "persistent_lower_bound_bytes": 2058006528,
+  "free_bytes": 12219580416,
+  "total_bytes": 12491292672,
+  "environment": {
+    "torch": "2.8.0+cu128",
+    "cuda": "12.8",
+    "gpu": "NVIDIA GeForce RTX 3080 Ti",
+    "tf32": false
+  },
+  "official_shape": true,
+  "warmup_step_ms": [
+    557.2172421962023,
+    154.6860821545124,
+    155.39922937750816,
+    155.3473137319088,
+    155.44880740344524
+  ],
+  "first_step_ms": 557.2172421962023,
+  "first_step_peak_allocated_bytes": 4350988288,
+  "warmup_peak_allocated_bytes": 5394704896,
+  "measurement_start_allocated_bytes": 2098131456,
+  "status": "ok",
+  "per_step_ms": [
+    155.60154896229506,
+    155.40790744125843,
+    155.45671619474888,
+    155.56686278432608,
+    155.4211489856243,
+    155.59382922947407,
+    155.488358810544,
+    155.6259961798787,
+    155.50378896296024,
+    155.7119768112898
+  ],
+  "mean_ms": 155.53781343623996,
+  "std_ms": 0.09821703711313244,
+  "phase_ms": {},
+  "memory_points": [
+    {
+      "step": 1,
+      "allocated_bytes": 2180051968,
+      "peak_allocated_bytes": 5394704896
+    },
+    {
+      "step": 2,
+      "allocated_bytes": 2180051968,
+      "peak_allocated_bytes": 5394704896
+    },
+    {
+      "step": 3,
+      "allocated_bytes": 2180051968,
+      "peak_allocated_bytes": 5394704896
+    },
+    {
+      "step": 4,
+      "allocated_bytes": 2180051968,
+      "peak_allocated_bytes": 5394704896
+    },
+    {
+      "step": 5,
+      "allocated_bytes": 2180051968,
+      "peak_allocated_bytes": 5394704896
+    },
+    {
+      "step": 6,
+      "allocated_bytes": 2180051968,
+      "peak_allocated_bytes": 5394704896
+    },
+    {
+      "step": 7,
+      "allocated_bytes": 2180051968,
+      "peak_allocated_bytes": 5394704896
+    },
+    {
+      "step": 8,
+      "allocated_bytes": 2180051968,
+      "peak_allocated_bytes": 5394704896
+    },
+    {
+      "step": 9,
+      "allocated_bytes": 2180051968,
+      "peak_allocated_bytes": 5394704896
+    },
+    {
+      "step": 10,
+      "allocated_bytes": 2180051968,
+      "peak_allocated_bytes": 5394704896
+    }
+  ],
+  "peak_allocated_bytes": 5394704896,
+  "peak_reserved_bytes": 5721030656,
+  "final_loss": 2.2716445922851562,
+  "parameter_dtype": "torch.float32",
+  "process_work_seconds": 4.35139452945441,
+  "exit_code": 0,
+  "cache_directory": "/root/autodl-tmp/cs336-compile-study-cache",
+  "compile_threads": "1"
+}

@@ -1,0 +1,26 @@
+{
+  "argv": [
+    "/root/miniconda3/bin/python",
+    "-m",
+    "torch.distributed.run",
+    "--standalone",
+    "--nproc-per-node=2",
+    "--module",
+    "scripts.benchmark_nccl_allreduce",
+    "--warmup",
+    "5",
+    "--steps",
+    "20",
+    "--output",
+    "/root/autodl-tmp/cs336-assignment2/reports/nccl_allreduce/20261117T0330Z/allreduce-3.json"
+  ],
+  "cwd": "/root/autodl-tmp/cs336-assignment2",
+  "environment": {
+    "CUDA_VISIBLE_DEVICES": "0,1",
+    "OMP_NUM_THREADS": "1",
+    "NCCL_DEBUG": "WARN"
+  },
+  "start_utc": "2026-11-17T03:33:36.615139+00:00",
+  "exit_code": 0,
+  "elapsed_s": 6.776185072958469
+}

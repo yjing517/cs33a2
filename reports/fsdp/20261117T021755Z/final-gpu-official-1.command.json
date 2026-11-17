@@ -1,0 +1,18 @@
+{
+  "argv": [
+    "/root/miniconda3/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "tests/test_fsdp.py"
+  ],
+  "cwd": "/root/autodl-tmp/cs336-assignment2",
+  "environment": {
+    "PYTHONPATH": "/root/autodl-tmp/cs336-fsdp-test-deps-20261117:/root/autodl-tmp/cs336-ddp-deps-20261117:/root/autodl-tmp/cs336-assignment2/cs336-basics:/root/autodl-tmp/cs336-assignment2",
+    "CUDA_VISIBLE_DEVICES": "0,1",
+    "OMP_NUM_THREADS": "1",
+    "CUBLAS_WORKSPACE_CONFIG": ":4096:8",
+    "NCCL_DEBUG": "WARN"
+  },
+  "elapsed_s": 20.63694502040744
+}

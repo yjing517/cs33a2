@@ -1,0 +1,49 @@
+{
+  "command": [
+    "/opt/nvidia/nsight-compute/2025.1.1/host/target-linux-x64/nsys",
+    "profile",
+    "--trace=cuda,nvtx,osrt",
+    "--sample=none",
+    "--cpuctxsw=none",
+    "--cuda-memory-usage=true",
+    "--capture-range=nvtx",
+    "--nvtx-capture=measurement",
+    "--capture-range-end=stop",
+    "--output",
+    "reports/gpu_study/artifacts/medium-train_step-fp32-w5-n1024-nsys",
+    "/root/miniconda3/bin/python",
+    "-m",
+    "cs336_systems.gpu_experiments",
+    "--model-size",
+    "medium",
+    "--mode",
+    "train_step",
+    "--precision",
+    "fp32",
+    "--warmup",
+    "5",
+    "--steps",
+    "1",
+    "--context-length",
+    "1024",
+    "--output",
+    "reports/gpu_study/data/medium-train_step-fp32-w5-n1024-nsys.json",
+    "--optimizer",
+    "reference_adamw",
+    "--nvtx"
+  ],
+  "cwd": "/root/autodl-tmp/cs336-assignment2",
+  "start_utc": "20261116T080444874718",
+  "gpu_before": {
+    "exit_code": 0,
+    "stdout": "NVIDIA GeForce RTX 3080 Ti, 1 MiB, 12288 MiB, 44, P0\n",
+    "stderr": ""
+  },
+  "exit_code": 42,
+  "elapsed_s": 8.847285151481628,
+  "gpu_after": {
+    "exit_code": 0,
+    "stdout": "NVIDIA GeForce RTX 3080 Ti, 1 MiB, 12288 MiB, 44, P0\n",
+    "stderr": ""
+  }
+}

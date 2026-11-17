@@ -1,0 +1,82 @@
+PAGE 37
+6 Optimizer State Sharding
+Distributed data parallel training is conceptually simple and often very effective, but requires each rank 
+to hold a distinct copy of the model parameters and optimizer state. This redundancy can come with 
+significant memory costs. For example, the AdamW optimizer maintains two floats per parameter, 
+meaning that it consumes twice as much memory as the model weights. S. Rajbhandari et al. [5] describe 
+several methods for reducing this redundancy in data-parallel training by partitioning the (1) optimizer 
+state, (2) gradients, and (3) parameters across ranks, communicating them between workers as necessary.
+In this part of the assignment, we’ll reduce per-rank memory consumption by implementing a simplified 
+version of optimizer state sharding. Rather than keeping the optimizer states for all parameters, each 
+rank’s optimizer instance will only handle a subset of the parameters (approximately 1 / world_size). 
+When each rank’s optimizer takes an optimizer step, it’ll only update the subset of model parameters in 
+its shard. Then, each rank will broadcast its updated parameters to the other ranks to ensure that the 
+model parameters remain synchronized after each optimizer step.
+Problem (optimizer_state_sharding):   Optimizer State Sharding (15 points)
+Implement a Python class to handle optimizer state sharding. The class should wrap an arbitrary 
+input PyTorch optim.Optimizer and take care of synchronizing updated parameters after each 
+optimizer step. We recommend the following public interface:
+def __init__(self, params, optimizer_cls: Type[Optimizer], **kwargs: Any): Initializes the 
+sharded state optimizer. params is a collection of parameters to be optimized (or parameter 
+groups, in case the user wants to use different hyperparameters, such as learning rates, for 
+different parts of the model); these parameters will be sharded across all the ranks. The 
+optimizer_cls parameter specifies the type of optimizer to be wrapped (e.g., optim.AdamW). 
+Finally, any remaining keyword arguments are forwarded to the constructor of the 
+optimizer_cls. Make sure to call the torch.optim.Optimizer super-class constructor in this 
+method.
+def step(self, closure, **kwargs): Calls the wrapped optimizer’s step() method with the 
+provided closure and keyword arguments. After updating the parameters, synchronize with the 
+other ranks.
+def add_param_group(self, param_group: dict[str, Any]): This method should add a parameter 
+group to the sharded optimizer. This is called during construction of the sharded optimizer by 
+the super-class constructor and may also be called during training (e.g., for gradually 
+unfreezing layers in a model). As a result, this method should handle assigning the model’s 
+parameters among the ranks.
+Deliverable: Implement a container class to handle optimizer state sharding. To test your 
+sharded optimizer, first implement the adapter [adapters.get_sharded_optimizer] . Then, to 
+execute the tests, run uv run pytest tests/test_sharded_optimizer.py. We recommend running 
+the tests multiple times (e.g., 5) to ensure that they pass reliably.
+Now that we’ve implemented optimizer state sharding, let’s analyze its effect on the peak memory usage 
+during training and its runtime overhead.
+37
+
+PAGE 38
+Problem (optimizer_state_sharding_accounting):   Optimizer State Sharding Accounting (5 
+points)
+(a) Create a script to profile the peak memory usage when training language models with and 
+without optimizer state sharding. Using the standard configuration (1 node, 2 GPUs, xl 
+model size), report the peak memory usage after model initialization, directly before the 
+optimizer step, and directly after the optimizer step. Do the results align with your 
+expectations? Break down the memory usage in each setting (e.g., how much memory for 
+parameters, how much for optimizer states, etc.).
+Deliverable: 2-3 sentence response with peak memory usage results and a breakdown of how 
+the memory is divided between different model and optimizer components.
+(b) How does our implementation of optimizer state sharding affect training speed? Measure the 
+time taken per iteration with and without optimizer state sharding for the standard 
+configuration (1 node, 2 GPUs, xl model size).
+Deliverable: 2-3 sentence response with your timings.
+(c) How does our approach to optimizer state sharding differ from ZeRO stage 1 (described as 
+ZeRO-DP 𝑃𝑜𝑠 in S. Rajbhandari, J. Rasley, O. Ruwase, and Y. He [5])?
+Deliverable: 2-3 sentence summary of any differences, especially those related to memory 
+and communication volume.
+7 Fully-Sharded Data Parallel
+With optimizer state sharding and data parallel, we’re able to split the optimizer state and activations 
+across our data-parallel axis. However, our model weights remain duplicated — we’re storing a full copy 
+of them all on each GPU.
+We can solve this by turning our data parallel (DP) axis into a fully-sharded data parallel axis (FSDP). 
+With FSDP, each GPU stores only its own slice of every weight tensor, but has to pull slices from other 
+GPUs to form the full weight tensor using an all-gather to prepare for a forward or backward pass.
+To avoid keeping GPU compute waiting around for communication to finish, most FSDP implementations 
+schedule the layer’s all-gather in advance of the operation, meaning the relevant weights are ready before 
+they are needed, preventing communication from blocking computation. This keeps weight sharding 
+communication off the critical path, meaning it has no cost as long as communication can keep up with 
+compute and is scheduled well.
+Some layers are small enough in memory and compute that the latency overhead of a transfer is not 
+worth it. You should mark these layers not to be sharded by FSDP. In our architecture, this will mostly 
+be the case for norms. This leaves us with the embedding layer and every linear layer.
+While it is necessary to store master weights in FP32 (any values that are repeatedly accumulated into 
+are sensitive to precision), the weights do not need to be used in FP32. In mixed precision, we always 
+convert to the low-precision compute datatype before use, so we may as well convert even before the 
+weight is communicated to save on bandwidth.
+Problem (fsdp):   Fully-Sharded Data Parallel (15 points)
+38

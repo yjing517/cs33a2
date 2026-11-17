@@ -1,0 +1,31 @@
+{
+  "argv": [
+    "/root/miniconda3/bin/python",
+    "-m",
+    "torch.distributed.run",
+    "--standalone",
+    "--nproc-per-node=2",
+    "--module",
+    "scripts.check_fsdp",
+    "--backend",
+    "nccl",
+    "--dtype",
+    "float16",
+    "--optimizer",
+    "reference_adamw",
+    "--reference",
+    "ddp",
+    "--steps",
+    "3",
+    "--output",
+    "reports/fsdp/20261117T021755Z/nccl-adamw-ddp-reference-float16.json"
+  ],
+  "environment": {
+    "PYTHONPATH": "/root/autodl-tmp/cs336-fsdp-test-deps-20261117:/root/autodl-tmp/cs336-ddp-deps-20261117:/root/autodl-tmp/cs336-assignment2/cs336-basics:/root/autodl-tmp/cs336-assignment2",
+    "CUDA_VISIBLE_DEVICES": "0,1",
+    "OMP_NUM_THREADS": "1",
+    "CUBLAS_WORKSPACE_CONFIG": ":4096:8",
+    "NCCL_DEBUG": "WARN"
+  },
+  "elapsed_s": 7.52475168555975
+}

@@ -1,0 +1,251 @@
+{
+  "status": "passed",
+  "arguments": {
+    "backend": "nccl",
+    "model": "mlp",
+    "dtype": "float32",
+    "steps": 5,
+    "output": "reports/optimizer_sharding/20261117T014825Z/nccl-mlp-float32.json"
+  },
+  "backend": "nccl",
+  "world_size": 2,
+  "torch_version": "2.8.0+cu128",
+  "gpu": "NVIDIA GeForce RTX 4090",
+  "ownership_policy": "Each unique whole parameter tensor goes to rank with least assigned numel; ties choose lower rank; assignment is stable across add_param_group",
+  "replicas_exactly_equal_every_step": true,
+  "partition_disjoint_and_complete": true,
+  "states_equal_to_unsharded": true,
+  "memory_definition": "Separate sequential baseline/sharded phases; first-step CUDA allocation/peak snapshots before replica-validation collectives; CPU references do not occupy GPU memory; NCCL context memory is not counted by PyTorch allocator",
+  "ranks": [
+    {
+      "rank": 0,
+      "baseline": {
+        "rank": 0,
+        "device": "cuda:0",
+        "losses": [
+          0.7250223159790039,
+          0.703414797782898,
+          1.2267297506332397,
+          1.1853985786437988,
+          1.029523491859436
+        ],
+        "state_parameter_names": [
+          "0.weight",
+          "0.bias",
+          "2.weight",
+          "2.bias",
+          "4.weight",
+          "4.bias"
+        ],
+        "state_parameter_numel": 4996,
+        "state_bytes": 39992,
+        "state_cuda_bytes": 39968,
+        "memory_points_first_step": {
+          "after_model_init": {
+            "allocated_bytes": 20992,
+            "peak_allocated_bytes": 20992,
+            "reserved_bytes": 2097152
+          },
+          "before_optimizer_step": {
+            "allocated_bytes": 17083392,
+            "peak_allocated_bytes": 17087488,
+            "reserved_bytes": 23068672
+          },
+          "after_optimizer_step": {
+            "allocated_bytes": 17125376,
+            "peak_allocated_bytes": 17146368,
+            "reserved_bytes": 23068672
+          }
+        },
+        "parameter_bytes": 19984,
+        "gradient_bytes": 19984,
+        "ownership": null
+      },
+      "sharded": {
+        "rank": 0,
+        "device": "cuda:0",
+        "losses": [
+          0.7250223159790039,
+          0.703414797782898,
+          1.2267297506332397,
+          1.1853985786437988,
+          1.029523491859436
+        ],
+        "state_parameter_names": [
+          "0.weight",
+          "2.bias",
+          "4.weight",
+          "4.bias"
+        ],
+        "state_parameter_numel": 836,
+        "state_bytes": 6704,
+        "state_cuda_bytes": 6688,
+        "memory_points_first_step": {
+          "after_model_init": {
+            "allocated_bytes": 17060352,
+            "peak_allocated_bytes": 17060352,
+            "reserved_bytes": 23068672
+          },
+          "before_optimizer_step": {
+            "allocated_bytes": 17083392,
+            "peak_allocated_bytes": 18114560,
+            "reserved_bytes": 23068672
+          },
+          "after_optimizer_step": {
+            "allocated_bytes": 17091584,
+            "peak_allocated_bytes": 18114560,
+            "reserved_bytes": 23068672
+          }
+        },
+        "parameter_bytes": 19984,
+        "gradient_bytes": 19984,
+        "ownership": {
+          "0.weight": {
+            "owner": 0,
+            "numel": 512
+          },
+          "0.bias": {
+            "owner": 1,
+            "numel": 64
+          },
+          "2.weight": {
+            "owner": 1,
+            "numel": 4096
+          },
+          "2.bias": {
+            "owner": 0,
+            "numel": 64
+          },
+          "4.weight": {
+            "owner": 0,
+            "numel": 256
+          },
+          "4.bias": {
+            "owner": 0,
+            "numel": 4
+          }
+        }
+      },
+      "max_errors": {
+        "loss": 0.0,
+        "gradient": 0.0,
+        "parameter": 0.0,
+        "optimizer_state": 0.0
+      }
+    },
+    {
+      "rank": 1,
+      "baseline": {
+        "rank": 1,
+        "device": "cuda:1",
+        "losses": [
+          0.74620121717453,
+          0.9181730151176453,
+          1.1998323202133179,
+          0.8981333374977112,
+          0.9442908763885498
+        ],
+        "state_parameter_names": [
+          "0.weight",
+          "0.bias",
+          "2.weight",
+          "2.bias",
+          "4.weight",
+          "4.bias"
+        ],
+        "state_parameter_numel": 4996,
+        "state_bytes": 39992,
+        "state_cuda_bytes": 39968,
+        "memory_points_first_step": {
+          "after_model_init": {
+            "allocated_bytes": 20992,
+            "peak_allocated_bytes": 20992,
+            "reserved_bytes": 2097152
+          },
+          "before_optimizer_step": {
+            "allocated_bytes": 17083392,
+            "peak_allocated_bytes": 17087488,
+            "reserved_bytes": 23068672
+          },
+          "after_optimizer_step": {
+            "allocated_bytes": 17125376,
+            "peak_allocated_bytes": 17146368,
+            "reserved_bytes": 23068672
+          }
+        },
+        "parameter_bytes": 19984,
+        "gradient_bytes": 19984,
+        "ownership": null
+      },
+      "sharded": {
+        "rank": 1,
+        "device": "cuda:1",
+        "losses": [
+          0.74620121717453,
+          0.9181730151176453,
+          1.1998323202133179,
+          0.8981333374977112,
+          0.9442908763885498
+        ],
+        "state_parameter_names": [
+          "0.bias",
+          "2.weight"
+        ],
+        "state_parameter_numel": 4160,
+        "state_bytes": 33288,
+        "state_cuda_bytes": 33280,
+        "memory_points_first_step": {
+          "after_model_init": {
+            "allocated_bytes": 17060352,
+            "peak_allocated_bytes": 17060352,
+            "reserved_bytes": 23068672
+          },
+          "before_optimizer_step": {
+            "allocated_bytes": 17083392,
+            "peak_allocated_bytes": 18114560,
+            "reserved_bytes": 23068672
+          },
+          "after_optimizer_step": {
+            "allocated_bytes": 17117184,
+            "peak_allocated_bytes": 18114560,
+            "reserved_bytes": 23068672
+          }
+        },
+        "parameter_bytes": 19984,
+        "gradient_bytes": 19984,
+        "ownership": {
+          "0.weight": {
+            "owner": 0,
+            "numel": 512
+          },
+          "0.bias": {
+            "owner": 1,
+            "numel": 64
+          },
+          "2.weight": {
+            "owner": 1,
+            "numel": 4096
+          },
+          "2.bias": {
+            "owner": 0,
+            "numel": 64
+          },
+          "4.weight": {
+            "owner": 0,
+            "numel": 256
+          },
+          "4.bias": {
+            "owner": 0,
+            "numel": 4
+          }
+        }
+      },
+      "max_errors": {
+        "loss": 0.0,
+        "gradient": 0.0,
+        "parameter": 0.0,
+        "optimizer_state": 0.0
+      }
+    }
+  ]
+}

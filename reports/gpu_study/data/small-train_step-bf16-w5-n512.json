@@ -1,0 +1,108 @@
+{
+  "arguments": {
+    "model_size": "small",
+    "mode": "train_step",
+    "precision": "bf16",
+    "device": "cuda",
+    "optimizer": "adam",
+    "batch_size": 4,
+    "vocab_size": 10000,
+    "context_length": 512,
+    "warmup": 5,
+    "steps": 10,
+    "profile": null,
+    "snapshot": null,
+    "nvtx": false,
+    "stage_timing": false,
+    "compile": false,
+    "checkpoint_group": 0,
+    "output": "reports/gpu_study/data/small-train_step-bf16-w5-n512.json"
+  },
+  "parameters": 128625408,
+  "parameter_bytes": 514501632,
+  "persistent_lower_bound_bytes": 2058006528,
+  "free_bytes": 12219580416,
+  "total_bytes": 12491292672,
+  "environment": {
+    "torch": "2.8.0+cu128",
+    "cuda": "12.8",
+    "gpu": "NVIDIA GeForce RTX 3080 Ti",
+    "tf32": false
+  },
+  "official_shape": true,
+  "warmup_peak_allocated_bytes": 4418243584,
+  "measurement_start_allocated_bytes": 2112942592,
+  "status": "ok",
+  "per_step_ms": [
+    96.4003773406148,
+    96.27432283014059,
+    96.6393006965518,
+    96.40699718147516,
+    96.13414388149977,
+    96.45389299839735,
+    96.48499544709921,
+    96.4927151799202,
+    96.60526271909475,
+    97.28358592838049
+  ],
+  "mean_ms": 96.51755942031741,
+  "std_ms": 0.3068057008366123,
+  "phase_ms": {},
+  "memory_points": [
+    {
+      "step": 1,
+      "allocated_bytes": 2153903104,
+      "peak_allocated_bytes": 4418243584
+    },
+    {
+      "step": 2,
+      "allocated_bytes": 2153903104,
+      "peak_allocated_bytes": 4418243584
+    },
+    {
+      "step": 3,
+      "allocated_bytes": 2153903104,
+      "peak_allocated_bytes": 4418243584
+    },
+    {
+      "step": 4,
+      "allocated_bytes": 2153903104,
+      "peak_allocated_bytes": 4418243584
+    },
+    {
+      "step": 5,
+      "allocated_bytes": 2153903104,
+      "peak_allocated_bytes": 4418243584
+    },
+    {
+      "step": 6,
+      "allocated_bytes": 2153903104,
+      "peak_allocated_bytes": 4418243584
+    },
+    {
+      "step": 7,
+      "allocated_bytes": 2153903104,
+      "peak_allocated_bytes": 4418243584
+    },
+    {
+      "step": 8,
+      "allocated_bytes": 2153903104,
+      "peak_allocated_bytes": 4418243584
+    },
+    {
+      "step": 9,
+      "allocated_bytes": 2153903104,
+      "peak_allocated_bytes": 4418243584
+    },
+    {
+      "step": 10,
+      "allocated_bytes": 2153903104,
+      "peak_allocated_bytes": 4418243584
+    }
+  ],
+  "peak_allocated_bytes": 4418243584,
+  "peak_reserved_bytes": 4693426176,
+  "final_loss": 2.208108901977539,
+  "parameter_dtype": "torch.float32",
+  "process_work_seconds": 3.899680672213435
+}

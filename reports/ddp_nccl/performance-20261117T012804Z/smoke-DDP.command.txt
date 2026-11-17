@@ -1,0 +1,1 @@
+/root/miniconda3/bin/python -m torch.distributed.run --standalone --nproc-per-node=2 --module scripts.benchmark_ddp --implementation DDP --warmup 1 --steps 2 --output reports/ddp_nccl/performance-20261117T012804Z/smoke-DDP.json 

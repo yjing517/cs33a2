@@ -1,0 +1,20 @@
+{
+  "command": [
+    "python",
+    "scripts/analyze_nsys.py"
+  ],
+  "cwd": "/root/autodl-tmp/cs336-assignment2",
+  "start_utc": "20261116T081802129038",
+  "gpu_before": {
+    "exit_code": 0,
+    "stdout": "NVIDIA GeForce RTX 3080 Ti, 1 MiB, 12288 MiB, 32, P8\n",
+    "stderr": ""
+  },
+  "exit_code": 0,
+  "elapsed_s": 1.052578474394977,
+  "gpu_after": {
+    "exit_code": 0,
+    "stdout": "NVIDIA GeForce RTX 3080 Ti, 1 MiB, 12288 MiB, 32, P8\n",
+    "stderr": ""
+  }
+}

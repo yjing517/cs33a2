@@ -1,0 +1,68 @@
+{
+  "project": "/root/autodl-tmp/cs336-assignment2",
+  "project_venv_exists": false,
+  "conda_envs": [
+    "/root/miniconda3"
+  ],
+  "checks": [
+    {
+      "candidate": "/root/autodl-tmp/cs336-assignment2/.venv/bin/python",
+      "status": "missing",
+      "error": "Interpreter does not exist"
+    },
+    {
+      "candidate": "/root/miniconda3/bin/python",
+      "exit_code": 0,
+      "result": {
+        "executable": "/root/miniconda3/bin/python",
+        "python_version": "3.12.3 | packaged by Anaconda, Inc. | (main, May  6 2024, 19:46:43) [GCC 11.2.0]",
+        "cwd": "/root/autodl-tmp/cs336-assignment2",
+        "imports": {
+          "torch": {
+            "status": "ok",
+            "path": "/root/miniconda3/lib/python3.12/site-packages/torch/__init__.py",
+            "version": "2.8.0+cu128"
+          },
+          "einx": {
+            "status": "error",
+            "error": "ModuleNotFoundError(\"No module named 'einx'\")",
+            "traceback": "Traceback (most recent call last):\n  File \"<string>\", line 6, in <module>\n  File \"/root/miniconda3/lib/python3.12/importlib/__init__.py\", line 90, in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen importlib._bootstrap>\", line 1387, in _gcd_import\n  File \"<frozen importlib._bootstrap>\", line 1360, in _find_and_load\n  File \"<frozen importlib._bootstrap>\", line 1324, in _find_and_load_unlocked\nModuleNotFoundError: No module named 'einx'\n"
+          },
+          "einops": {
+            "status": "error",
+            "error": "ModuleNotFoundError(\"No module named 'einops'\")",
+            "traceback": "Traceback (most recent call last):\n  File \"<string>\", line 6, in <module>\n  File \"/root/miniconda3/lib/python3.12/importlib/__init__.py\", line 90, in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen importlib._bootstrap>\", line 1387, in _gcd_import\n  File \"<frozen importlib._bootstrap>\", line 1360, in _find_and_load\n  File \"<frozen importlib._bootstrap>\", line 1324, in _find_and_load_unlocked\nModuleNotFoundError: No module named 'einops'\n"
+          },
+          "jaxtyping": {
+            "status": "error",
+            "error": "ModuleNotFoundError(\"No module named 'jaxtyping'\")",
+            "traceback": "Traceback (most recent call last):\n  File \"<string>\", line 6, in <module>\n  File \"/root/miniconda3/lib/python3.12/importlib/__init__.py\", line 90, in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen importlib._bootstrap>\", line 1387, in _gcd_import\n  File \"<frozen importlib._bootstrap>\", line 1360, in _find_and_load\n  File \"<frozen importlib._bootstrap>\", line 1324, in _find_and_load_unlocked\nModuleNotFoundError: No module named 'jaxtyping'\n"
+          },
+          "cs336_basics.model": {
+            "status": "error",
+            "error": "ModuleNotFoundError(\"No module named 'einx'\")",
+            "traceback": "Traceback (most recent call last):\n  File \"<string>\", line 6, in <module>\n  File \"/root/miniconda3/lib/python3.12/importlib/__init__.py\", line 90, in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen importlib._bootstrap>\", line 1387, in _gcd_import\n  File \"<frozen importlib._bootstrap>\", line 1360, in _find_and_load\n  File \"<frozen importlib._bootstrap>\", line 1331, in _find_and_load_unlocked\n  File \"<frozen importlib._bootstrap>\", line 935, in _load_unlocked\n  File \"<frozen importlib._bootstrap_external>\", line 995, in exec_module\n  File \"<frozen importlib._bootstrap>\", line 488, in _call_with_frames_removed\n  File \"/root/autodl-tmp/cs336-assignment2/cs336-basics/cs336_basics/model.py\", line 9, in <module>\n    import einx\nModuleNotFoundError: No module named 'einx'\n"
+          }
+        },
+        "gpu": {
+          "cuda_available": true,
+          "device_count": 2,
+          "devices": [
+            "NVIDIA GeForce RTX 4090",
+            "NVIDIA GeForce RTX 4090"
+          ],
+          "nccl_available": true,
+          "torch_cuda": "12.8",
+          "nccl_version": [
+            2,
+            27,
+            3
+          ]
+        },
+        "usable": false
+      }
+    }
+  ],
+  "prior_correctness_logs_preserved": true,
+  "usable_environment_found": false
+}

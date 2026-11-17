@@ -1,0 +1,16 @@
+{
+  "torch": "2.8.0+cu128",
+  "torch_path": "/root/miniconda3/lib/python3.12/site-packages/torch/__init__.py",
+  "cuda": "12.8",
+  "nccl": [
+    2,
+    27,
+    3
+  ],
+  "numpy_runtime": "2.4.4",
+  "pytest": "9.0.3",
+  "devices": [
+    "NVIDIA GeForce RTX 4090",
+    "NVIDIA GeForce RTX 4090"
+  ]
+}

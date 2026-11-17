@@ -1,0 +1,1 @@
+/root/miniconda3/bin/python scripts/analyze_ddp_results.py reports/ddp_nccl/performance-20261117T012804Z

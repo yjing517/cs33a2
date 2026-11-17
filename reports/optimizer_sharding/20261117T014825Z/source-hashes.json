@@ -1,0 +1,9 @@
+{
+  "cs336_systems/sharded_optimizer.py": "0d4f8c2174113ec9a89423e68ada6285e1fb4dfd0f47e8047e481ed066017c1b",
+  "cs336_systems/ddp.py": "e6870b9ba1e501cde7f8a8733c551ffc8ee536cfdd23390fef2fdca62c1c5158",
+  "tests/adapters.py": "ea073f75d893c0c224de2547f9db3ed0338e778c8d59419fd38c970912ccefd2",
+  "tests/test_sharded_optimizer.py": "953745ae56751260bc4a4342d82c375e3751c42d69a91aec61c4967d45784056",
+  "tests/test_sharded_optimizer_extra.py": "303be721bbcc211713ea4a0847cbecb78c955804eaf3077a7c6e38d2b686ba33",
+  "scripts/check_sharded_optimizer.py": "84d1aa80ff459104f68d1e1a4e02632f11893214cae19830863fe4c53c741857",
+  "scripts/check_sharded_optimizer_memory.py": "f744e89a22d10cf7a5004ba264d0a70021765845b4cb46b286beb85c7d48c77f"
+}

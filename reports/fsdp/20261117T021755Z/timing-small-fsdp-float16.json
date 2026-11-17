@@ -1,0 +1,278 @@
+{
+  "status": "passed",
+  "configuration": {
+    "vocab_size": 10000,
+    "context_length": 128,
+    "d_model": 768,
+    "d_ff": 3072,
+    "num_layers": 12,
+    "num_heads": 12,
+    "batch_size_per_rank": 2,
+    "optimizer": "torch.optim.AdamW",
+    "lr": 0.001,
+    "weight_decay": 0.03,
+    "betas": [
+      0.9,
+      0.99
+    ],
+    "master_dtype": "float32",
+    "compute_dtype": "float16",
+    "warmup": 5,
+    "steps": 10,
+    "mode": "fsdp",
+    "profile": false
+  },
+  "torch": "2.8.0+cu128",
+  "ranks": [
+    {
+      "rank": 0,
+      "pid": 7986,
+      "device": 0,
+      "rows": [
+        {
+          "start_ns": 29810826135946415,
+          "end_ns": 29810826242273710,
+          "local_ms": 106.327295,
+          "loss": 4.408709526062012
+        },
+        {
+          "start_ns": 29810826243926202,
+          "end_ns": 29810826350233186,
+          "local_ms": 106.306984,
+          "loss": 3.5016465187072754
+        },
+        {
+          "start_ns": 29810826351665096,
+          "end_ns": 29810826449495482,
+          "local_ms": 97.830386,
+          "loss": 2.3283276557922363
+        },
+        {
+          "start_ns": 29810826450588763,
+          "end_ns": 29810826558447429,
+          "local_ms": 107.858666,
+          "loss": 0.9631151556968689
+        },
+        {
+          "start_ns": 29810826559499078,
+          "end_ns": 29810826656387108,
+          "local_ms": 96.88803,
+          "loss": 0.5627273321151733
+        },
+        {
+          "start_ns": 29810826657915913,
+          "end_ns": 29810826764997546,
+          "local_ms": 107.081633,
+          "loss": 0.3300541639328003
+        },
+        {
+          "start_ns": 29810826767055030,
+          "end_ns": 29810826879021365,
+          "local_ms": 111.966335,
+          "loss": 0.2053719162940979
+        },
+        {
+          "start_ns": 29810826880683904,
+          "end_ns": 29810827008113339,
+          "local_ms": 127.429435,
+          "loss": 0.12484701722860336
+        },
+        {
+          "start_ns": 29810827009957855,
+          "end_ns": 29810827118823425,
+          "local_ms": 108.86557,
+          "loss": 0.08003944903612137
+        },
+        {
+          "start_ns": 29810827121292915,
+          "end_ns": 29810827227415217,
+          "local_ms": 106.122302,
+          "loss": 0.05574892461299896
+        }
+      ],
+      "memory_points": {
+        "after_model_init": {
+          "allocated_bytes": 277720064,
+          "max_memory_allocated": 562826240,
+          "reserved_bytes": 616562688,
+          "max_memory_reserved": 616562688
+        },
+        "before_optimizer_step": {
+          "allocated_bytes": 1158784000,
+          "max_memory_allocated": 1222092288,
+          "reserved_bytes": 1585446912,
+          "max_memory_reserved": 1585446912
+        },
+        "after_optimizer_step": {
+          "allocated_bytes": 1158784000,
+          "max_memory_allocated": 1429000192,
+          "reserved_bytes": 1585446912,
+          "max_memory_reserved": 1585446912
+        }
+      },
+      "measurement_peak": {
+        "allocated_bytes": 1153663488,
+        "max_memory_allocated": 1429000192,
+        "reserved_bytes": 1585446912,
+        "max_memory_reserved": 1585446912
+      },
+      "parameter_bytes": 257289216,
+      "gradient_bytes": 257289216,
+      "state_bytes": 514578876,
+      "communication": {
+        "all_gather": {
+          "torch.float16": {
+            "calls": 1720,
+            "input_bytes": 2572124160
+          }
+        },
+        "reduce_scatter": {
+          "torch.float32": {
+            "calls": 860,
+            "input_bytes": 5144248320
+          }
+        },
+        "all_reduce": {
+          "torch.float32": {
+            "calls": 250,
+            "input_bytes": 768000
+          }
+        }
+      }
+    },
+    {
+      "rank": 1,
+      "pid": 7987,
+      "device": 1,
+      "rows": [
+        {
+          "start_ns": 29810826137620245,
+          "end_ns": 29810826240773982,
+          "local_ms": 103.153737,
+          "loss": 4.82560396194458
+        },
+        {
+          "start_ns": 29810826243889177,
+          "end_ns": 29810826349028400,
+          "local_ms": 105.139223,
+          "loss": 3.2163519859313965
+        },
+        {
+          "start_ns": 29810826351641065,
+          "end_ns": 29810826448440042,
+          "local_ms": 96.798977,
+          "loss": 2.4440689086914062
+        },
+        {
+          "start_ns": 29810826450587366,
+          "end_ns": 29810826557528212,
+          "local_ms": 106.940846,
+          "loss": 1.5674018859863281
+        },
+        {
+          "start_ns": 29810826559489662,
+          "end_ns": 29810826657167759,
+          "local_ms": 97.678097,
+          "loss": 0.8921564221382141
+        },
+        {
+          "start_ns": 29810826657936912,
+          "end_ns": 29810826766229624,
+          "local_ms": 108.292712,
+          "loss": 0.4483332335948944
+        },
+        {
+          "start_ns": 29810826767066073,
+          "end_ns": 29810826879836860,
+          "local_ms": 112.770787,
+          "loss": 0.24525201320648193
+        },
+        {
+          "start_ns": 29810826880702101,
+          "end_ns": 29810827006636669,
+          "local_ms": 125.934568,
+          "loss": 0.15829575061798096
+        },
+        {
+          "start_ns": 29810827009909588,
+          "end_ns": 29810827120063371,
+          "local_ms": 110.153783,
+          "loss": 0.1120186299085617
+        },
+        {
+          "start_ns": 29810827121320256,
+          "end_ns": 29810827228247915,
+          "local_ms": 106.927659,
+          "loss": 0.08291758596897125
+        }
+      ],
+      "memory_points": {
+        "after_model_init": {
+          "allocated_bytes": 277720064,
+          "max_memory_allocated": 562826240,
+          "reserved_bytes": 616562688,
+          "max_memory_reserved": 616562688
+        },
+        "before_optimizer_step": {
+          "allocated_bytes": 1156424704,
+          "max_memory_allocated": 1220625920,
+          "reserved_bytes": 1585446912,
+          "max_memory_reserved": 1585446912
+        },
+        "after_optimizer_step": {
+          "allocated_bytes": 1156424704,
+          "max_memory_allocated": 1428738048,
+          "reserved_bytes": 1585446912,
+          "max_memory_reserved": 1585446912
+        }
+      },
+      "measurement_peak": {
+        "allocated_bytes": 1151304192,
+        "max_memory_allocated": 1428738048,
+        "reserved_bytes": 1585446912,
+        "max_memory_reserved": 1585446912
+      },
+      "parameter_bytes": 257289216,
+      "gradient_bytes": 257289216,
+      "state_bytes": 514578876,
+      "communication": {
+        "all_gather": {
+          "torch.float16": {
+            "calls": 1720,
+            "input_bytes": 2572124160
+          }
+        },
+        "reduce_scatter": {
+          "torch.float32": {
+            "calls": 860,
+            "input_bytes": 5144248320
+          }
+        },
+        "all_reduce": {
+          "torch.float32": {
+            "calls": 250,
+            "input_bytes": 768000
+          }
+        }
+      }
+    }
+  ],
+  "global_step_ms": [
+    106.327295,
+    106.344009,
+    97.854417,
+    107.860063,
+    97.678097,
+    108.313711,
+    112.78183,
+    127.429435,
+    110.153783,
+    106.955
+  ],
+  "median_ms": 107.4075315,
+  "min_ms": 97.678097,
+  "max_ms": 127.429435,
+  "global_tokens_per_s": 4733.300518248334,
+  "timing": "max rank end minus min rank start; synchronized CUDA, barrier excluded; first step includes three memory snapshot calls; performance median has 10 measured steps",
+  "communication_definition": "Python collective input tensor payload bytes, not physical link traffic; all-gather input is a shard, reduce-scatter input is full FP32 gradient; weight traffic casts before collective"
+}

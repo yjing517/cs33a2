@@ -1,0 +1,21 @@
+{
+  "argv": [
+    "/root/miniconda3/bin/python",
+    "-m",
+    "torch.distributed.run",
+    "--standalone",
+    "--nproc-per-node=2",
+    "--module",
+    "scripts.check_sharded_optimizer_memory",
+    "--output",
+    "reports/optimizer_sharding/20261117T014825Z/balanced/memory-baseline.json"
+  ],
+  "cwd": "/root/autodl-tmp/cs336-assignment2",
+  "environment": {
+    "PYTHONPATH": "/root/autodl-tmp/cs336-ddp-deps-20261117:/root/autodl-tmp/cs336-assignment2/cs336-basics:/root/autodl-tmp/cs336-assignment2",
+    "CUDA_VISIBLE_DEVICES": "0,1",
+    "OMP_NUM_THREADS": "1",
+    "NCCL_DEBUG": "INFO"
+  },
+  "elapsed_s": 7.234861798584461
+}

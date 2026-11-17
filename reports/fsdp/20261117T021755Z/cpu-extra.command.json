@@ -1,0 +1,14 @@
+{
+  "argv": [
+    "/home/yangjing/projects/cs336/assignment2-systems/.venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "tests/test_fsdp_extra.py"
+  ],
+  "environment": {
+    "CUDA_VISIBLE_DEVICES": "",
+    "OMP_NUM_THREADS": "1"
+  },
+  "elapsed_s": 13.306566586999907
+}

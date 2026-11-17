@@ -1,0 +1,43 @@
+{
+  "command": [
+    "python",
+    "-m",
+    "cs336_systems.benchmark",
+    "--mode",
+    "forward",
+    "--device",
+    "cuda",
+    "--vocab-size",
+    "10000",
+    "--d-model",
+    "768",
+    "--d-ff",
+    "3072",
+    "--num-layers",
+    "12",
+    "--num-heads",
+    "12",
+    "--batch-size",
+    "4",
+    "--context-length",
+    "512",
+    "--warmup",
+    "5",
+    "--steps",
+    "10"
+  ],
+  "cwd": "/root/autodl-tmp/cs336-assignment2",
+  "start_utc": "20261116T075131260102",
+  "gpu_before": {
+    "exit_code": 0,
+    "stdout": "NVIDIA GeForce RTX 3080 Ti, 1 MiB, 12288 MiB, 32, P8\n",
+    "stderr": ""
+  },
+  "exit_code": 0,
+  "elapsed_s": 6.862495189532638,
+  "gpu_after": {
+    "exit_code": 0,
+    "stdout": "NVIDIA GeForce RTX 3080 Ti, 1 MiB, 12288 MiB, 37, P0\n",
+    "stderr": ""
+  }
+}

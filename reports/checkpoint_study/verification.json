@@ -1,0 +1,20 @@
+[
+  {
+    "group": 1,
+    "status": "passed",
+    "parameter_tensors_checked": 111,
+    "max_output_absolute_error": 0.0,
+    "max_gradient_absolute_error": 0.0,
+    "atol": 1e-06,
+    "rtol": 1e-05
+  },
+  {
+    "group": 2,
+    "status": "passed",
+    "parameter_tensors_checked": 111,
+    "max_output_absolute_error": 0.0,
+    "max_gradient_absolute_error": 0.0,
+    "atol": 1e-06,
+    "rtol": 1e-05
+  }
+]

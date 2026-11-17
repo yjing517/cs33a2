@@ -1,0 +1,117 @@
+{
+  "status": "ok",
+  "arguments": {
+    "implementation": "OverlapDDP",
+    "model_size": "small",
+    "batch_size": 4,
+    "context_length": 512,
+    "vocab_size": 10000,
+    "warmup": 5,
+    "steps": 3,
+    "profile": true,
+    "output": "reports/ddp_nccl/performance-20261117T012804Z/trace-OverlapDDP.json"
+  },
+  "dtype": "float32",
+  "optimizer": "torch.optim.AdamW",
+  "lr": 0.0001,
+  "seed": 42,
+  "tf32": false,
+  "torch": "2.8.0+cu128",
+  "cuda": "12.8",
+  "gpu": "NVIDIA GeForce RTX 4090",
+  "world_size": 2,
+  "parameters": 128625408,
+  "shape": {
+    "d_model": 768,
+    "d_ff": 3072,
+    "num_layers": 12,
+    "num_heads": 12
+  },
+  "ranks": [
+    {
+      "rank": 0,
+      "pid": 4290,
+      "device": 0,
+      "records": [
+        {
+          "rank": 0,
+          "step": 0,
+          "start_ns": 29806817604281790,
+          "end_ns": 29806817735622837,
+          "local_ms": 131.341047,
+          "gradient_sync_tail_ms": 6.583040237426758
+        },
+        {
+          "rank": 0,
+          "step": 1,
+          "start_ns": 29806817736868803,
+          "end_ns": 29806817865831310,
+          "local_ms": 128.962507,
+          "gradient_sync_tail_ms": 6.3745598793029785
+        },
+        {
+          "rank": 0,
+          "step": 2,
+          "start_ns": 29806817867120456,
+          "end_ns": 29806817992256473,
+          "local_ms": 125.136017,
+          "gradient_sync_tail_ms": 6.365920066833496
+        }
+      ],
+      "final_loss": 7.406983375549316,
+      "peak_memory_bytes": 5397900288
+    },
+    {
+      "rank": 1,
+      "pid": 4291,
+      "device": 1,
+      "records": [
+        {
+          "rank": 1,
+          "step": 0,
+          "start_ns": 29806817604127200,
+          "end_ns": 29806817732315117,
+          "local_ms": 128.187917,
+          "gradient_sync_tail_ms": 21.78870391845703
+        },
+        {
+          "rank": 1,
+          "step": 1,
+          "start_ns": 29806817736813476,
+          "end_ns": 29806817862737743,
+          "local_ms": 125.924267,
+          "gradient_sync_tail_ms": 20.961631774902344
+        },
+        {
+          "rank": 1,
+          "step": 2,
+          "start_ns": 29806817867064259,
+          "end_ns": 29806817989182231,
+          "local_ms": 122.117972,
+          "gradient_sync_tail_ms": 20.078752517700195
+        }
+      ],
+      "final_loss": 7.473580360412598,
+      "peak_memory_bytes": 5397900288
+    }
+  ],
+  "global_step_ms": [
+    131.495637,
+    129.017834,
+    125.192214
+  ],
+  "median_ms": 129.017834,
+  "min_ms": 125.192214,
+  "max_ms": 131.495637,
+  "mean_ms": 128.56856166666665,
+  "std_ms": 3.175636881218675,
+  "global_tokens_per_step": 4096,
+  "global_tokens_per_s": 31858.488163066613,
+  "gradient_sync_tail_ms": [
+    21.78870391845703,
+    20.961631774902344,
+    20.078752517700195
+  ],
+  "timing_definition": "max(rank end_ns)-min(rank start_ns), shared host monotonic clock; zero_grad+forward+loss+backward+gradient sync+optimizer+CUDA synchronize; barrier excluded",
+  "sync_tail_definition": "CUDA events around finish_gradient_synchronization including pack/copy/wait; OverlapDDP excludes communication already executed in backward"
+}

@@ -1,0 +1,21 @@
+{
+  "argv": [
+    "/root/miniconda3/bin/python",
+    "-m",
+    "pip",
+    "install",
+    "--target",
+    "/root/autodl-tmp/cs336-fsdp-test-deps-20261117",
+    "--no-deps",
+    "--disable-pip-version-check",
+    "--retries",
+    "1",
+    "--timeout",
+    "20",
+    "pytest==9.0.3",
+    "iniconfig==2.3.0",
+    "packaging==26.1",
+    "pluggy==1.6.0",
+    "pygments==2.20.0"
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "command": [
+    "python",
+    "scripts/run_gpu_study.py",
+    "memory"
+  ],
+  "cwd": "/root/autodl-tmp/cs336-assignment2",
+  "start_utc": "20261116T080749762780",
+  "gpu_before": {
+    "exit_code": 0,
+    "stdout": "NVIDIA GeForce RTX 3080 Ti, 1 MiB, 12288 MiB, 32, P8\n",
+    "stderr": ""
+  },
+  "exit_code": 0,
+  "elapsed_s": 334.514945208095,
+  "gpu_after": {
+    "exit_code": 0,
+    "stdout": "NVIDIA GeForce RTX 3080 Ti, 1 MiB, 12288 MiB, 40, P0\n",
+    "stderr": ""
+  }
+}

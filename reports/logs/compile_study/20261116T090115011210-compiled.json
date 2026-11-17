@@ -1,0 +1,25 @@
+{
+  "command": [
+    "timeout",
+    "--signal=TERM",
+    "--kill-after=10s",
+    "420s",
+    "/root/miniconda3/bin/python",
+    "/root/autodl-tmp/cs336-assignment2/scripts/compile_study.py",
+    "compiled"
+  ],
+  "cwd": "/root/autodl-tmp/cs336-assignment2",
+  "start_utc": "20261116T090115011210",
+  "gpu_before": {
+    "exit_code": 0,
+    "stdout": "NVIDIA GeForce RTX 3080 Ti, 1 MiB, 12288 MiB, 38, P0\n",
+    "stderr": ""
+  },
+  "exit_code": 0,
+  "elapsed_s": 51.4408322731033,
+  "gpu_after": {
+    "exit_code": 0,
+    "stdout": "NVIDIA GeForce RTX 3080 Ti, 1 MiB, 12288 MiB, 43, P0\n",
+    "stderr": ""
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "command": [
+    "/opt/nvidia/nsight-compute/2025.1.1/host/target-linux-x64/nsys",
+    "export",
+    "--type=sqlite",
+    "--output",
+    "reports/gpu_study/artifacts/medium-train_step-fp32-w5-n256-nsys.sqlite",
+    "reports/gpu_study/artifacts/medium-train_step-fp32-w5-n256-nsys.nsys-rep"
+  ],
+  "cwd": "/root/autodl-tmp/cs336-assignment2",
+  "start_utc": "20261116T081607949908",
+  "gpu_before": {
+    "exit_code": 0,
+    "stdout": "NVIDIA GeForce RTX 3080 Ti, 1 MiB, 12288 MiB, 32, P8\n",
+    "stderr": ""
+  },
+  "exit_code": 0,
+  "elapsed_s": 0.19847345259040594,
+  "gpu_after": {
+    "exit_code": 0,
+    "stdout": "NVIDIA GeForce RTX 3080 Ti, 1 MiB, 12288 MiB, 32, P8\n",
+    "stderr": ""
+  }
+}

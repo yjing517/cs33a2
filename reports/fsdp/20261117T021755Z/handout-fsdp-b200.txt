@@ -1,0 +1,250 @@
+HANDOUT PAGE 3
+your writeup in code, since formatting tables in LaTeX or Typst can be very tedious. See 
+pandas.DataFrame.to_latex() and pandas.DataFrame.to_typst() or write your own function to generate 
+them from your preferred tabular representation.
+Size d_model d_ff num_layers num_heads
+small 768 3072 12 12
+medium 1024 4096 24 16
+large 1280 5120 36 20
+xl 2560 10240 32 32
+10B 4608 12288 50 36
+Table  1: Specifications of different model sizes. These are mostly based on GPT-2 configs.
+Use context length 512 unless otherwise specified.
+2.1.3 End-to-End Benchmarking
+We will now implement a simple performance evaluation script. We will be testing many variations of our 
+model (changing precision, swapping layers, etc.), so it will pay off to have your script enable these 
+variations via command-line arguments to make them easy to run later on.
+To start off, let’s do the simplest possible profiling of our model by timing the forward pass, backward 
+pass, and optimizer step. Since we will only be measuring speed and memory, it’s fine to use random 
+weights and data.
+Measuring performance is subtle — some common traps can cause us to not measure what we want. For 
+benchmarking GPU code, one caveat is that CUDA calls are asynchronous. When you call a CUDA 
+kernel, such as when you invoke torch.matmul, the PyTorch function call returns control to your code 
+without waiting for the matrix multiplication to finish. In this way, the CPU can continue running ahead 
+and scheduling new operations while the GPU finishes the matrix multiplication, which is a major 
+performance win. On the other hand, this means that naïvely measuring how long the torch.matmul call 
+takes to return does not tell us how long the GPU takes to actually run the matrix multiplication. In 
+PyTorch, we can call torch.cuda.synchronize() to wait for all scheduled GPU kernels to complete, 
+allowing us to get more accurate measurements of CUDA kernel runtime. The synchronization in this 
+operation refers to synchronizing the CPU runtime with the GPU runtime. With this in mind, let’s write 
+our basic profiling infrastructure.
+Problem (benchmarking_script):   Benchmarking Script (4 points)
+(a) Write a script to perform basic end-to-end benchmarking of the forward pass, backward pass, 
+and optimizer step in your model. Specifically, your script should support the following:
+• Given hyperparameters (e.g., number of layers), initialize a model.
+• Generate a random batch of data.
+• Run 𝑤 warm-up steps (before you start measuring time), then time the execution of 𝑛 
+steps (either only forward, forward and backward, or forward and backward with optimizer 
+step, depending on an argument). For timing, you can use the Python timeit module (e.g., 
+either using the timeit function, or using timeit.default_timer(), which gives you the 
+system’s highest resolution clock, thus a better default for benchmarking than 
+time.time()).
+3
+
+HANDOUT PAGE 38
+Problem (optimizer_state_sharding_accounting):   Optimizer State Sharding Accounting (5 
+points)
+(a) Create a script to profile the peak memory usage when training language models with and 
+without optimizer state sharding. Using the standard configuration (1 node, 2 GPUs, xl 
+model size), report the peak memory usage after model initialization, directly before the 
+optimizer step, and directly after the optimizer step. Do the results align with your 
+expectations? Break down the memory usage in each setting (e.g., how much memory for 
+parameters, how much for optimizer states, etc.).
+Deliverable: 2-3 sentence response with peak memory usage results and a breakdown of how 
+the memory is divided between different model and optimizer components.
+(b) How does our implementation of optimizer state sharding affect training speed? Measure the 
+time taken per iteration with and without optimizer state sharding for the standard 
+configuration (1 node, 2 GPUs, xl model size).
+Deliverable: 2-3 sentence response with your timings.
+(c) How does our approach to optimizer state sharding differ from ZeRO stage 1 (described as 
+ZeRO-DP 𝑃𝑜𝑠 in S. Rajbhandari, J. Rasley, O. Ruwase, and Y. He [5])?
+Deliverable: 2-3 sentence summary of any differences, especially those related to memory 
+and communication volume.
+7 Fully-Sharded Data Parallel
+With optimizer state sharding and data parallel, we’re able to split the optimizer state and activations 
+across our data-parallel axis. However, our model weights remain duplicated — we’re storing a full copy 
+of them all on each GPU.
+We can solve this by turning our data parallel (DP) axis into a fully-sharded data parallel axis (FSDP). 
+With FSDP, each GPU stores only its own slice of every weight tensor, but has to pull slices from other 
+GPUs to form the full weight tensor using an all-gather to prepare for a forward or backward pass.
+To avoid keeping GPU compute waiting around for communication to finish, most FSDP implementations 
+schedule the layer’s all-gather in advance of the operation, meaning the relevant weights are ready before 
+they are needed, preventing communication from blocking computation. This keeps weight sharding 
+communication off the critical path, meaning it has no cost as long as communication can keep up with 
+compute and is scheduled well.
+Some layers are small enough in memory and compute that the latency overhead of a transfer is not 
+worth it. You should mark these layers not to be sharded by FSDP. In our architecture, this will mostly 
+be the case for norms. This leaves us with the embedding layer and every linear layer.
+While it is necessary to store master weights in FP32 (any values that are repeatedly accumulated into 
+are sensitive to precision), the weights do not need to be used in FP32. In mixed precision, we always 
+convert to the low-precision compute datatype before use, so we may as well convert even before the 
+weight is communicated to save on bandwidth.
+Problem (fsdp):   Fully-Sharded Data Parallel (15 points)
+38
+
+HANDOUT PAGE 39
+Implement a Python class for fully-sharded data parallel training. The class should wrap an 
+arbitrary PyTorch nn.Module (your full model) and hook into or wrap any Linear or Embedding 
+layer within it. We recommend the following public interface:
+def __init__(self, module: torch.nn.Module, compute_dtype: torch.dtype | None = None): 
+Given an instantiated PyTorch nn.Module to be parallelized, construct an FSDP module that 
+will handle weight all-gathers and gradient reduce-scatters. Make sure that your hooks or your 
+module wrappers all-gather the weights in time for the forward pass. To limit memory use, 
+only start gathering after the layer two before the current one has completed its forward pass. 
+In the backward pass, your hooks or module wrappers should all-gather to have the weights 
+available for the computation. When the gradients are available, they should be reduce-
+scattered to the appropriate ranks. Make sure to free the gathered weights after use. When 
+compute_dtype is provided, cast the weights to that dtype before communicating or using them 
+for compute, while keeping master weights and optimizer updates in FP32.
+def forward(self, *inputs, **kwargs): Calls the wrapped module’s forward() method with the 
+provided positional and keyword arguments.
+def finish_gradient_synchronization(self): When called, wait for asynchronous communication 
+calls to finish on the GPU.
+Deliverable: Implement a container class to handle fully sharded data parallel training. Each 
+shard of this container should be compatible with the standard AdamW implementation from 
+assignment 1. To test your FSDP implementation, implement the adapter [adapters.get_fsdp] . 
+Run the tests with uv run pytest tests/test_fsdp.py. We recommend running the tests multiple 
+times (e.g., 5) to catch any race conditions.
+Problem (fsdp_accounting):   FSDP Accounting (5 points)
+(a) Given your analysis in Section  6, how much memory do you expect to save from the peak by 
+implementing FSDP? You can ignore the size of the preallocated buffers needed to all-gather 
+weights to each GPU in your calculation.
+Deliverable: 2-3 sentence response with your findings.
+(b) Profile the xl model on two GPUs and pay attention to the all-gather of weights. Does the 
+communication finish in time for the forward pass?
+Deliverable: 2-3 sentence response with your timings. Include screenshots of Nsight to back 
+up your claims.
+8 Analyzing Parallelism Strategies
+There are more axes along which we can parallelize our training process. Some common strategies 
+include:
+• Data parallelism (DP) — Batches of data are split across multiple devices, and each device 
+computes gradients for its own batch. Gradients are then averaged across devices.
+• Fully-Sharded Data Parallelism (FSDP) — On top of data parallelism, we also split optimizer 
+states, gradients, and weights across devices to reduce memory usage. Devices then need to gather 
+weight shards from other devices during the forward and backward passes.
+39
+
+HANDOUT PAGE 46
+𝒛(𝒊,𝒋) = 𝑓(𝒙(𝒊,𝒋)
+𝟏 ) ∗ 𝒙(𝒊,𝒋)
+𝟐 (57)
+𝒚(𝒊,𝒋) = 𝒛(𝒊,𝒋)𝑾 (𝒊)
+𝟑 (58)
+𝒚(𝒋) = all-reduce ({𝒚(𝒊,𝒋)}
+𝑁TP−1
+𝑖=0 ), (59)
+ending up with batch-sharded output 𝒚(𝒋) of size ( 𝐵
+𝑁FSDP
+, 𝐷). We’ll omit the backward pass for brevity in 
+this section, and just focus on the forward pass. But at this point, you should have all the information 
+you need to write it out yourself.
+Problem (fsdp_tp_calcs):   2D parallelism calculations (6 points)
+Under the same setting as the calculations so far, let’s calculate when 2D parallelism becomes 
+bottlenecked.
+(a) How many FLOPs are required to compute the forward pass, with 𝑁FSDP FSDP + 𝑁TP TP?
+Deliverable: An answer in terms of 𝐵, 𝐷, 𝐷FF, 𝑁FSDP, and 𝑁TP, along with a one-sentence 
+justification.
+(b) How much communication time is required in the forward pass, with 𝑁FSDP FSDP + 𝑁TP 
+TP? Assume that the communication along each axis can be overlapped (in other words, the 
+collectives along the FSDP axis can be overlapped with the collectives along the TP axis).
+Deliverable: An answer in terms of a subset of 𝐵, 𝐷, 𝐷FF, 𝑁FSDP, 𝑁TP, and 𝑊, along with a 
+one-sentence justification. Hint: The answer should be expressed as a max between two 
+quantities (the FSDP and TP collective costs), since the two can be overlapped.
+(c) Under the optimal setting of 𝑁TP and 𝑁FSDP, how large can 𝑁 = 𝑁TP𝑁FSDP become before 
+the forward pass is communication bottlenecked?
+Deliverable: An inequality with 𝑁 on one side, and an expression in terms of a subset of 𝐵, 
+𝐷, 𝐷FF, 𝐶, and 𝑊 on the other, along with a few sentences and equations as justification.
+(d) Now suppose the FSDP-axis and TP-axis collectives cannot be overlapped because they share 
+the same network resources. Under the optimal setting of 𝑁TP and 𝑁FSDP, how large can 𝑁 =
+𝑁TP𝑁FSDP become before the forward pass is communication bottlenecked? Don’t worry 
+about truncating 𝑁TP and 𝑁FSDP to be integers.
+Deliverable: An inequality with 𝑁 on one side, and an expression in terms of a subset of 𝐵, 
+𝐷, 𝐷FF, 𝐶, and 𝑊 on the other, along with a few sentences and equations as justification.
+9 Leaderboard
+Assignment 2′s leaderboard will test the speed of a full training step for an 8B model. We challenge you 
+to benchmark your code and to optimize memory and runtime, using any tricks you can come up with. 
+The key restrictions are that you cannot change the input/output behavior of the model. Your 
+implementation will be tested against the model in the cs336_basics directory. Your inputs will be tested 
+at BF16 with causal masking, and they must pass the same tests as your regular implementation. The 
+implementation must also be your own, and you cannot use or copy pre-existing implementations. Your 
+timing should be measured on two B200 GPUs using a sample with batch size 2 and sequence length 
+32,768. It is intentionally difficult to fit the model in memory. See the code below for the full config. We 
+46
+
+HANDOUT PAGE 47
+will verify the top 5-10 submissions for correctness and performance. The test we will run to time your 
+implementation is the following:
+class Config:
+    ctx_len = 32768
+    vocab_size = 151936
+    d_model = 4096
+    d_ff = 11008
+    num_layers = 34
+    num_heads = 32
+    torch_dtype = torch.bfloat16
+    is_causal = True
+    batch_size = 2
+cfg = Config()
+def test_timing_forward_backward():
+    labels, targets = torch.randint(high=cfg.vocab_size, size=(2, cfg.batch_size, 
+cfg.ctx_len))
+    model = BasicsTransformerLM(Config())
+    optimizer = AdamW(model.parameters())
+    def train_step():
+        optimizer.zero_grad(set_to_none=True)
+        res = model(labels)
+        loss = cross_entropy(res, targets).sum()
+        loss.backward()
+        optimizer.step()
+    timing_results = triton.testing.do_bench(train_step, rep=30_000, warmup=10_000)
+    print(timing_results)
+For testing purposes, you can reduce the repetition and warmup time (given in ms) to something shorter.
+Some ideas for improvement and for making sure your model fits:
+• Tune the tile sizes for your kernel (use Triton autotune for this!)
+• Tune additional Triton/torch.compile config parameters
+• Implement fused AdamW
+• The base implementation is materializing the full logits ([batch, seq_len, vocab_size]). Write a 
+kernel that fuses the LM head and your cross-entropy loss. You can also have it compute the backward 
+pass immediately in a fused manner
+• Improve FlashAttention
+‣ Implement the backward pass in Triton, not just torch.compile (see Section  4.2.3)
+‣ Do two passes over your input for the backward pass, one for dQ and another for dK and dV, to 
+avoid atomics or synchronization between blocks
+‣ Stop program instances early when doing causal masking, skipping tiles that are guaranteed to be all 
+zero
+‣ Separate the non-masked tiles from the tile diagonals, computing the first without ever comparing 
+indices, and the second with a single comparison
+47
+
+HANDOUT PAGE 48
+‣ Use TMA (Tensor Memory Accelerator) functionality on architectures later than Hopper, following a 
+similar pattern to our tutorial
+• Use activation checkpointing to trade runtime speed for memory savings only if you need it
+Problem (leaderboard):   Leaderboard: fastest training step (10 points)
+The benchmark will be run at batch size 2 on two B200 GPUs. Your submission will be evaluated 
+on wall-clock time for a complete training step: forward pass, loss, backward pass, and AdamW 
+update.
+From an empty PyTorch/Triton cache, your benchmarking run must complete within 10 minutes, 
+so be careful with overly aggressive torch.compile and Triton autotuning.
+Deliverable: Your best wall-clock time for a full forward-and-backward training step with 
+AdamW.
+We expect leaderboard submissions to beat the naïve baseline of 10 seconds.
+Submit your result to the leaderboard here: 
+github.com/stanford-cs336/assignment2-systems-leaderboard
+Bibliography
+[1] T. Dao, “FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning.” [Online]. 
+Available: https://arxiv.org/abs/2307.08691
+[2] T. Dao, D. Y. Fu, S. Ermon, A. Rudra, and C. Re, “FlashAttention: Fast and Memory-Efficient Exact 
+Attention with IO-Awareness,” in Advances in Neural Information Processing Systems, A. H. Oh, A. 
+Agarwal, D. Belgrave, and K. Cho, Eds.,  2022. [Online].  Available: 
+https://openreview.net/forum?id=H4DqfPSibmx
+[3] M. Milakov and N. Gimelshein, “Online normalizer calculation for softmax.” [Online]. Available: 
+https://arxiv.org/abs/1805.02867
+[4] H. He, “Making Deep Learning Go Brrrr From First Principles,” 2022, [Online].  Available: 
+https://horace.io/brrr_intro.html
+[5] S. Rajbhandari, J. Rasley, O. Ruwase, and Y. He, “ZeRO: Memory Optimizations Toward Training 
+Trillion Parameter Models.” 2020.
+[6] J. Austin et al., “How to Scale Your Model,” 2025.
+[7] H. Z. P. N. M. M. L. W. T. W. Nouamane Tazi Ferdinand Mom, “The Ultra-Scale Playbook: 
+Training LLMs on GPU Clusters.” 2025.
+48

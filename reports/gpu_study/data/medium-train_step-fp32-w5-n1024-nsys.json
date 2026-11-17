@@ -1,0 +1,24 @@
+{
+  "status": "observed_oom",
+  "arguments": {
+    "model_size": "medium",
+    "mode": "train_step",
+    "precision": "fp32",
+    "device": "cuda",
+    "optimizer": "reference_adamw",
+    "batch_size": 4,
+    "vocab_size": 10000,
+    "context_length": 1024,
+    "warmup": 5,
+    "steps": 1,
+    "profile": null,
+    "snapshot": null,
+    "nvtx": true,
+    "stage_timing": false,
+    "compile": false,
+    "checkpoint_group": 0,
+    "output": "reports/gpu_study/data/medium-train_step-fp32-w5-n1024-nsys.json"
+  },
+  "error": "CUDA out of memory. Tried to allocate 256.00 MiB. GPU 0 has a total capacity of 11.63 GiB of which 37.50 MiB is free. Including non-PyTorch memory, this process has 11.59 GiB memory in use. Of the allocated memory 11.17 GiB is allocated by PyTorch, and 101.57 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)",
+  "process_work_seconds": 4.944415914826095
+}

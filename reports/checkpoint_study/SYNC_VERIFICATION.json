@@ -1,0 +1,12 @@
+{
+    "existing_sources_overwritten":  false,
+    "conflicts":  0,
+    "method":  "SCP + extract only new report directories + sha256sum -c",
+    "source":  "scripts/checkpoint_study.py",
+    "status":  "verified",
+    "local_root":  "/home/yangjing/projects/cs336/assignment2-systems",
+    "files_verified":  26,
+    "remote_only_files":  [
+
+                          ]
+}

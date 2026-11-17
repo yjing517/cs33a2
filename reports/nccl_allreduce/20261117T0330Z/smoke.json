@@ -1,0 +1,244 @@
+{
+  "status": "passed",
+  "world_size": 2,
+  "dtype": "float32",
+  "warmup": 1,
+  "steps": 2,
+  "torch": "2.8.0+cu128",
+  "cuda": "12.8",
+  "nccl": [
+    2,
+    27,
+    3
+  ],
+  "gpu": "NVIDIA GeForce RTX 4090",
+  "size_units": "decimal MB/GB",
+  "timing": "CUDA-synchronized max(rank end)-min(rank start), shared host clock; barrier and payload reset excluded",
+  "bandwidth": "algorithm=message_bytes/median_seconds; bus=algorithm*2*(N-1)/N; GB=1e9 bytes; not a link counter",
+  "results": [
+    {
+      "bytes": 1000000,
+      "ranks": [
+        {
+          "rank": 0,
+          "pid": 9700,
+          "correctness": {
+            "checked_elements": 250000,
+            "incorrect_elements": 0,
+            "expected_value": 3.0
+          },
+          "rows": [
+            {
+              "start_ns": 29813756600721781,
+              "end_ns": 29813756600842113,
+              "local_ms": 0.120332
+            },
+            {
+              "start_ns": 29813756600911074,
+              "end_ns": 29813756601020144,
+              "local_ms": 0.10907
+            }
+          ]
+        },
+        {
+          "rank": 1,
+          "pid": 9701,
+          "correctness": {
+            "checked_elements": 250000,
+            "incorrect_elements": 0,
+            "expected_value": 3.0
+          },
+          "rows": [
+            {
+              "start_ns": 29813756600714152,
+              "end_ns": 29813756600842775,
+              "local_ms": 0.128623
+            },
+            {
+              "start_ns": 29813756600911707,
+              "end_ns": 29813756601019490,
+              "local_ms": 0.107783
+            }
+          ]
+        }
+      ],
+      "global_ms": [
+        0.128623,
+        0.10907
+      ],
+      "median_ms": 0.1188465,
+      "mean_ms": 0.1188465,
+      "std_ms": 0.013826058892540554,
+      "algorithm_GB_s": 8.41421497477839,
+      "bus_GB_s": 8.41421497477839
+    },
+    {
+      "bytes": 10000000,
+      "ranks": [
+        {
+          "rank": 0,
+          "pid": 9700,
+          "correctness": {
+            "checked_elements": 2500000,
+            "incorrect_elements": 0,
+            "expected_value": 3.0
+          },
+          "rows": [
+            {
+              "start_ns": 29813756644166398,
+              "end_ns": 29813756644882903,
+              "local_ms": 0.716505
+            },
+            {
+              "start_ns": 29813756644938003,
+              "end_ns": 29813756645647766,
+              "local_ms": 0.709763
+            }
+          ]
+        },
+        {
+          "rank": 1,
+          "pid": 9701,
+          "correctness": {
+            "checked_elements": 2500000,
+            "incorrect_elements": 0,
+            "expected_value": 3.0
+          },
+          "rows": [
+            {
+              "start_ns": 29813756644163500,
+              "end_ns": 29813756644881550,
+              "local_ms": 0.71805
+            },
+            {
+              "start_ns": 29813756644943637,
+              "end_ns": 29813756645658559,
+              "local_ms": 0.714922
+            }
+          ]
+        }
+      ],
+      "global_ms": [
+        0.719403,
+        0.720556
+      ],
+      "median_ms": 0.7199795,
+      "mean_ms": 0.7199795,
+      "std_ms": 0.0008152941187080608,
+      "algorithm_GB_s": 13.889284347679343,
+      "bus_GB_s": 13.889284347679343
+    },
+    {
+      "bytes": 100000000,
+      "ranks": [
+        {
+          "rank": 0,
+          "pid": 9700,
+          "correctness": {
+            "checked_elements": 25000000,
+            "incorrect_elements": 0,
+            "expected_value": 3.0
+          },
+          "rows": [
+            {
+              "start_ns": 29813756653942905,
+              "end_ns": 29813756660540723,
+              "local_ms": 6.597818
+            },
+            {
+              "start_ns": 29813756660716537,
+              "end_ns": 29813756667225320,
+              "local_ms": 6.508783
+            }
+          ]
+        },
+        {
+          "rank": 1,
+          "pid": 9701,
+          "correctness": {
+            "checked_elements": 25000000,
+            "incorrect_elements": 0,
+            "expected_value": 3.0
+          },
+          "rows": [
+            {
+              "start_ns": 29813756653942502,
+              "end_ns": 29813756660605066,
+              "local_ms": 6.662564
+            },
+            {
+              "start_ns": 29813756660715476,
+              "end_ns": 29813756667220777,
+              "local_ms": 6.505301
+            }
+          ]
+        }
+      ],
+      "global_ms": [
+        6.662564,
+        6.509844
+      ],
+      "median_ms": 6.586204,
+      "mean_ms": 6.586204,
+      "std_ms": 0.1079893476228092,
+      "algorithm_GB_s": 15.1832527507499,
+      "bus_GB_s": 15.1832527507499
+    },
+    {
+      "bytes": 1000000000,
+      "ranks": [
+        {
+          "rank": 0,
+          "pid": 9700,
+          "correctness": {
+            "checked_elements": 250000000,
+            "incorrect_elements": 0,
+            "expected_value": 3.0
+          },
+          "rows": [
+            {
+              "start_ns": 29813756735286616,
+              "end_ns": 29813756801609211,
+              "local_ms": 66.322595
+            },
+            {
+              "start_ns": 29813756802766294,
+              "end_ns": 29813756866885842,
+              "local_ms": 64.119548
+            }
+          ]
+        },
+        {
+          "rank": 1,
+          "pid": 9701,
+          "correctness": {
+            "checked_elements": 250000000,
+            "incorrect_elements": 0,
+            "expected_value": 3.0
+          },
+          "rows": [
+            {
+              "start_ns": 29813756735285119,
+              "end_ns": 29813756801627197,
+              "local_ms": 66.342078
+            },
+            {
+              "start_ns": 29813756802787329,
+              "end_ns": 29813756866884311,
+              "local_ms": 64.096982
+            }
+          ]
+        }
+      ],
+      "global_ms": [
+        66.342078,
+        64.119548
+      ],
+      "median_ms": 65.230813,
+      "mean_ms": 65.230813,
+      "std_ms": 1.5715660343905418,
+      "algorithm_GB_s": 15.330178392840205,
+      "bus_GB_s": 15.330178392840205
+    }
+  ]
+}

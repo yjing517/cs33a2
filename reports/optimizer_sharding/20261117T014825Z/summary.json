@@ -1,0 +1,291 @@
+{
+  "status": "passed",
+  "final_results_directory": "balanced",
+  "official_repetitions": 5,
+  "official_cases_per_repetition": 2,
+  "extra_api_cases": 2,
+  "cpu_gloo": "passed",
+  "nccl_cases": [
+    "mlp-float32",
+    "mlp-float64",
+    "transformer-float32"
+  ],
+  "max_errors": {
+    "loss": 0.0,
+    "gradient": 0.0,
+    "parameter": 0.0,
+    "optimizer_state": 0.0
+  },
+  "baseline": {
+    "status": "passed",
+    "fresh_processes": true,
+    "torch_version": "2.8.0+cu128",
+    "ranks": [
+      {
+        "rank": 0,
+        "mode": "baseline",
+        "memory": {
+          "after_model_init": {
+            "allocated_bytes": 37790720,
+            "peak_allocated_bytes": 37790720,
+            "reserved_bytes": 39845888
+          },
+          "before_optimizer_step": {
+            "allocated_bytes": 102341120,
+            "peak_allocated_bytes": 124328960,
+            "reserved_bytes": 142606336
+          },
+          "after_optimizer_step": {
+            "allocated_bytes": 177857024,
+            "peak_allocated_bytes": 215614976,
+            "reserved_bytes": 232783872
+          }
+        },
+        "parameter_bytes": 37266432,
+        "gradient_bytes": 37266432,
+        "state_bytes": 74533020,
+        "state_cuda_bytes": 74532864
+      },
+      {
+        "rank": 1,
+        "mode": "baseline",
+        "memory": {
+          "after_model_init": {
+            "allocated_bytes": 37790720,
+            "peak_allocated_bytes": 37790720,
+            "reserved_bytes": 39845888
+          },
+          "before_optimizer_step": {
+            "allocated_bytes": 102341120,
+            "peak_allocated_bytes": 124328960,
+            "reserved_bytes": 142606336
+          },
+          "after_optimizer_step": {
+            "allocated_bytes": 177857024,
+            "peak_allocated_bytes": 215614976,
+            "reserved_bytes": 232783872
+          }
+        },
+        "parameter_bytes": 37266432,
+        "gradient_bytes": 37266432,
+        "state_bytes": 74533020,
+        "state_cuda_bytes": 74532864
+      }
+    ]
+  },
+  "sharded": {
+    "status": "passed",
+    "fresh_processes": true,
+    "torch_version": "2.8.0+cu128",
+    "ranks": [
+      {
+        "rank": 0,
+        "mode": "sharded",
+        "memory": {
+          "after_model_init": {
+            "allocated_bytes": 37790720,
+            "peak_allocated_bytes": 37790720,
+            "reserved_bytes": 39845888
+          },
+          "before_optimizer_step": {
+            "allocated_bytes": 102341120,
+            "peak_allocated_bytes": 124328960,
+            "reserved_bytes": 142606336
+          },
+          "after_optimizer_step": {
+            "allocated_bytes": 140100096,
+            "peak_allocated_bytes": 159225344,
+            "reserved_bytes": 165675008
+          }
+        },
+        "parameter_bytes": 37266432,
+        "gradient_bytes": 37266432,
+        "state_bytes": 37267536,
+        "state_cuda_bytes": 37267456
+      },
+      {
+        "rank": 1,
+        "mode": "sharded",
+        "memory": {
+          "after_model_init": {
+            "allocated_bytes": 37790720,
+            "peak_allocated_bytes": 37790720,
+            "reserved_bytes": 39845888
+          },
+          "before_optimizer_step": {
+            "allocated_bytes": 102341120,
+            "peak_allocated_bytes": 124328960,
+            "reserved_bytes": 142606336
+          },
+          "after_optimizer_step": {
+            "allocated_bytes": 140098048,
+            "peak_allocated_bytes": 159222272,
+            "reserved_bytes": 165675008
+          }
+        },
+        "parameter_bytes": 37266432,
+        "gradient_bytes": 37266432,
+        "state_bytes": 37265484,
+        "state_cuda_bytes": 37265408
+      }
+    ]
+  },
+  "ownership": {
+    "token_embeddings.weight": {
+      "owner": 0,
+      "numel": 2560000
+    },
+    "layers.0.attn.q_proj.weight": {
+      "owner": 0,
+      "numel": 65536
+    },
+    "layers.0.attn.k_proj.weight": {
+      "owner": 1,
+      "numel": 65536
+    },
+    "layers.0.attn.v_proj.weight": {
+      "owner": 0,
+      "numel": 65536
+    },
+    "layers.0.attn.output_proj.weight": {
+      "owner": 1,
+      "numel": 65536
+    },
+    "layers.0.ffn.w1.weight": {
+      "owner": 0,
+      "numel": 262144
+    },
+    "layers.0.ffn.w2.weight": {
+      "owner": 1,
+      "numel": 262144
+    },
+    "layers.0.ffn.w3.weight": {
+      "owner": 0,
+      "numel": 262144
+    },
+    "layers.0.ln1.weight": {
+      "owner": 0,
+      "numel": 256
+    },
+    "layers.0.ln2.weight": {
+      "owner": 1,
+      "numel": 256
+    },
+    "layers.1.attn.q_proj.weight": {
+      "owner": 0,
+      "numel": 65536
+    },
+    "layers.1.attn.k_proj.weight": {
+      "owner": 1,
+      "numel": 65536
+    },
+    "layers.1.attn.v_proj.weight": {
+      "owner": 0,
+      "numel": 65536
+    },
+    "layers.1.attn.output_proj.weight": {
+      "owner": 1,
+      "numel": 65536
+    },
+    "layers.1.ffn.w1.weight": {
+      "owner": 1,
+      "numel": 262144
+    },
+    "layers.1.ffn.w2.weight": {
+      "owner": 0,
+      "numel": 262144
+    },
+    "layers.1.ffn.w3.weight": {
+      "owner": 1,
+      "numel": 262144
+    },
+    "layers.1.ln1.weight": {
+      "owner": 0,
+      "numel": 256
+    },
+    "layers.1.ln2.weight": {
+      "owner": 1,
+      "numel": 256
+    },
+    "layers.2.attn.q_proj.weight": {
+      "owner": 0,
+      "numel": 65536
+    },
+    "layers.2.attn.k_proj.weight": {
+      "owner": 1,
+      "numel": 65536
+    },
+    "layers.2.attn.v_proj.weight": {
+      "owner": 0,
+      "numel": 65536
+    },
+    "layers.2.attn.output_proj.weight": {
+      "owner": 1,
+      "numel": 65536
+    },
+    "layers.2.ffn.w1.weight": {
+      "owner": 0,
+      "numel": 262144
+    },
+    "layers.2.ffn.w2.weight": {
+      "owner": 1,
+      "numel": 262144
+    },
+    "layers.2.ffn.w3.weight": {
+      "owner": 0,
+      "numel": 262144
+    },
+    "layers.2.ln1.weight": {
+      "owner": 0,
+      "numel": 256
+    },
+    "layers.2.ln2.weight": {
+      "owner": 1,
+      "numel": 256
+    },
+    "layers.3.attn.q_proj.weight": {
+      "owner": 0,
+      "numel": 65536
+    },
+    "layers.3.attn.k_proj.weight": {
+      "owner": 1,
+      "numel": 65536
+    },
+    "layers.3.attn.v_proj.weight": {
+      "owner": 0,
+      "numel": 65536
+    },
+    "layers.3.attn.output_proj.weight": {
+      "owner": 1,
+      "numel": 65536
+    },
+    "layers.3.ffn.w1.weight": {
+      "owner": 1,
+      "numel": 262144
+    },
+    "layers.3.ffn.w2.weight": {
+      "owner": 0,
+      "numel": 262144
+    },
+    "layers.3.ffn.w3.weight": {
+      "owner": 1,
+      "numel": 262144
+    },
+    "layers.3.ln1.weight": {
+      "owner": 0,
+      "numel": 256
+    },
+    "layers.3.ln2.weight": {
+      "owner": 1,
+      "numel": 256
+    },
+    "ln_final.weight": {
+      "owner": 0,
+      "numel": 256
+    },
+    "lm_head.weight": {
+      "owner": 1,
+      "numel": 2560000
+    }
+  }
+}

@@ -1,0 +1,1 @@
+/root/miniconda3/bin/python -m pip install --disable-pip-version-check --no-deps --upgrade --target /root/autodl-tmp/cs336-ddp-deps-20261117 numpy==2.4.4

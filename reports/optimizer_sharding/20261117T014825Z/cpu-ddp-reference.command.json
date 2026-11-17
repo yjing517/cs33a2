@@ -1,0 +1,27 @@
+{
+  "argv": [
+    "/home/yangjing/projects/cs336/assignment2-systems/.venv/bin/python",
+    "-m",
+    "torch.distributed.run",
+    "--standalone",
+    "--nproc-per-node=2",
+    "--module",
+    "scripts.check_sharded_optimizer",
+    "--backend",
+    "gloo",
+    "--dtype",
+    "float64",
+    "--steps",
+    "5",
+    "--output",
+    "reports/optimizer_sharding/20261117T014825Z/cpu-ddp-reference.json"
+  ],
+  "cwd": "/home/yangjing/projects/cs336/assignment2-systems",
+  "env": {
+    "CUDA_VISIBLE_DEVICES": "",
+    "OMP_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  },
+  "elapsed_s": 9.4166132320006,
+  "torch_version": "2.11.0+cu130"
+}

@@ -1,0 +1,7 @@
+{
+  "argv": [
+    "/root/miniconda3/bin/python",
+    "reports/fsdp/20261117T021755Z/analyze_results.py",
+    "reports/fsdp/20261117T021755Z"
+  ]
+}

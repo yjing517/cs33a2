@@ -1,0 +1,1 @@
+env CUDA_VISIBLE_DEVICES=0\,1 OMP_NUM_THREADS=1 NCCL_DEBUG=INFO /root/miniconda3/bin/python -m torch.distributed.run --standalone --nnodes=1 --nproc-per-node=2 --module scripts.check_ddp_nccl --dtype float32 --steps 5 

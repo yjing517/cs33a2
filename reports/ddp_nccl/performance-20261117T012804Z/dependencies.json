@@ -1,0 +1,34 @@
+{
+  "torch": "2.8.0+cu128",
+  "torch_path": "/root/miniconda3/lib/python3.12/site-packages/torch/__init__.py",
+  "cuda": "12.8",
+  "nccl": [
+    2,
+    27,
+    3
+  ],
+  "transformer_import": "ok",
+  "gpus": [
+    "NVIDIA GeForce RTX 4090",
+    "NVIDIA GeForce RTX 4090"
+  ],
+  "packages": {
+    "einx": "0.4.3",
+    "einops": "0.8.2",
+    "jaxtyping": "0.3.9",
+    "frozendict": "2.4.7",
+    "wadler-lindig": "0.1.7",
+    "numpy": "2.4.4",
+    "sympy": "1.14.0",
+    "mpmath": "1.3.0"
+  },
+  "command_env": {
+    "PYTHONPATH": "/root/autodl-tmp/cs336-ddp-deps-20261117:/root/autodl-tmp/cs336-assignment2/cs336-basics:/root/autodl-tmp/cs336-assignment2",
+    "CUDA_VISIBLE_DEVICES": "0,1",
+    "OMP_NUM_THREADS": "1",
+    "NCCL_DEBUG": "WARN"
+  },
+  "numpy_runtime_version": "2.4.4",
+  "numpy_path": "/root/autodl-tmp/cs336-ddp-deps-20261117/numpy/__init__.py",
+  "note": "pip --target NumPy was pinned to uv.lock 2.4.4 after initial resolution; runtime __version__ is authoritative."
+}

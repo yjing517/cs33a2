@@ -1,0 +1,19 @@
+{
+  "argv": [
+    "/opt/nvidia/nsight-compute/2025.1.1/host/target-linux-x64/nsys",
+    "export",
+    "--type",
+    "sqlite",
+    "--output",
+    "reports/fsdp/20261117T021755Z/trace-small-fsdp-float16.sqlite",
+    "reports/fsdp/20261117T021755Z/trace-small-fsdp-float16.nsys-rep"
+  ],
+  "environment": {
+    "PYTHONPATH": "/root/autodl-tmp/cs336-fsdp-test-deps-20261117:/root/autodl-tmp/cs336-ddp-deps-20261117:/root/autodl-tmp/cs336-assignment2/cs336-basics:/root/autodl-tmp/cs336-assignment2",
+    "CUDA_VISIBLE_DEVICES": "0,1",
+    "OMP_NUM_THREADS": "1",
+    "CUBLAS_WORKSPACE_CONFIG": ":4096:8",
+    "NCCL_DEBUG": "WARN"
+  },
+  "elapsed_s": 0.31425590440630913
+}

@@ -1,0 +1,75 @@
+{
+  "status": "passed",
+  "backend": "nccl",
+  "model": "transformer",
+  "compute_dtype": "float32",
+  "optimizer": "sgd",
+  "reference": "full_batch",
+  "steps": 3,
+  "torch": "2.8.0+cu128",
+  "ranks": [
+    {
+      "rank": 0,
+      "max_errors": {
+        "loss": 4.76837158203125e-07,
+        "gradient": 6.752088665962219e-08,
+        "parameter": 1.1920928955078125e-07
+      },
+      "losses": [
+        {
+          "reference": 4.7299485206604,
+          "fsdp_global": 4.729948043823242
+        },
+        {
+          "reference": 4.628894805908203,
+          "fsdp_global": 4.628894805908203
+        },
+        {
+          "reference": 4.528363227844238,
+          "fsdp_global": 4.528363227844238
+        }
+      ],
+      "master_bytes": 190720,
+      "reference_parameter_bytes": 380160,
+      "forward_order_length": 16,
+      "backward_order_length": 16
+    },
+    {
+      "rank": 1,
+      "max_errors": {
+        "loss": 4.76837158203125e-07,
+        "gradient": 6.752088665962219e-08,
+        "parameter": 1.1920928955078125e-07
+      },
+      "losses": [
+        {
+          "reference": 4.7299485206604,
+          "fsdp_global": 4.729948043823242
+        },
+        {
+          "reference": 4.628894805908203,
+          "fsdp_global": 4.628894805908203
+        },
+        {
+          "reference": 4.528363227844238,
+          "fsdp_global": 4.528363227844238
+        }
+      ],
+      "master_bytes": 190720,
+      "reference_parameter_bytes": 380160,
+      "forward_order_length": 16,
+      "backward_order_length": 16
+    }
+  ],
+  "tolerances": {
+    "parameter": {
+      "atol": 1e-06,
+      "rtol": 0.0001
+    },
+    "gradient": {
+      "atol": 1e-06,
+      "rtol": 0.0001
+    }
+  },
+  "full_model_replicas_exactly_equal": true
+}

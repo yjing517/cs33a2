@@ -1,0 +1,284 @@
+{
+  "configuration": {
+    "model_size": "small",
+    "batch_size": 4,
+    "context_length": 512,
+    "vocab_size": 10000,
+    "warmup": 5,
+    "steps": 10,
+    "profile": false
+  },
+  "timing": {
+    "DDP": {
+      "steps": 30,
+      "median_ms": 128.18620850000002,
+      "min_ms": 127.701537,
+      "max_ms": 132.074469,
+      "mean_ms": 128.5393773,
+      "std_ms": 1.1269098671977558,
+      "repeat_median_ms": [
+        128.09599500000002,
+        128.26603999999998,
+        128.1013825
+      ],
+      "global_tokens_per_s": 31865.721509139443,
+      "sync_tail_median_ms": 37.05311965942383,
+      "peak_memory_gib": 5.0242109298706055
+    },
+    "FlatDDP": {
+      "steps": 30,
+      "median_ms": 128.92920900000001,
+      "min_ms": 127.215955,
+      "max_ms": 132.53296,
+      "mean_ms": 128.9712886,
+      "std_ms": 1.0795179953860838,
+      "repeat_median_ms": [
+        128.7534035,
+        128.376197,
+        129.27502900000002
+      ],
+      "global_tokens_per_s": 31759.006554579777,
+      "sync_tail_median_ms": 37.61100959777832,
+      "peak_memory_gib": 5.0242109298706055
+    },
+    "OverlapDDP": {
+      "steps": 30,
+      "median_ms": 105.86576550000001,
+      "min_ms": 105.46218,
+      "max_ms": 110.127917,
+      "mean_ms": 106.04770423333333,
+      "std_ms": 0.8131334736642061,
+      "repeat_median_ms": [
+        105.9399315,
+        105.86454,
+        105.86576550000001
+      ],
+      "global_tokens_per_s": 38624.12703426096,
+      "sync_tail_median_ms": 6.198784112930298,
+      "peak_memory_gib": 5.027186393737793
+    }
+  },
+  "traces": {
+    "DDP": {
+      "database": "trace-DDP.sqlite",
+      "kernel_association": "correlationId + process identity; backward attribution uses launch timestamp inside same-process backward NVTX range, including worker threads; intersection uses GPU kernel execution start/end on same device",
+      "timebase": "Nanoseconds relative to Nsight report origin; each report has its own origin",
+      "ranks": [
+        {
+          "rank": 0,
+          "pid": 3842,
+          "gpu": 0,
+          "backward_kernel_count": 3684,
+          "backward_gemm_count": 654,
+          "nccl_kernel_count": 333,
+          "nccl_kernel_sum_ms": 123.134783,
+          "backward_all_overlap_union_ms": 0.0,
+          "backward_gemm_overlap_union_ms": 0.0,
+          "examples": [],
+          "verdict": "no_backward_kernel_overlap_observed"
+        },
+        {
+          "rank": 1,
+          "pid": 3843,
+          "gpu": 1,
+          "backward_kernel_count": 3684,
+          "backward_gemm_count": 654,
+          "nccl_kernel_count": 333,
+          "nccl_kernel_sum_ms": 109.233212,
+          "backward_all_overlap_union_ms": 0.0,
+          "backward_gemm_overlap_union_ms": 0.0,
+          "examples": [],
+          "verdict": "no_backward_kernel_overlap_observed"
+        }
+      ]
+    },
+    "FlatDDP": {
+      "database": "trace-FlatDDP.sqlite",
+      "kernel_association": "correlationId + process identity; backward attribution uses launch timestamp inside same-process backward NVTX range, including worker threads; intersection uses GPU kernel execution start/end on same device",
+      "timebase": "Nanoseconds relative to Nsight report origin; each report has its own origin",
+      "ranks": [
+        {
+          "rank": 0,
+          "pid": 4066,
+          "gpu": 0,
+          "backward_kernel_count": 3684,
+          "backward_gemm_count": 654,
+          "nccl_kernel_count": 3,
+          "nccl_kernel_sum_ms": 102.55037,
+          "backward_all_overlap_union_ms": 0.0,
+          "backward_gemm_overlap_union_ms": 0.0,
+          "examples": [],
+          "verdict": "no_backward_kernel_overlap_observed"
+        },
+        {
+          "rank": 1,
+          "pid": 4067,
+          "gpu": 1,
+          "backward_kernel_count": 3684,
+          "backward_gemm_count": 654,
+          "nccl_kernel_count": 3,
+          "nccl_kernel_sum_ms": 105.494533,
+          "backward_all_overlap_union_ms": 0.0,
+          "backward_gemm_overlap_union_ms": 0.0,
+          "examples": [],
+          "verdict": "no_backward_kernel_overlap_observed"
+        }
+      ]
+    },
+    "OverlapDDP": {
+      "database": "trace-OverlapDDP.sqlite",
+      "kernel_association": "correlationId + process identity; backward attribution uses launch timestamp inside same-process backward NVTX range, including worker threads; intersection uses GPU kernel execution start/end on same device",
+      "timebase": "Nanoseconds relative to Nsight report origin; each report has its own origin",
+      "ranks": [
+        {
+          "rank": 0,
+          "pid": 4290,
+          "gpu": 0,
+          "backward_kernel_count": 3684,
+          "backward_gemm_count": 654,
+          "nccl_kernel_count": 333,
+          "nccl_kernel_sum_ms": 148.321454,
+          "backward_all_overlap_union_ms": 97.155696,
+          "backward_gemm_overlap_union_ms": 52.389148,
+          "examples": [
+            {
+              "overlap_start_ns": 223929862,
+              "overlap_end_ns": 224221580,
+              "overlap_us": 291.718,
+              "nccl": {
+                "start": 222306458,
+                "end": 224712767,
+                "name": "ncclDevKernel_AllReduce_Sum_f32_RING_LL(ncclDevKernelArgsStorage<(unsigned long)4096>)",
+                "streamId": 17,
+                "correlationId": 62483
+              },
+              "backward_gemm": {
+                "start": 223929862,
+                "end": 224221580,
+                "name": "ampere_sgemm_128x64_nn",
+                "streamId": 7,
+                "correlationId": 62939,
+                "launch_start": 223555001
+              }
+            },
+            {
+              "overlap_start_ns": 354490992,
+              "overlap_end_ns": 354772887,
+              "overlap_us": 281.895,
+              "nccl": {
+                "start": 352686741,
+                "end": 354993218,
+                "name": "ncclDevKernel_AllReduce_Sum_f32_RING_LL(ncclDevKernelArgsStorage<(unsigned long)4096>)",
+                "streamId": 17,
+                "correlationId": 104676
+              },
+              "backward_gemm": {
+                "start": 354490992,
+                "end": 354772887,
+                "name": "ampere_sgemm_128x64_nn",
+                "streamId": 7,
+                "correlationId": 105132,
+                "launch_start": 354014707
+              }
+            },
+            {
+              "overlap_start_ns": 94816280,
+              "overlap_end_ns": 95096639,
+              "overlap_us": 280.359,
+              "nccl": {
+                "start": 93758809,
+                "end": 95932083,
+                "name": "ncclDevKernel_AllReduce_Sum_f32_RING_LL(ncclDevKernelArgsStorage<(unsigned long)4096>)",
+                "streamId": 17,
+                "correlationId": 20248
+              },
+              "backward_gemm": {
+                "start": 94816280,
+                "end": 95096639,
+                "name": "void cutlass::Kernel2<cutlass_80_simt_sgemm_256x128_8x4_nt_align1>(T1::Params)",
+                "streamId": 7,
+                "correlationId": 20546,
+                "launch_start": 94803205
+              }
+            }
+          ],
+          "verdict": "observed_backward_gemm_overlap"
+        },
+        {
+          "rank": 1,
+          "pid": 4291,
+          "gpu": 1,
+          "backward_kernel_count": 3684,
+          "backward_gemm_count": 654,
+          "nccl_kernel_count": 333,
+          "nccl_kernel_sum_ms": 240.152027,
+          "backward_all_overlap_union_ms": 168.020248,
+          "backward_gemm_overlap_union_ms": 83.05355,
+          "examples": [
+            {
+              "overlap_start_ns": 94720564,
+              "overlap_end_ns": 95030456,
+              "overlap_us": 309.892,
+              "nccl": {
+                "start": 88239133,
+                "end": 96091864,
+                "name": "ncclDevKernel_AllReduce_Sum_f32_RING_LL(ncclDevKernelArgsStorage<(unsigned long)4096>)",
+                "streamId": 17,
+                "correlationId": 20248
+              },
+              "backward_gemm": {
+                "start": 94720564,
+                "end": 95030456,
+                "name": "void cutlass::Kernel2<cutlass_80_simt_sgemm_256x128_8x4_nn_align1>(T1::Params)",
+                "streamId": 7,
+                "correlationId": 22992,
+                "launch_start": 94514342
+              }
+            },
+            {
+              "overlap_start_ns": 95467313,
+              "overlap_end_ns": 95739672,
+              "overlap_us": 272.359,
+              "nccl": {
+                "start": 88239133,
+                "end": 96091864,
+                "name": "ncclDevKernel_AllReduce_Sum_f32_RING_LL(ncclDevKernelArgsStorage<(unsigned long)4096>)",
+                "streamId": 17,
+                "correlationId": 20248
+              },
+              "backward_gemm": {
+                "start": 95467313,
+                "end": 95739672,
+                "name": "ampere_sgemm_128x64_nn",
+                "streamId": 7,
+                "correlationId": 23131,
+                "launch_start": 94841163
+              }
+            },
+            {
+              "overlap_start_ns": 354205255,
+              "overlap_end_ns": 354473134,
+              "overlap_us": 267.879,
+              "nccl": {
+                "start": 348706903,
+                "end": 354888937,
+                "name": "ncclDevKernel_AllReduce_Sum_f32_RING_LL(ncclDevKernelArgsStorage<(unsigned long)4096>)",
+                "streamId": 17,
+                "correlationId": 104622
+              },
+              "backward_gemm": {
+                "start": 354205255,
+                "end": 354473134,
+                "name": "void cutlass::Kernel2<cutlass_80_simt_sgemm_256x128_8x4_nn_align1>(T1::Params)",
+                "streamId": 7,
+                "correlationId": 107366,
+                "launch_start": 353347029
+              }
+            }
+          ],
+          "verdict": "observed_backward_gemm_overlap"
+        }
+      ]
+    }
+  }
+}

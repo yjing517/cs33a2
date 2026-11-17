@@ -1,0 +1,33 @@
+Figure  3: A schematic representation of a distributed application running on 2 nodes with a world size of 
+8. Each worker process is identified by a global rank (from 0 to 7) and a local rank (from 0 to 3). Figure 
+taken from https://lightning.ai/docs/fabric/stable/advanced/distributed_communication.html
+5.1.1 Best Practices for Benchmarking Distributed Applications
+Throughout this portion of the assignment you will be benchmarking distributed applications to better 
+understand the overhead from communication. Here are a few best practices:
+• Whenever possible, run benchmarks on the same machine to facilitate controlled comparisons.
+• Perform several warm-up steps before timing the operation of interest. This is especially important for 
+NCCL communication calls. 5 iterations of warmup is generally sufficient.
+• Call torch.cuda.synchronize() to wait for CUDA operations to complete when benchmarking on 
+GPUs. Note that this is necessary even when calling communication operations with async_op=False, 
+which returns when the operation is queued on the GPU (as opposed to when the communication 
+actually finishes).3
+• Timings may vary slightly across different ranks, so it’s common to aggregate measurements across 
+ranks to improve estimates. You may find the all-gather collective (specifically the 
+dist.all_gather_object function) to be useful for collecting results from all ranks.
+• In general, debug locally with Gloo on CPU, and then as required in a given problem, benchmark with 
+NCCL on GPU.
+Switching between the backends should be as simple as modifying your init_process_group call and 
+tensor device casts.
+Problem (distributed_communication_single_node):   Distributed Communication (Single 
+Node) (5 points)
+Write a script to benchmark the runtime of the all-reduce operation in the single-node multi-
+process setup. The example code above may provide a reasonable starting point. Experiment with 
+varying the following settings:
+all-reduce data size float32 data tensors ranging over 1MB, 10MB, 100MB, 1GB.
+Number of GPUs/processes 2, 4, or 6.
+Resource requirements: Up to 6 GPUs. Each benchmarking run should take less than 5 
+minutes.
+Deliverable: Plot(s) and/or table(s) comparing the various settings, with 2-3 sentences of 
+commentary about your results and thoughts about how the various factors interact.
+3See https://github.com/pytorch/pytorch/issues/68112\#issuecomment-965932386 for more details.
+32

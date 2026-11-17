@@ -1,0 +1,11 @@
+{
+  "cs336_systems/fsdp.py": "377bc1b9dffa009115aee8c6639b128970cb01997bc36ffb0858a98f3a71538f",
+  "cs336_systems/ddp.py": "e6870b9ba1e501cde7f8a8733c551ffc8ee536cfdd23390fef2fdca62c1c5158",
+  "tests/adapters.py": "2cdc779e1240e0c5e38e329501f6bff6cf66c1d94eb6a338ee118360637a73d9",
+  "tests/test_fsdp.py": "23eeb6ab636e7467c8c77f340f478ffd0d523f68dbe77e927449c1329bc642d5",
+  "tests/test_fsdp_extra.py": "085ab86b178a27a0b354c8d31b0838256523f22a81c3b074deac7f71b04d8a19",
+  "scripts/check_fsdp.py": "3cc2c2fd442451beb58ec7e423dd70538c482cce40094ab770c02ec421f37a2f",
+  "scripts/experiment_fsdp.py": "e4829fa9986b2c693d21d0a3625400733376e5b994754803e4c8dcbaddc962e5",
+  "cs336-basics/cs336_basics/model.py": "0935522e9684869a275453bdfb44b687d67ca6631d794c3993b772e7bb5d686a",
+  "cs336-basics/cs336_basics/optimizer.py": "b7ac4ca497230c314fdab26d4068c11f74aa73699dc9588f80f556f9e713b89d"
+}

@@ -1,0 +1,29 @@
+{
+  "utc": "2026-11-17T03:33:16.971073+00:00",
+  "python": "/root/miniconda3/bin/python",
+  "torch": "2.8.0+cu128",
+  "cuda": "12.8",
+  "nccl": [
+    2,
+    27,
+    3
+  ],
+  "gpus": [
+    "NVIDIA GeForce RTX 4090",
+    "NVIDIA GeForce RTX 4090"
+  ],
+  "memory_bytes": [
+    25250627584,
+    25250627584
+  ],
+  "environment": {
+    "CUDA_VISIBLE_DEVICES": "0,1",
+    "OMP_NUM_THREADS": "1",
+    "NCCL_DEBUG": "WARN"
+  },
+  "scope": "Only two-GPU All-Reduce; no DDP/sharding/FSDP/single-GPU experiments",
+  "warmup": 5,
+  "measured_iterations": 20,
+  "independent_repetitions": 3,
+  "units": "decimal MB/GB"
+}

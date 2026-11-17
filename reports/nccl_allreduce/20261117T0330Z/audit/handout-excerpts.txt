@@ -1,0 +1,441 @@
+HANDOUT PAGE 3
+your writeup in code, since formatting tables in LaTeX or Typst can be very tedious. See 
+pandas.DataFrame.to_latex() and pandas.DataFrame.to_typst() or write your own function to generate 
+them from your preferred tabular representation.
+Size d_model d_ff num_layers num_heads
+small 768 3072 12 12
+medium 1024 4096 24 16
+large 1280 5120 36 20
+xl 2560 10240 32 32
+10B 4608 12288 50 36
+Table  1: Specifications of different model sizes. These are mostly based on GPT-2 configs.
+Use context length 512 unless otherwise specified.
+2.1.3 End-to-End Benchmarking
+We will now implement a simple performance evaluation script. We will be testing many variations of our 
+model (changing precision, swapping layers, etc.), so it will pay off to have your script enable these 
+variations via command-line arguments to make them easy to run later on.
+To start off, let’s do the simplest possible profiling of our model by timing the forward pass, backward 
+pass, and optimizer step. Since we will only be measuring speed and memory, it’s fine to use random 
+weights and data.
+Measuring performance is subtle — some common traps can cause us to not measure what we want. For 
+benchmarking GPU code, one caveat is that CUDA calls are asynchronous. When you call a CUDA 
+kernel, such as when you invoke torch.matmul, the PyTorch function call returns control to your code 
+without waiting for the matrix multiplication to finish. In this way, the CPU can continue running ahead 
+and scheduling new operations while the GPU finishes the matrix multiplication, which is a major 
+performance win. On the other hand, this means that naïvely measuring how long the torch.matmul call 
+takes to return does not tell us how long the GPU takes to actually run the matrix multiplication. In 
+PyTorch, we can call torch.cuda.synchronize() to wait for all scheduled GPU kernels to complete, 
+allowing us to get more accurate measurements of CUDA kernel runtime. The synchronization in this 
+operation refers to synchronizing the CPU runtime with the GPU runtime. With this in mind, let’s write 
+our basic profiling infrastructure.
+Problem (benchmarking_script):   Benchmarking Script (4 points)
+(a) Write a script to perform basic end-to-end benchmarking of the forward pass, backward pass, 
+and optimizer step in your model. Specifically, your script should support the following:
+• Given hyperparameters (e.g., number of layers), initialize a model.
+• Generate a random batch of data.
+• Run 𝑤 warm-up steps (before you start measuring time), then time the execution of 𝑛 
+steps (either only forward, forward and backward, or forward and backward with optimizer 
+step, depending on an argument). For timing, you can use the Python timeit module (e.g., 
+either using the timeit function, or using timeit.default_timer(), which gives you the 
+system’s highest resolution clock, thus a better default for benchmarking than 
+time.time()).
+3
+HANDOUT PAGE 32
+Figure  3: A schematic representation of a distributed application running on 2 nodes with a world size of 
+8. Each worker process is identified by a global rank (from 0 to 7) and a local rank (from 0 to 3). Figure 
+taken from https://lightning.ai/docs/fabric/stable/advanced/distributed_communication.html
+5.1.1 Best Practices for Benchmarking Distributed Applications
+Throughout this portion of the assignment you will be benchmarking distributed applications to better 
+understand the overhead from communication. Here are a few best practices:
+• Whenever possible, run benchmarks on the same machine to facilitate controlled comparisons.
+• Perform several warm-up steps before timing the operation of interest. This is especially important for 
+NCCL communication calls. 5 iterations of warmup is generally sufficient.
+• Call torch.cuda.synchronize() to wait for CUDA operations to complete when benchmarking on 
+GPUs. Note that this is necessary even when calling communication operations with async_op=False, 
+which returns when the operation is queued on the GPU (as opposed to when the communication 
+actually finishes).3
+• Timings may vary slightly across different ranks, so it’s common to aggregate measurements across 
+ranks to improve estimates. You may find the all-gather collective (specifically the 
+dist.all_gather_object function) to be useful for collecting results from all ranks.
+• In general, debug locally with Gloo on CPU, and then as required in a given problem, benchmark with 
+NCCL on GPU.
+Switching between the backends should be as simple as modifying your init_process_group call and 
+tensor device casts.
+Problem (distributed_communication_single_node):   Distributed Communication (Single 
+Node) (5 points)
+Write a script to benchmark the runtime of the all-reduce operation in the single-node multi-
+process setup. The example code above may provide a reasonable starting point. Experiment with 
+varying the following settings:
+all-reduce data size float32 data tensors ranging over 1MB, 10MB, 100MB, 1GB.
+Number of GPUs/processes 2, 4, or 6.
+Resource requirements: Up to 6 GPUs. Each benchmarking run should take less than 5 
+minutes.
+Deliverable: Plot(s) and/or table(s) comparing the various settings, with 2-3 sentences of 
+commentary about your results and thoughts about how the various factors interact.
+3See https://github.com/pytorch/pytorch/issues/68112\#issuecomment-965932386 for more details.
+32
+HANDOUT PAGE 33
+5.2 A Naïve Implementation of Distributed Data Parallel Training
+Now that we’ve seen the basics of writing distributed applications in PyTorch, let’s build a minimal 
+implementation of distributed data parallel (DDP) training.
+Data parallelism splits batches across multiple devices (e.g., GPUs), enabling training on large batch sizes 
+that do not fit on a single device. For example, given four devices that can each handle a maximum batch 
+size of 32, data parallel training would enable an effective batch size of 128.
+Here are the steps for naïvely doing distributed data parallel training. Initially, each device constructs a 
+(randomly-initialized) model. We use the broadcast collective communication operation to send the model 
+parameters from rank 0 to all other ranks. At the start of training, each device holds an identical copy of 
+the model parameters and optimizer states (e.g. the accumulated gradient statistics in Adam).
+1. Given a batch with 𝑛 examples, the batch is sharded and each device receives 𝑛/𝑑 disjoint examples 
+(where 𝑑 is the number of devices used for data parallel training). 𝑑 should divide 𝑛, otherwise some 
+ranks would do more work than others, and the step is bottlenecked by the slowest.
+2. Each device uses its local copy of the model parameters to run a forward pass on its 𝑛/𝑑 examples and 
+a backward pass to calculate the gradients. Note that at this point, each device holds the gradients 
+computed from the 𝑛/𝑑 examples it received.
+3. We then use the all-reduce collective communication operation to average the gradients across the 
+different devices, so each device holds the gradients averaged across all 𝑛 examples.
+4. Next, each device runs an optimizer step to update its copy of the parameters—from the optimizer’s 
+perspective, it is simply optimizing a local model. The parameters and optimizer states will stay in 
+sync on all of the different devices since they all start from the same initial model and optimizer state 
+and use the same averaged gradients for each iteration. At this point, we’ve completed a single training 
+iteration and can repeat the process.
+Problem (naive_ddp):   Naïve DDP (5 points)
+Deliverable: Implement a naïve form of distributed data parallel training that all-reduces 
+individual parameter gradients after the backward pass. To test your implementation, implement 
+[adapters.get_ddp] and (optionally) [adapters.ddp_on_after_backward] , then run uv run pytest 
+tests/test_ddp.py.
+Problem (naive_ddp_benchmarking):   Naïve DDP Benchmarking (3 points)
+In this naïve DDP implementation, parameter gradients are individually all-reduced across ranks 
+after each backward pass. To better understand the overhead of data parallel training, create a 
+script to benchmark your previously-implemented language model when trained with this naïve 
+implementation of DDP. Measure the total time per training step and the proportion of time 
+spent on communicating gradients. Collect measurements in the single-node setting (1 node x 2 
+GPUs) for the xl model size described in Section  2.1.2.
+Deliverable: A description of your benchmarking setup, along with the measured time per 
+training iteration and time spent communicating gradients for each setting.
+33
+HANDOUT PAGE 34
+5.3 Improving Upon the Minimal DDP Implementation
+The minimal DDP implementation that we saw in Section  5.2 has a couple of key limitations:
+1. It conducts a separate all-reduce operation for every parameter tensor. Each communication call incurs 
+overhead, so it may be advantageous to batch communication calls to minimize this overhead.
+2. It waits for the backward pass to finish before communicating gradients. However, the backward pass 
+is incrementally computed. Thus, when a parameter gradient is ready, it can immediately be 
+communicated without waiting for the gradients of the other parameters. This allows us to overlap 
+communication of gradients with computation of the backward pass, reducing the overhead of 
+distributed data parallel training.
+In this part of the assignment, we’ll address each of these limitations in turn and measure the impact on 
+training speed.
+5.3.1 Reducing the Number of Communication Calls
+Rather than issuing a communication call for each parameter tensor, let’s see if we can improve 
+performance by batching the all-reduce. Concretely, we’ll take the gradients that we want to all-reduce, 
+concatenate them into a single tensor, and then all-reduce the combined gradients across all ranks. It 
+might be helpful to use torch._utils._flatten_dense_tensors and 
+torch._utils._unflatten_dense_tensors.
+Problem (minimal_ddp_flat_benchmarking):   Minimal DDP with Flat Gradients 
+Benchmarking (2 points)
+Modify your minimal DDP implementation to communicate a tensor with flattened gradients 
+from all parameters. Compare its performance with the minimal DDP implementation that issues 
+an all-reduce for each parameter tensor under the previously-used conditions (1 node x 2 GPUs, 
+xl model size as described in Section  2.1.2).
+Deliverable: The measured time per training iteration and time spent communicating gradients 
+under distributed data parallel training with a single batched all-reduce call. 1-2 sentences 
+comparing the results when batching vs. individually communicating gradients.
+5.3.2 Overlapping Computation with Communication of Individual Parameter Gradients
+While batching the communication calls might help lower the overhead associated with issuing a large 
+number of small all-reduce operations, all of the communication time still directly contributes to the 
+overhead. To resolve this, we can take advantage of the observation that the backward pass incrementally 
+computes gradients for each layer (starting from the loss and moving toward the input)—thus, we can all-
+reduce parameter gradients as soon as they’re ready, reducing the overhead of data parallel training by 
+overlapping computation of the backward pass with communication of gradients.
+We’ll start by implementing and benchmarking a distributed data parallel wrapper that asynchronously 
+all-reduces individual parameter tensors as they become ready during the backward pass. The following 
+pointers may be useful:
+Backward hooks To automatically call a function on a parameter after its gradient has been 
+accumulated in the backward pass, you can use the register_post_accumulate_grad_hook function.4
+4See https://pytorch.org/docs/stable/generated/torch.Tensor.register_post_accumulate_grad_hook.html for more 
+information and usage examples.
+34
+HANDOUT PAGE 35
+Asynchronous communication All PyTorch collective communication operations support 
+synchronous (async_op=False) and asynchronous execution (async_op=True). Synchronous calls will block 
+until the collective operation is queued on the GPU. This does not mean that the CUDA operation is 
+completed since CUDA operations are asynchronous. That being said, later function calls using the 
+output will behave as expected.5 In contrast, asynchronous calls will return a distributed request handle—
+as a result, when the function returns, the collective communication operation is not guaranteed to have 
+been queued on the GPU, let alone completed. To wait for the operation to be queued on the GPU (and 
+therefore for the output to be usable in later operations), you can call handle.wait() on the returned 
+communication handle.
+For example, the following two examples all-reduce each tensor in a list of tensors with either a 
+synchronous or an asynchronous call:
+tensors = [torch.rand(5) for _ in range(10)]
+# Synchronous, block until operation is queued on the GPU.
+for tensor in tensors:
+    dist.all_reduce(tensor, async_op=False)
+# Asynchronous, return immediately after each call and
+# wait on results at the end.
+handles = []
+for tensor in tensors:
+    handle = dist.all_reduce(tensor, async_op=True)
+    handles.append(handle)
+# ...
+# Possibly execute other commands that don't rely on the all_reduce results
+# ...
+# Ensure that all-reduce calls were queued and
+# therefore other operations depending on the
+# all-reduce output can be queued.
+for handle in handles:
+    handle.wait()
+handles.clear()
+Problem (ddp_overlap_individual_parameters):   DDP with Overlapping Individual 
+Parameters (5 points)
+Implement a Python class to handle distributed data parallel training. The class should wrap an 
+arbitrary PyTorch nn.Module and take care of broadcasting the weights before training (so all 
+ranks have the same initial parameters) and issuing communication calls for gradient averaging. 
+We recommend the following public interface:
+def __init__(self, module: torch.nn.Module): Given an instantiated PyTorch nn.Module to be 
+parallelized, construct a DDP container that will handle gradient synchronization across ranks.
+def forward(self, *inputs, **kwargs): Calls the wrapped module’s forward() method with the 
+provided positional and keyword arguments.
+5In advanced cases, if you are using multiple CUDA streams, you may need explicit synchronization across streams to 
+ensure that the output is ready for later operations. See https://pytorch.org/docs/stable/notes/cuda.html\#cuda-streams.
+35
+HANDOUT PAGE 36
+def finish_gradient_synchronization(self): When called, wait for asynchronous communication 
+calls to finish on the GPU.
+To use this class to perform distributed training, we’ll pass it a module to wrap, and then add a 
+call to finish_gradient_synchronization() before we run optimizer.step() to ensure that the 
+optimizer step, an operation that depends on the gradients, can be safely queued:
+model = ToyModel().to(device)
+ddp_model = DDP(model)
+for _ in range(train_steps):
+    x, y = get_batch()
+    logits = ddp_model(x)
+    loss = loss_fn(logits, y)
+    loss.backward()
+    ddp_model.finish_gradient_synchronization()
+    optimizer.step()
+Deliverable: Implement a container class to handle distributed data parallel training. This class 
+should overlap gradient communication and the computation of the backward pass. To test your 
+DDP class, first implement the adapters [adapters.get_ddp] and 
+[adapters.ddp_on_after_backward] (the latter is optional, depending on your implementation you 
+may not need it).
+Then, to execute the tests, run uv run pytest tests/test_ddp.py. We recommend running the 
+tests multiple times (e.g., 5) to ensure that it passes reliably.
+Problem (ddp_overlap_individual_parameters_benchmarking):   DDP Overlapping Individual 
+Parameters Benchmarking (1 point)
+(a) Benchmark the performance of your DDP implementation when overlapping backward pass 
+computation with communication of individual parameter gradients. Compare its performance 
+with our previously-studied settings (the minimal DDP implementation that either issues an 
+all-reduce for each parameter tensor, or a single all-reduce on the concatenation of all 
+parameter tensors) with the same setup: 1 node, 2 GPUs, and the xl model size described in 
+Section  2.1.2.
+Deliverable: The measured time per training iteration when overlapping the backward pass 
+with communication of individual parameter gradients, with 1-2 sentences comparing the 
+results.
+(b) Instrument your benchmarking code (using the 1 node, 2 GPUs, xl model size setup) with the 
+Nsight profiler, comparing the initial DDP implementation with this overlapped 
+implementation. Visually compare the two traces, and provide a profiler screenshot 
+demonstrating that one implementation overlaps compute with communication while the 
+other doesn’t.
+Deliverable: 2 screenshots (one from the initial DDP implementation, and another from this 
+DDP implementation that overlaps compute with communication) that visually show that 
+communication is or isn’t overlapped with the backward pass.
+36
+HANDOUT PAGE 37
+6 Optimizer State Sharding
+Distributed data parallel training is conceptually simple and often very effective, but requires each rank 
+to hold a distinct copy of the model parameters and optimizer state. This redundancy can come with 
+significant memory costs. For example, the AdamW optimizer maintains two floats per parameter, 
+meaning that it consumes twice as much memory as the model weights. S. Rajbhandari et al. [5] describe 
+several methods for reducing this redundancy in data-parallel training by partitioning the (1) optimizer 
+state, (2) gradients, and (3) parameters across ranks, communicating them between workers as necessary.
+In this part of the assignment, we’ll reduce per-rank memory consumption by implementing a simplified 
+version of optimizer state sharding. Rather than keeping the optimizer states for all parameters, each 
+rank’s optimizer instance will only handle a subset of the parameters (approximately 1 / world_size). 
+When each rank’s optimizer takes an optimizer step, it’ll only update the subset of model parameters in 
+its shard. Then, each rank will broadcast its updated parameters to the other ranks to ensure that the 
+model parameters remain synchronized after each optimizer step.
+Problem (optimizer_state_sharding):   Optimizer State Sharding (15 points)
+Implement a Python class to handle optimizer state sharding. The class should wrap an arbitrary 
+input PyTorch optim.Optimizer and take care of synchronizing updated parameters after each 
+optimizer step. We recommend the following public interface:
+def __init__(self, params, optimizer_cls: Type[Optimizer], **kwargs: Any): Initializes the 
+sharded state optimizer. params is a collection of parameters to be optimized (or parameter 
+groups, in case the user wants to use different hyperparameters, such as learning rates, for 
+different parts of the model); these parameters will be sharded across all the ranks. The 
+optimizer_cls parameter specifies the type of optimizer to be wrapped (e.g., optim.AdamW). 
+Finally, any remaining keyword arguments are forwarded to the constructor of the 
+optimizer_cls. Make sure to call the torch.optim.Optimizer super-class constructor in this 
+method.
+def step(self, closure, **kwargs): Calls the wrapped optimizer’s step() method with the 
+provided closure and keyword arguments. After updating the parameters, synchronize with the 
+other ranks.
+def add_param_group(self, param_group: dict[str, Any]): This method should add a parameter 
+group to the sharded optimizer. This is called during construction of the sharded optimizer by 
+the super-class constructor and may also be called during training (e.g., for gradually 
+unfreezing layers in a model). As a result, this method should handle assigning the model’s 
+parameters among the ranks.
+Deliverable: Implement a container class to handle optimizer state sharding. To test your 
+sharded optimizer, first implement the adapter [adapters.get_sharded_optimizer] . Then, to 
+execute the tests, run uv run pytest tests/test_sharded_optimizer.py. We recommend running 
+the tests multiple times (e.g., 5) to ensure that they pass reliably.
+Now that we’ve implemented optimizer state sharding, let’s analyze its effect on the peak memory usage 
+during training and its runtime overhead.
+37
+HANDOUT PAGE 38
+Problem (optimizer_state_sharding_accounting):   Optimizer State Sharding Accounting (5 
+points)
+(a) Create a script to profile the peak memory usage when training language models with and 
+without optimizer state sharding. Using the standard configuration (1 node, 2 GPUs, xl 
+model size), report the peak memory usage after model initialization, directly before the 
+optimizer step, and directly after the optimizer step. Do the results align with your 
+expectations? Break down the memory usage in each setting (e.g., how much memory for 
+parameters, how much for optimizer states, etc.).
+Deliverable: 2-3 sentence response with peak memory usage results and a breakdown of how 
+the memory is divided between different model and optimizer components.
+(b) How does our implementation of optimizer state sharding affect training speed? Measure the 
+time taken per iteration with and without optimizer state sharding for the standard 
+configuration (1 node, 2 GPUs, xl model size).
+Deliverable: 2-3 sentence response with your timings.
+(c) How does our approach to optimizer state sharding differ from ZeRO stage 1 (described as 
+ZeRO-DP 𝑃𝑜𝑠 in S. Rajbhandari, J. Rasley, O. Ruwase, and Y. He [5])?
+Deliverable: 2-3 sentence summary of any differences, especially those related to memory 
+and communication volume.
+7 Fully-Sharded Data Parallel
+With optimizer state sharding and data parallel, we’re able to split the optimizer state and activations 
+across our data-parallel axis. However, our model weights remain duplicated — we’re storing a full copy 
+of them all on each GPU.
+We can solve this by turning our data parallel (DP) axis into a fully-sharded data parallel axis (FSDP). 
+With FSDP, each GPU stores only its own slice of every weight tensor, but has to pull slices from other 
+GPUs to form the full weight tensor using an all-gather to prepare for a forward or backward pass.
+To avoid keeping GPU compute waiting around for communication to finish, most FSDP implementations 
+schedule the layer’s all-gather in advance of the operation, meaning the relevant weights are ready before 
+they are needed, preventing communication from blocking computation. This keeps weight sharding 
+communication off the critical path, meaning it has no cost as long as communication can keep up with 
+compute and is scheduled well.
+Some layers are small enough in memory and compute that the latency overhead of a transfer is not 
+worth it. You should mark these layers not to be sharded by FSDP. In our architecture, this will mostly 
+be the case for norms. This leaves us with the embedding layer and every linear layer.
+While it is necessary to store master weights in FP32 (any values that are repeatedly accumulated into 
+are sensitive to precision), the weights do not need to be used in FP32. In mixed precision, we always 
+convert to the low-precision compute datatype before use, so we may as well convert even before the 
+weight is communicated to save on bandwidth.
+Problem (fsdp):   Fully-Sharded Data Parallel (15 points)
+38
+HANDOUT PAGE 39
+Implement a Python class for fully-sharded data parallel training. The class should wrap an 
+arbitrary PyTorch nn.Module (your full model) and hook into or wrap any Linear or Embedding 
+layer within it. We recommend the following public interface:
+def __init__(self, module: torch.nn.Module, compute_dtype: torch.dtype | None = None): 
+Given an instantiated PyTorch nn.Module to be parallelized, construct an FSDP module that 
+will handle weight all-gathers and gradient reduce-scatters. Make sure that your hooks or your 
+module wrappers all-gather the weights in time for the forward pass. To limit memory use, 
+only start gathering after the layer two before the current one has completed its forward pass. 
+In the backward pass, your hooks or module wrappers should all-gather to have the weights 
+available for the computation. When the gradients are available, they should be reduce-
+scattered to the appropriate ranks. Make sure to free the gathered weights after use. When 
+compute_dtype is provided, cast the weights to that dtype before communicating or using them 
+for compute, while keeping master weights and optimizer updates in FP32.
+def forward(self, *inputs, **kwargs): Calls the wrapped module’s forward() method with the 
+provided positional and keyword arguments.
+def finish_gradient_synchronization(self): When called, wait for asynchronous communication 
+calls to finish on the GPU.
+Deliverable: Implement a container class to handle fully sharded data parallel training. Each 
+shard of this container should be compatible with the standard AdamW implementation from 
+assignment 1. To test your FSDP implementation, implement the adapter [adapters.get_fsdp] . 
+Run the tests with uv run pytest tests/test_fsdp.py. We recommend running the tests multiple 
+times (e.g., 5) to catch any race conditions.
+Problem (fsdp_accounting):   FSDP Accounting (5 points)
+(a) Given your analysis in Section  6, how much memory do you expect to save from the peak by 
+implementing FSDP? You can ignore the size of the preallocated buffers needed to all-gather 
+weights to each GPU in your calculation.
+Deliverable: 2-3 sentence response with your findings.
+(b) Profile the xl model on two GPUs and pay attention to the all-gather of weights. Does the 
+communication finish in time for the forward pass?
+Deliverable: 2-3 sentence response with your timings. Include screenshots of Nsight to back 
+up your claims.
+8 Analyzing Parallelism Strategies
+There are more axes along which we can parallelize our training process. Some common strategies 
+include:
+• Data parallelism (DP) — Batches of data are split across multiple devices, and each device 
+computes gradients for its own batch. Gradients are then averaged across devices.
+• Fully-Sharded Data Parallelism (FSDP) — On top of data parallelism, we also split optimizer 
+states, gradients, and weights across devices to reduce memory usage. Devices then need to gather 
+weight shards from other devices during the forward and backward passes.
+39
+HANDOUT PAGE 47
+will verify the top 5-10 submissions for correctness and performance. The test we will run to time your 
+implementation is the following:
+class Config:
+    ctx_len = 32768
+    vocab_size = 151936
+    d_model = 4096
+    d_ff = 11008
+    num_layers = 34
+    num_heads = 32
+    torch_dtype = torch.bfloat16
+    is_causal = True
+    batch_size = 2
+cfg = Config()
+def test_timing_forward_backward():
+    labels, targets = torch.randint(high=cfg.vocab_size, size=(2, cfg.batch_size, 
+cfg.ctx_len))
+    model = BasicsTransformerLM(Config())
+    optimizer = AdamW(model.parameters())
+    def train_step():
+        optimizer.zero_grad(set_to_none=True)
+        res = model(labels)
+        loss = cross_entropy(res, targets).sum()
+        loss.backward()
+        optimizer.step()
+    timing_results = triton.testing.do_bench(train_step, rep=30_000, warmup=10_000)
+    print(timing_results)
+For testing purposes, you can reduce the repetition and warmup time (given in ms) to something shorter.
+Some ideas for improvement and for making sure your model fits:
+• Tune the tile sizes for your kernel (use Triton autotune for this!)
+• Tune additional Triton/torch.compile config parameters
+• Implement fused AdamW
+• The base implementation is materializing the full logits ([batch, seq_len, vocab_size]). Write a 
+kernel that fuses the LM head and your cross-entropy loss. You can also have it compute the backward 
+pass immediately in a fused manner
+• Improve FlashAttention
+‣ Implement the backward pass in Triton, not just torch.compile (see Section  4.2.3)
+‣ Do two passes over your input for the backward pass, one for dQ and another for dK and dV, to 
+avoid atomics or synchronization between blocks
+‣ Stop program instances early when doing causal masking, skipping tiles that are guaranteed to be all 
+zero
+‣ Separate the non-masked tiles from the tile diagonals, computing the first without ever comparing 
+indices, and the second with a single comparison
+47
+HANDOUT PAGE 48
+‣ Use TMA (Tensor Memory Accelerator) functionality on architectures later than Hopper, following a 
+similar pattern to our tutorial
+• Use activation checkpointing to trade runtime speed for memory savings only if you need it
+Problem (leaderboard):   Leaderboard: fastest training step (10 points)
+The benchmark will be run at batch size 2 on two B200 GPUs. Your submission will be evaluated 
+on wall-clock time for a complete training step: forward pass, loss, backward pass, and AdamW 
+update.
+From an empty PyTorch/Triton cache, your benchmarking run must complete within 10 minutes, 
+so be careful with overly aggressive torch.compile and Triton autotuning.
+Deliverable: Your best wall-clock time for a full forward-and-backward training step with 
+AdamW.
+We expect leaderboard submissions to beat the naïve baseline of 10 seconds.
+Submit your result to the leaderboard here: 
+github.com/stanford-cs336/assignment2-systems-leaderboard
+Bibliography
+[1] T. Dao, “FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning.” [Online]. 
+Available: https://arxiv.org/abs/2307.08691
+[2] T. Dao, D. Y. Fu, S. Ermon, A. Rudra, and C. Re, “FlashAttention: Fast and Memory-Efficient Exact 
+Attention with IO-Awareness,” in Advances in Neural Information Processing Systems, A. H. Oh, A. 
+Agarwal, D. Belgrave, and K. Cho, Eds.,  2022. [Online].  Available: 
+https://openreview.net/forum?id=H4DqfPSibmx
+[3] M. Milakov and N. Gimelshein, “Online normalizer calculation for softmax.” [Online]. Available: 
+https://arxiv.org/abs/1805.02867
+[4] H. He, “Making Deep Learning Go Brrrr From First Principles,” 2022, [Online].  Available: 
+https://horace.io/brrr_intro.html
+[5] S. Rajbhandari, J. Rasley, O. Ruwase, and Y. He, “ZeRO: Memory Optimizations Toward Training 
+Trillion Parameter Models.” 2020.
+[6] J. Austin et al., “How to Scale Your Model,” 2025.
+[7] H. Z. P. N. M. M. L. W. T. W. Nouamane Tazi Ferdinand Mom, “The Ultra-Scale Playbook: 
+Training LLMs on GPU Clusters.” 2025.
+48

@@ -1,0 +1,168 @@
+HANDOUT PAGE 3
+your writeup in code, since formatting tables in LaTeX or Typst can be very tedious. See 
+pandas.DataFrame.to_latex() and pandas.DataFrame.to_typst() or write your own function to generate 
+them from your preferred tabular representation.
+Size d_model d_ff num_layers num_heads
+small 768 3072 12 12
+medium 1024 4096 24 16
+large 1280 5120 36 20
+xl 2560 10240 32 32
+10B 4608 12288 50 36
+Table  1: Specifications of different model sizes. These are mostly based on GPT-2 configs.
+Use context length 512 unless otherwise specified.
+2.1.3 End-to-End Benchmarking
+We will now implement a simple performance evaluation script. We will be testing many variations of our 
+model (changing precision, swapping layers, etc.), so it will pay off to have your script enable these 
+variations via command-line arguments to make them easy to run later on.
+To start off, let’s do the simplest possible profiling of our model by timing the forward pass, backward 
+pass, and optimizer step. Since we will only be measuring speed and memory, it’s fine to use random 
+weights and data.
+Measuring performance is subtle — some common traps can cause us to not measure what we want. For 
+benchmarking GPU code, one caveat is that CUDA calls are asynchronous. When you call a CUDA 
+kernel, such as when you invoke torch.matmul, the PyTorch function call returns control to your code 
+without waiting for the matrix multiplication to finish. In this way, the CPU can continue running ahead 
+and scheduling new operations while the GPU finishes the matrix multiplication, which is a major 
+performance win. On the other hand, this means that naïvely measuring how long the torch.matmul call 
+takes to return does not tell us how long the GPU takes to actually run the matrix multiplication. In 
+PyTorch, we can call torch.cuda.synchronize() to wait for all scheduled GPU kernels to complete, 
+allowing us to get more accurate measurements of CUDA kernel runtime. The synchronization in this 
+operation refers to synchronizing the CPU runtime with the GPU runtime. With this in mind, let’s write 
+our basic profiling infrastructure.
+Problem (benchmarking_script):   Benchmarking Script (4 points)
+(a) Write a script to perform basic end-to-end benchmarking of the forward pass, backward pass, 
+and optimizer step in your model. Specifically, your script should support the following:
+• Given hyperparameters (e.g., number of layers), initialize a model.
+• Generate a random batch of data.
+• Run 𝑤 warm-up steps (before you start measuring time), then time the execution of 𝑛 
+steps (either only forward, forward and backward, or forward and backward with optimizer 
+step, depending on an argument). For timing, you can use the Python timeit module (e.g., 
+either using the timeit function, or using timeit.default_timer(), which gives you the 
+system’s highest resolution clock, thus a better default for benchmarking than 
+time.time()).
+3
+
+HANDOUT PAGE 33
+5.2 A Naïve Implementation of Distributed Data Parallel Training
+Now that we’ve seen the basics of writing distributed applications in PyTorch, let’s build a minimal 
+implementation of distributed data parallel (DDP) training.
+Data parallelism splits batches across multiple devices (e.g., GPUs), enabling training on large batch sizes 
+that do not fit on a single device. For example, given four devices that can each handle a maximum batch 
+size of 32, data parallel training would enable an effective batch size of 128.
+Here are the steps for naïvely doing distributed data parallel training. Initially, each device constructs a 
+(randomly-initialized) model. We use the broadcast collective communication operation to send the model 
+parameters from rank 0 to all other ranks. At the start of training, each device holds an identical copy of 
+the model parameters and optimizer states (e.g. the accumulated gradient statistics in Adam).
+1. Given a batch with 𝑛 examples, the batch is sharded and each device receives 𝑛/𝑑 disjoint examples 
+(where 𝑑 is the number of devices used for data parallel training). 𝑑 should divide 𝑛, otherwise some 
+ranks would do more work than others, and the step is bottlenecked by the slowest.
+2. Each device uses its local copy of the model parameters to run a forward pass on its 𝑛/𝑑 examples and 
+a backward pass to calculate the gradients. Note that at this point, each device holds the gradients 
+computed from the 𝑛/𝑑 examples it received.
+3. We then use the all-reduce collective communication operation to average the gradients across the 
+different devices, so each device holds the gradients averaged across all 𝑛 examples.
+4. Next, each device runs an optimizer step to update its copy of the parameters—from the optimizer’s 
+perspective, it is simply optimizing a local model. The parameters and optimizer states will stay in 
+sync on all of the different devices since they all start from the same initial model and optimizer state 
+and use the same averaged gradients for each iteration. At this point, we’ve completed a single training 
+iteration and can repeat the process.
+Problem (naive_ddp):   Naïve DDP (5 points)
+Deliverable: Implement a naïve form of distributed data parallel training that all-reduces 
+individual parameter gradients after the backward pass. To test your implementation, implement 
+[adapters.get_ddp] and (optionally) [adapters.ddp_on_after_backward] , then run uv run pytest 
+tests/test_ddp.py.
+Problem (naive_ddp_benchmarking):   Naïve DDP Benchmarking (3 points)
+In this naïve DDP implementation, parameter gradients are individually all-reduced across ranks 
+after each backward pass. To better understand the overhead of data parallel training, create a 
+script to benchmark your previously-implemented language model when trained with this naïve 
+implementation of DDP. Measure the total time per training step and the proportion of time 
+spent on communicating gradients. Collect measurements in the single-node setting (1 node x 2 
+GPUs) for the xl model size described in Section  2.1.2.
+Deliverable: A description of your benchmarking setup, along with the measured time per 
+training iteration and time spent communicating gradients for each setting.
+33
+
+HANDOUT PAGE 34
+5.3 Improving Upon the Minimal DDP Implementation
+The minimal DDP implementation that we saw in Section  5.2 has a couple of key limitations:
+1. It conducts a separate all-reduce operation for every parameter tensor. Each communication call incurs 
+overhead, so it may be advantageous to batch communication calls to minimize this overhead.
+2. It waits for the backward pass to finish before communicating gradients. However, the backward pass 
+is incrementally computed. Thus, when a parameter gradient is ready, it can immediately be 
+communicated without waiting for the gradients of the other parameters. This allows us to overlap 
+communication of gradients with computation of the backward pass, reducing the overhead of 
+distributed data parallel training.
+In this part of the assignment, we’ll address each of these limitations in turn and measure the impact on 
+training speed.
+5.3.1 Reducing the Number of Communication Calls
+Rather than issuing a communication call for each parameter tensor, let’s see if we can improve 
+performance by batching the all-reduce. Concretely, we’ll take the gradients that we want to all-reduce, 
+concatenate them into a single tensor, and then all-reduce the combined gradients across all ranks. It 
+might be helpful to use torch._utils._flatten_dense_tensors and 
+torch._utils._unflatten_dense_tensors.
+Problem (minimal_ddp_flat_benchmarking):   Minimal DDP with Flat Gradients 
+Benchmarking (2 points)
+Modify your minimal DDP implementation to communicate a tensor with flattened gradients 
+from all parameters. Compare its performance with the minimal DDP implementation that issues 
+an all-reduce for each parameter tensor under the previously-used conditions (1 node x 2 GPUs, 
+xl model size as described in Section  2.1.2).
+Deliverable: The measured time per training iteration and time spent communicating gradients 
+under distributed data parallel training with a single batched all-reduce call. 1-2 sentences 
+comparing the results when batching vs. individually communicating gradients.
+5.3.2 Overlapping Computation with Communication of Individual Parameter Gradients
+While batching the communication calls might help lower the overhead associated with issuing a large 
+number of small all-reduce operations, all of the communication time still directly contributes to the 
+overhead. To resolve this, we can take advantage of the observation that the backward pass incrementally 
+computes gradients for each layer (starting from the loss and moving toward the input)—thus, we can all-
+reduce parameter gradients as soon as they’re ready, reducing the overhead of data parallel training by 
+overlapping computation of the backward pass with communication of gradients.
+We’ll start by implementing and benchmarking a distributed data parallel wrapper that asynchronously 
+all-reduces individual parameter tensors as they become ready during the backward pass. The following 
+pointers may be useful:
+Backward hooks To automatically call a function on a parameter after its gradient has been 
+accumulated in the backward pass, you can use the register_post_accumulate_grad_hook function.4
+4See https://pytorch.org/docs/stable/generated/torch.Tensor.register_post_accumulate_grad_hook.html for more 
+information and usage examples.
+34
+
+HANDOUT PAGE 36
+def finish_gradient_synchronization(self): When called, wait for asynchronous communication 
+calls to finish on the GPU.
+To use this class to perform distributed training, we’ll pass it a module to wrap, and then add a 
+call to finish_gradient_synchronization() before we run optimizer.step() to ensure that the 
+optimizer step, an operation that depends on the gradients, can be safely queued:
+model = ToyModel().to(device)
+ddp_model = DDP(model)
+for _ in range(train_steps):
+    x, y = get_batch()
+    logits = ddp_model(x)
+    loss = loss_fn(logits, y)
+    loss.backward()
+    ddp_model.finish_gradient_synchronization()
+    optimizer.step()
+Deliverable: Implement a container class to handle distributed data parallel training. This class 
+should overlap gradient communication and the computation of the backward pass. To test your 
+DDP class, first implement the adapters [adapters.get_ddp] and 
+[adapters.ddp_on_after_backward] (the latter is optional, depending on your implementation you 
+may not need it).
+Then, to execute the tests, run uv run pytest tests/test_ddp.py. We recommend running the 
+tests multiple times (e.g., 5) to ensure that it passes reliably.
+Problem (ddp_overlap_individual_parameters_benchmarking):   DDP Overlapping Individual 
+Parameters Benchmarking (1 point)
+(a) Benchmark the performance of your DDP implementation when overlapping backward pass 
+computation with communication of individual parameter gradients. Compare its performance 
+with our previously-studied settings (the minimal DDP implementation that either issues an 
+all-reduce for each parameter tensor, or a single all-reduce on the concatenation of all 
+parameter tensors) with the same setup: 1 node, 2 GPUs, and the xl model size described in 
+Section  2.1.2.
+Deliverable: The measured time per training iteration when overlapping the backward pass 
+with communication of individual parameter gradients, with 1-2 sentences comparing the 
+results.
+(b) Instrument your benchmarking code (using the 1 node, 2 GPUs, xl model size setup) with the 
+Nsight profiler, comparing the initial DDP implementation with this overlapped 
+implementation. Visually compare the two traces, and provide a profiler screenshot 
+demonstrating that one implementation overlaps compute with communication while the 
+other doesn’t.
+Deliverable: 2 screenshots (one from the initial DDP implementation, and another from this 
+DDP implementation that overlaps compute with communication) that visually show that 
+communication is or isn’t overlapped with the backward pass.
+36

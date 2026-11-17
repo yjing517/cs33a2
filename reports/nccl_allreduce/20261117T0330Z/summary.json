@@ -1,0 +1,89 @@
+{
+  "status": "passed",
+  "scope": "two GPU NCCL only",
+  "results": [
+    {
+      "bytes": 1000000,
+      "samples": 60,
+      "warmup_per_run": 5,
+      "repetitions": 3,
+      "median_ms": 0.110842,
+      "mean_ms": 0.1107213,
+      "std_ms": 0.0037594591447463487,
+      "min_ms": 0.102469,
+      "max_ms": 0.119309,
+      "p5_ms": 0.10492955,
+      "p95_ms": 0.11632834999999998,
+      "algorithm_GB_s": 9.02185092293535,
+      "bus_GB_s": 9.02185092293535,
+      "per_run_median_ms": [
+        0.1129505,
+        0.107074,
+        0.1114725
+      ]
+    },
+    {
+      "bytes": 10000000,
+      "samples": 60,
+      "warmup_per_run": 5,
+      "repetitions": 3,
+      "median_ms": 0.72143,
+      "mean_ms": 0.7213418666666667,
+      "std_ms": 0.005890339734286195,
+      "min_ms": 0.706772,
+      "max_ms": 0.735835,
+      "p5_ms": 0.7129308,
+      "p95_ms": 0.7312069,
+      "algorithm_GB_s": 13.86135869037883,
+      "bus_GB_s": 13.86135869037883,
+      "per_run_median_ms": [
+        0.7224705,
+        0.719009,
+        0.7222005
+      ]
+    },
+    {
+      "bytes": 100000000,
+      "samples": 60,
+      "warmup_per_run": 5,
+      "repetitions": 3,
+      "median_ms": 6.580382999999999,
+      "mean_ms": 6.590860816666667,
+      "std_ms": 0.06649031360153312,
+      "min_ms": 6.459269,
+      "max_ms": 6.719199,
+      "p5_ms": 6.5042941,
+      "p95_ms": 6.69439795,
+      "algorithm_GB_s": 15.196683840439077,
+      "bus_GB_s": 15.196683840439077,
+      "per_run_median_ms": [
+        6.6112055000000005,
+        6.559196,
+        6.623721
+      ]
+    },
+    {
+      "bytes": 1000000000,
+      "samples": 60,
+      "warmup_per_run": 5,
+      "repetitions": 3,
+      "median_ms": 65.9281775,
+      "mean_ms": 65.5380497,
+      "std_ms": 0.9207691091730508,
+      "min_ms": 63.434194,
+      "max_ms": 66.743391,
+      "p5_ms": 63.8849388,
+      "p95_ms": 66.55150520000001,
+      "algorithm_GB_s": 15.168021291048124,
+      "bus_GB_s": 15.168021291048124,
+      "per_run_median_ms": [
+        66.104145,
+        65.489255,
+        65.8828745
+      ]
+    }
+  ],
+  "correctness": "Both ranks, all elements, all sizes, smoke plus three independent runs",
+  "bandwidth": "algorithm GB/s = bytes / (median_ms * 1e6); bus = algorithm * 2*(N-1)/N, identical at N=2; decimal units",
+  "statistical_unit": "one shared-clock, CUDA-synchronized collective completed by both ranks; 60 observations per size, pooled median"
+}

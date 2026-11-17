@@ -1,0 +1,34 @@
+{
+  "argv": [
+    "/root/miniconda3/bin/python",
+    "-m",
+    "torch.distributed.run",
+    "--standalone",
+    "--nproc-per-node=2",
+    "--module",
+    "scripts.check_fsdp",
+    "--backend",
+    "nccl",
+    "--model",
+    "transformer",
+    "--dtype",
+    "float32",
+    "--optimizer",
+    "sgd",
+    "--reference",
+    "full_batch",
+    "--steps",
+    "3",
+    "--output",
+    "reports/fsdp/20261117T021755Z/final-nccl-transformer-sgd-float32.json"
+  ],
+  "cwd": "/root/autodl-tmp/cs336-assignment2",
+  "environment": {
+    "PYTHONPATH": "/root/autodl-tmp/cs336-fsdp-test-deps-20261117:/root/autodl-tmp/cs336-ddp-deps-20261117:/root/autodl-tmp/cs336-assignment2/cs336-basics:/root/autodl-tmp/cs336-assignment2",
+    "CUDA_VISIBLE_DEVICES": "0,1",
+    "OMP_NUM_THREADS": "1",
+    "CUBLAS_WORKSPACE_CONFIG": ":4096:8",
+    "NCCL_DEBUG": "WARN"
+  },
+  "elapsed_s": 7.407144885510206
+}
